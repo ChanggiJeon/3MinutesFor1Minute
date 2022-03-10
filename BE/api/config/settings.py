@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'accounts',
     'boards',
     'community',
-    'meetings',
+    'minutes',
 
     # 2nd party
     'rest_framework',
