@@ -20,7 +20,7 @@ class BoardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ('id', 'title', )
+        fields = ('id', 'title', 'is_notice', )
 
 
 class BoardSerializer(serializers.ModelSerializer):

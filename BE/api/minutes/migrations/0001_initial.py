@@ -13,26 +13,28 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Board',
+            name='Minute',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=100)),
                 ('content', models.TextField(max_length=500)),
-                ('upload', models.FileField(max_length=15, null=True, upload_to='')),
-                ('is_notice', models.BooleanField(default=False)),
+                ('summary', models.TextField(null=True)),
+                ('keyword', models.TextField(null=True)),
+                ('record_file', models.FileField(null=True, upload_to='')),
+                ('text_file', models.FileField(null=True, upload_to='')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(
-            name='BoardComment',
+            name='MinuteComment',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('content', models.TextField(max_length=300)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('board', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='boards.board')),
-                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='boards.boardcomment')),
+                ('minute', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='minutes.minute')),
+                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='minutes.minutecomment')),
             ],
         ),
     ]
