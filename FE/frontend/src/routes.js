@@ -1,6 +1,8 @@
 // url 변수화 해서 관리
 const routes = {
-  main: "/",
-}
+	main: '/',
+	login: '/login',
+	signup: '/signup',
+};
 
-export default routes
+export default routes;
