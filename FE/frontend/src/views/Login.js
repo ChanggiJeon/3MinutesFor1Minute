@@ -20,6 +20,7 @@ import FindId from '../components/login/FindId';
 import Modal from '../components/modal/Modal';
 import FindPw from '../components/login/FindPw';
 import EmptyBtn from '../components/auth/EmptyBtn';
+import { apiLogin } from '../api/accounts';
 
 function Login() {
 	const {
@@ -39,8 +40,17 @@ function Login() {
 
 	const onValidSubmit = async () => {
 		const { id, password } = getValues();
+
 		try {
 			// api
+			await apiLogin({ username: id, password }).then(res => {
+				const {
+					data: { access, refresh },
+				} = res;
+
+				localStorage.setItem('access', access);
+				localStorage.setItem('refresh', refresh);
+			});
 			dispatch(
 				login({
 					isLoggedIn: true,
@@ -51,8 +61,9 @@ function Login() {
 			clearErrors('result');
 			navigate(routes.main);
 		} catch (e) {
-			// e.response.status
-			setError('result', { message: '계정정보가 유효하지 않습니다.' });
+			if (e.response.status === 401) {
+				setError('result', { message: '계정정보가 유효하지 않습니다.' });
+			}
 		}
 	};
 
@@ -81,6 +92,18 @@ function Login() {
 		</ErrorMsg>
 	) : (
 		<EmptyMsg />
+	);
+
+	const FindIdModal = isFindIdMode && (
+		<Modal setMode={setFindIdmode}>
+			<FindId />
+		</Modal>
+	);
+
+	const FindPwModal = isFindPwMode && (
+		<Modal setMode={setFindPwmode}>
+			<FindPw />
+		</Modal>
 	);
 
 	return (
@@ -147,16 +170,8 @@ function Login() {
 					</LinkContainer>
 				</Form>
 			</FormContainer>
-			{isFindIdMode && (
-				<Modal setMode={setFindIdmode}>
-					<FindId />
-				</Modal>
-			)}
-			{isFindPwMode && (
-				<Modal setMode={setFindPwmode}>
-					<FindPw />
-				</Modal>
-			)}
+			{FindIdModal}
+			{FindPwModal}
 		</Divider>
 	);
 }
