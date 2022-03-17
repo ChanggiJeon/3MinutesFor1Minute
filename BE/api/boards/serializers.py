@@ -3,12 +3,6 @@ from .models import Board, BoardComment
 
 
 class BoardCommentSerializer(serializers.ModelSerializer):
-    comments_filter = serializers.SerializerMethodField('filt')
-
-    def filt(self, comment):
-        comments = BoardComment.objects.filter(parent=comment)
-        serializer = BoardCommentSerializer(comments, many=True)
-        return serializer.data
 
     class Meta:
         model = BoardComment
@@ -24,9 +18,9 @@ class BoardListSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
-    comments_filter = serializers.SerializerMethodField('filt')
+    board_comments = serializers.SerializerMethodField('bc_filter')
 
-    def filt(self, board):
+    def bc_filter(self, board):
         comments = BoardComment.objects.filter(board=board)
         serializer = BoardCommentSerializer(comments, many=True)
         return serializer.data
