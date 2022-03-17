@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import User
+from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 
 # Create your views here.
@@ -27,7 +27,7 @@ def signup(request):
         return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
     serializers = UserSerializer(data=request.data)
     if serializers.is_valid(raise_exception=True):
-        user = serializers.save()
+        user = serializers.save(nickname=username)
         user.set_password(request.data.get('password'))
         user.save()
         return Response(serializers.data, status=status.HTTP_201_CREATED)
@@ -35,6 +35,7 @@ def signup(request):
 @api_view(['DELETE'])
 def delete(request):
     username = request.data.get('username')
+    User = get_user_model()
     user = get_object_or_404(User, username=username)
     user.delete()
     return Response({'delete: 탈퇴 완료'}, status=status.HTTP_204_NO_CONTENT)
