@@ -1,5 +1,5 @@
 from django.db import models
-from ..community import models
+from community.models import Member
 
 
 class Minute(models.Model):
