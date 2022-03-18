@@ -18,9 +18,10 @@ def minute_list(request):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            minute = get_object_or_404(Minute, pk=serializer.id)
+            minute = get_object_or_404(Minute, pk=serializer.data['id'])
             participant = Participant(minute=minute, is_assignee=True)
             participant.save()
+            serializer = MinuteSerializer(minute)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
