@@ -4,6 +4,7 @@ import Provider from './Provider';
 import GlobalStyles from './styles/GlobalStyles';
 import Main from './views/Main';
 import Login from './views/Login';
+import Index from './views/Index';
 
 function App() {
 	return (
@@ -11,8 +12,10 @@ function App() {
 			<GlobalStyles />
 			<Router>
 				<Routes>
-					<Route path={routes.main} element={<Main />} />
-					<Route path={routes.login} element={<Login />} />
+					<Route element={<Index />}>
+						<Route path={routes.main} element={<Main />} />
+						<Route path={routes.login} element={<Login />} />
+					</Route>
 				</Routes>
 			</Router>
 		</Provider>
