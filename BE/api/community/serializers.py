@@ -10,10 +10,12 @@ class CommunitySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommunitySearchSerializer(serializers.ModelSerializer):
-    is_joined = serializers.BooleanField(read_only=True)
+    is_joined = serializers.SerializerMethodField()
     class Meta:
         model = Community
         fields = ('id', 'name','is_joined')
+    def get_is_joined(self, obj):
+        return 3
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
