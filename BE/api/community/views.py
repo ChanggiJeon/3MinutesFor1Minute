@@ -12,7 +12,7 @@ from .models import Community, Member
 from .serializers import CommunitySerializer, MemberSerializer, CommunitySearchSerializer
 from community import serializers
 
-# 1. 커뮤니티 생성 
+# 1. 커뮤니티 생성
 ## 난수 생성 함수
 def make_random_code():
     code_list = string.ascii_uppercase + '0123456789'
@@ -53,7 +53,7 @@ def uniquecheck_commnity_name(request):
 
 # 2. 커뮤니티 가입 신청
 @api_view(['POST'])
-def community_join(request, community_pk):
+def community_apply(request, community_pk):
     
     pass
 
@@ -66,10 +66,11 @@ def search_for_code(request):
     member = community.member_set.all()
     if community:
         if member.filter(user_id=request.user.pk).exists():
-            serializers = CommunitySearchSerializer(community, is_joined=True)
+            serializer = CommunitySearchSerializer(community)
         else:
-            serializers = CommunitySearchSerializer(community, is_joined=False)
-            return Response(serializers.data, status=status.HTTP_200_OK)
+            serializer = CommunitySearchSerializer(community)
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     return Response('error: 해당 코드의 커뮤니티가 존재하지 않습니다.', status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -87,7 +88,6 @@ def search_for_name(request):
 @api_view(['GET'])
 def uniquecheck_member_nickname(request,community_pk):
     nickname = request.data.get('nickname')
-    print(nickname)
     members = get_list_or_404(Member, community_id=community_pk)
     for member in members:
         if member.nickname == nickname:

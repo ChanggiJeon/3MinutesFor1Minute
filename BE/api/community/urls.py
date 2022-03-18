@@ -7,7 +7,7 @@ urlpatterns = [
     path('create/', views.community_create),
     path('uniquecheck/community_name', views.uniquecheck_commnity_name),
     # 가입 신청
-    path('join/<int:community_pk>',views.community_join),
+    path('apply/<int:community_pk>',views.community_apply),
     path('search/code/', views.search_for_code),
     path('search/name/', views.search_for_name),
     path('uniquecheck/<int:community_pk>/nickname', views.uniquecheck_member_nickname),
