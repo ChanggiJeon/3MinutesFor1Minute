@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { FaUser, FaUserTag } from 'react-icons/fa';
 import { FiMail } from 'react-icons/fi';
 import { IoWarningOutline } from 'react-icons/io5';
+import Swal from 'sweetalert2';
 import EmptyMsg from '../auth/EmptyMsg';
 import ErrorMsg from '../auth/ErrorMsg';
 import Form from '../auth/Form';
@@ -26,6 +27,10 @@ function FindPw() {
 		try {
 			// api
 			// alert
+			Swal.fire({
+				icon: 'success',
+				text: '임시 비밀번호를 이메일로 전송하였습니다.',
+			});
 		} catch (e) {
 			// e.response.status
 			setError('result', { message: '존재하지 않는 회원 정보 입니다.' });
