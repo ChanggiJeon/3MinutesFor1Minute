@@ -14,7 +14,7 @@ class Community(models.Model):
 class Member(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=16)
+    nickname = models.CharField(max_length=16, blank=True)
     bio = models.CharField(max_length=100, blank=True)
     authority = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
