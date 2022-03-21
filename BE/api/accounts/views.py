@@ -27,7 +27,10 @@ def signup(request):
         return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
     serializers = UserSerializer(data=request.data)
     if serializers.is_valid(raise_exception=True):
-        user = serializers.save(nickname=username)
+        if not request.data.get('nickname'):
+            user = serializers.save(nickname=username)
+        else:
+            user = serializers.save()
         user.set_password(request.data.get('password'))
         user.save()
         return Response(serializers.data, status=status.HTTP_201_CREATED)

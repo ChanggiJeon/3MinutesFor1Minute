@@ -9,10 +9,10 @@ from django.contrib.auth import get_user_model
 
 from .models import Community, Member
 
-from .serializers import CommunitySerializer, MemberSerializer, CommunitySearchSerializer
-from community import serializers
+from .serializers import CommunitySerializer, MemberSerializer, CommunitySearchSerializer, CommunityDetailSerializer
+from accounts.serializers import UserSerializer
 
-# 1. 커뮤니티 생성 
+# 1. 커뮤니티 생성
 ## 난수 생성 함수
 def make_random_code():
     code_list = string.ascii_uppercase + '0123456789'
@@ -53,9 +53,18 @@ def uniquecheck_commnity_name(request):
 
 # 2. 커뮤니티 가입 신청
 @api_view(['POST'])
-def community_join(request, community_pk):
-    
-    pass
+def community_apply(request, community_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    serializer = MemberSerializer(data=request.data)
+    if community.member_set.filter(user_id=request.user.pk).exists():
+        return Response('error: 이미 가입된 커뮤니티 입니다.', status=status.HTTP_400_BAD_REQUEST)
+    if serializer.is_valid(raise_exception=True):
+        if request.data.get('nickname'):
+            serializer.save(user=request.user, community=community)
+        else:
+            serializer.save(user=request.user, community=community, nickname=request.user.nickname)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response('error: 미입력된 정보가 있습니다.', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -63,13 +72,10 @@ def search_for_code(request):
     code = request.data.get('private_code')
     code = code.upper()
     community = get_object_or_404(Community, private_code=code)
-    member = community.member_set.all()
     if community:
-        if member.filter(user_id=request.user.pk).exists():
-            serializers = CommunitySearchSerializer(community, is_joined=True)
-        else:
-            serializers = CommunitySearchSerializer(community, is_joined=False)
-            return Response(serializers.data, status=status.HTTP_200_OK)
+        # serializer = CommunitySearchSerializer(community, context=request.user)
+        serializer = CommunitySearchSerializer(community)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     return Response('error: 해당 코드의 커뮤니티가 존재하지 않습니다.', status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -87,7 +93,8 @@ def search_for_name(request):
 @api_view(['GET'])
 def uniquecheck_member_nickname(request,community_pk):
     nickname = request.data.get('nickname')
-    print(nickname)
+    if not 2 <= len(nickname) <= 16:
+        return Response('error: 닉네임은 2자 이상 16자 이하로 입력해주세요.', status=status.HTTP_400_BAD_REQUEST)
     members = get_list_or_404(Member, community_id=community_pk)
     for member in members:
         if member.nickname == nickname:
@@ -96,5 +103,100 @@ def uniquecheck_member_nickname(request,community_pk):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def community_detail_update_or_delete(request):
-    pass
+def community_detail_update_or_delete(request, community_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    if request.method == 'GET':
+        serializer = CommunityDetailSerializer(community)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        serializer = CommunitySerializer(instance=community, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        community.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def community_get_members(request, community_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    members = community.member_set.all()
+    serializer = MemberSerializer(members, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+def community_delete_member(request, community_pk, member_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    member = community.member_set.get(pk=member_pk)
+    member.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# 구성원 초대
+@api_view(['GET'])
+def find_user(request):
+    username = request.data.get('username')
+    nickname = request.data.get('nickname')
+    User = get_user_model()
+    if username:
+        users = User.objects.filter(username__icontains=username)
+    elif nickname:
+        users = User.objects.filter(nickname__icontains=nickname)
+    else:
+        return Response('error: 아이디 또는 닉네임을 검색해주세요.', status=status.HTTP_400_BAD_REQUEST)
+    if not users:
+        return Response('error: 해당 유저가 없습니다.', status=status.HTTP_400_BAD_REQUEST) 
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def invite_user(request, community_pk, user_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    if community.member_set.filter(pk=user_pk):
+        return Response('error: 이미 가입한 사용자입니다.', status=status.HTTP_400_BAD_REQUEST)
+    User = get_user_model()
+    user = get_object_or_404(User, pk=user_pk)
+    serializer = MemberSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=user, community=community, nickname=user.nickname)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# 멤버 수정
+@api_view(['POST'])
+def member_nickname_update(request,community_pk, member_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    member = community.member_set.get(id=member_pk)
+    if member.user != request.user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    serializer = MemberSerializer(instance=member, data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def member_bio_update(request,community_pk, member_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    member = community.member_set.get(id=member_pk)
+    if member.user != request.user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    serializer = MemberSerializer(instance=member, data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+def member_withdraw(request,community_pk,member_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    member = community.member_set.get(id=member_pk)
+    if member.user != request.user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    if member.user != request.user:
+        Response(status=status.HTTP_401_UNAUTHORIZED)
+    member.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
