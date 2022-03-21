@@ -17,6 +17,13 @@ const Label = styled.label`
 			outline: none;
 		}
 	}
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus,
+	input:-webkit-autofill:active {
+		transition: background-color 9999s;
+		-webkit-text-fill-color: inherit;
+	}
 `;
 
 export default Label;
