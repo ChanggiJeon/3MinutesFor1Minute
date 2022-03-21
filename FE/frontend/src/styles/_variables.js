@@ -7,6 +7,7 @@ const _ = {
 	blueGreen: '#557571',
 	pink: '#FCD8D4',
 	darkRed: '#AC0D0D',
+	green: '#32D145',
 };
 
 export default _;
