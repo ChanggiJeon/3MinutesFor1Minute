@@ -21,18 +21,20 @@ export const apiRefreshToken = refresh =>
 	});
 
 export const apiSignup = ({
-	username,
+	id,
 	password,
 	passwordConfirmation,
+	name,
 	email,
 }) =>
 	axios({
 		method: 'post',
 		url: `${BASE_URL}/accounts/signup/`,
 		data: {
-			username,
+			username: id,
 			password,
-			password_confirmation: passwordConfirmation,
+			password_confirm: passwordConfirmation,
+			name,
 			email,
 		},
 	});

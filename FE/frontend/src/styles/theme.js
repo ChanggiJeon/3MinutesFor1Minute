@@ -9,6 +9,7 @@ const theme = {
 		subFontColor: _.darkWhite,
 		accentColor: _.oceanBlue,
 		warnColor: _.darkRed,
+		confirmColor: _.green,
 	},
 };
 
