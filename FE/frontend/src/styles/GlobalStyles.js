@@ -17,6 +17,8 @@ const GlobalStyles = createGlobalStyle`
 		font-family: 'HoengseongHanu';
 	}
 
+
+
 	@font-face {
 		font-family: 'EliceDigitalBaeum-Bd';
 		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_elice@1.0/EliceDigitalBaeum-Bd.woff2') format('woff2');
