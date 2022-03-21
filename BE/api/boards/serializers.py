@@ -7,14 +7,15 @@ class BoardCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardComment
         fields = '__all__'
-        read_only_fields = ('board', )
+        read_only_fields = ('member', 'board', )
 
 
 class BoardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ('id', 'title', 'is_notice', )
+        fields = ('id', 'member', 'title', 'is_notice', )
+        read_only_fields = ('member', )
 
 
 class BoardSerializer(serializers.ModelSerializer):
@@ -28,3 +29,4 @@ class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = '__all__'
+        read_only_fields = ('member', 'community', )
