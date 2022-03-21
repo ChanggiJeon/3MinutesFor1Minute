@@ -1,6 +1,4 @@
-## Data 학습 삽질과정.
-
-
+## STT Model 학습.
 
 #### 1. 로컬 -> 학습 서버로 데이터 전송
 
@@ -72,9 +70,60 @@
       공개로 설정했는데도 자꾸 설정 안했다고 거절뜸!
       -> 안되서 그냥 잤는데 다음날 일어나니 다운이 된다.
       -> 왜 그런지 정확히는 알 수 없지만, 공개하고 몇 시간이 지나야 가능한듯 싶음.
+      -> 깃 허브 답변.
+      
+      Access denied with the following error:
+      
+       	Too many users have viewed or downloaded this file recently. Please
+      	try accessing the file again later. If the file you are trying to
+      	access is particularly large or is shared with many people, it may
+      	take up to 24 hours to be able to view or download the file. If you
+      	still can't access a file after 24 hours, contact your domain
+      	administrator. 
+      라고 되어있지만 깃허브를 열심히 찾아본 결과 자기들도 왜 뜨는지 해결방안이 뭔지 모름
+      용량을 줄여서 된 사람도 있고. 기다렸더니 된 사람도 있고. 다양함.
+      ```
+
+   5. pip install gshell 사용!!(해결!!!!)
+
+      ```
+      pip install gshell
+      gshell init
+      terminal 창에 뜨는 연결 링크로 사용할 google 계정을 연결하면 된다.
+      
+      >> 학습데이터 옮기는데만 3일을 내리 삽질하니 기쁘다기보다 현타가 심하게 왔다.
+      >> 생각해보면 모델을 학습 시킨 뒤에 다시 꺼내와야하므로 계정 연결하는 법을 찾는게 훨씬 빨랐을 것이다.
+      >> ...하...
+      ```
+
+   6. mobaxterm
+
+      ```
+      컨설턴트님, 다른 조원분들께 상담해본 결과 mobaxterm을 사용해도 좋다고 한다!
+      https://mobaxterm.mobatek.net/ 를 사용하자.
+      ```
+
+4. GPU 서버
+
+   1. 용량부족
+
+      ```
+      1. 용량확인 df -h(보기 좋게 표시)
+      2. 학습용 데이터는 home/team1 폴더에 저장하지 말고, data/team1/에 저장해서 사용하자!
+         학습데이터 경로는 pwd명령어로 경로 확인 후, 절대경로로 집어 넣으면 OK
+      ```
+
+   2. 학습진행
+
+      ```
+      1. nohup 실행명령어 &(백그라운드로 실행)
+      2. tail -f nohup.out << 실행중인 프로세서 추적.
       ```
 
       
+
+
+
 
 #### 2. 전처리 및 데이터 학습
 
@@ -84,19 +133,69 @@
     kospeech -> models -> __init__.py 32 line에 BeamDecoderRNN를 지워주자.
     ```
 
- 2.  전처리
+ 2. 전처리
 
     ```
     1. AI hub에서 데이터를 다운 받으면 복잡하게 나눠져 있는데, 학습에 필요한 KsponSpeech_01~05까지의 파일을 data폴더에 train_data 폴더를 만들어 안에다 압축을 풀고, 폴더 depth를 조정하여 data -> KsponSpeech_01~05 -> pem, txt파일이 올 수 있도록 만든다.
     
     2. 필요한 라이브러리들을 모두 설치 한 뒤 dataset -> kspon -> preprocess.sh에 들어가서 DATASET_PATH를 "(절대경로를 추천한다).../data/train_data"로 맞추고
     VOCAB_DEST는 "(절대경로).../kospeech/data"로 맞춘다.
-    ```
-
-	3.  모델 학습 후 평가
-
-    ```
-    bin/inference.py에서 50~52줄 사이의 require을 required로 바꾼다.
-    ```
-
     
+    3. sh preprocess.sh 로 실행.
+    
+    4. dataset폴더에 만들어진 transcripts.txt를 data로 옮기자.
+    ```
+    
+    
+
+
+#### 3. 모델 학습 후 평가
+
+```
+1. bin/inference.py에서 50~52줄 사이의 require을 required로 바꾼다.
+```
+
+
+
+#### 4. 중간 모델 이어서 학습
+
+```
+1. 작성된 코드는 output에 있는 최신폴더 > 그 안에 있는 최신폴더를 상대경로로 불러온다.
+2. FileNotFound에러가 발생시에 절대경로로 잡아줘야한다.
+3. kospeech/trainer/supervised_train.py에 130번 줄 latest_checkpoint_path="절대경로"로 수정해주자.
+```
+
+
+
+
+
+
+
+## Summarization
+
+#### 1. 알라꿍달라꿍
+
+```
+2021 훈민정음 한국어 음성•자연어 인공지능 경진대회 대화요약 부분에서 1등한 오픈소스
+>> 정확도가 그렇게 높지는 않고, 5000자(?) 이상 넣으면 에러가 떠서 가볍게 포기
+```
+
+
+
+#### 2. SKT-KoBART
+
+```
+SKT-KoBART Summarization >> 2022.03.21일 기준 Summerization 업데이트 예정임.
+```
+
+
+
+#### 3. KoBART-summairzation
+
+```
+https://github.com/seujung/KoBART-summarization
+정확도가 알라꿍달라꿍보다 높음.(체감상)
+KoBART pre-trainning모델을 사용하고, Dacon 한국어 문서 생성요약 AI 경진대회의 학습 데이터로
+fine-tuning한 모델을 사용함.(학습 예정)
+```
+
