@@ -24,39 +24,40 @@
 
 
 - 게시글 (Board)
-  - 글 목록 출력 [GET] : boards/
-  - 글 작성 [POST] : boards/create/
+  - 글 목록 출력 [GET] : <int:community pk>/boards/
+  - 글 작성 [POST] : <int:community pk>/boards/create/
     - title
     - content
     - is_notice (기본 False)
     - upload (필수 X, 테스트 X)
-  - 글 상세 정보 (댓글까지 출력) [GET] : boards/<int:board pk>/
-  - 글 삭제 [DELETE] : boards/<int:board pk>/delete/
-  - 글 수정 (수정할 부분만) [PUT] : boards/<int:board pk>/update/
+  - 글 상세 정보 (댓글까지 출력) [GET] : <int:community pk>/boards/<int:board pk>/
+  - 글 삭제 [DELETE] : <int:community pk>/boards/<int:board pk>/delete/
+  - 글 수정 (수정할 부분만) [PUT] : <int:community pk>/boards/<int:board pk>/update/
     - title
     - content
     - is_notice (기본 False)
     - upload (필수 X, 테스트 X)
-  - 댓글 작성 [POST] : boards/<int:board pk>/comment/create/
+  - 댓글 작성 [POST] : <int:community pk>/boards/<int:board pk>/comment/create/
     - content
-  - 댓글 삭제 [DELETE] : boards/<int:board pk>/comment/<int:comment pk>/delete/
-  - 댓글 수정 [PUT] : boards/<int:board pk>/comment/<int:comment pk>/update/
+  - 댓글 삭제 [DELETE] : <int:community pk>/boards/<int:board pk>/comment/<int:comment pk>/delete/
+  - 댓글 수정 [PUT] : <int:community pk>/boards/<int:board pk>/comment/<int:comment pk>/update/
     - content
 
 
 
 - 회의록 (Minute)
-  - 회의록 목록 출력 [GET] : minutes/
-  - 회의록 작성 [POST] : minutes/create/
+  - 회의록 목록 출력 [GET] : <int:community pk>/minutes/
+  - 회의록 작성 (멤버 목록 호출) [GET] : <int:community pk>/minutes/create/
+  - 회의록 작성 (진짜 생성) [POST] : <int:community pk>/minutes/create/
     - title
     - content
     - conclusion
     - is_closed (기본 False)
     - deadline
     - reference_file (필수 X, 테스트 X)
-  - 회의록 상세 정보 (스피치까지 출력) [GET] : minutes/<int:minute pk>/
-  - 회의록 삭제 [DELETE] : minutes/<int:minute pk>/delete/
-  - 회의록 수정 (수정할 부분만) [PUT] : minutes/<int:minute pk>/update/
+  - 회의록 상세 정보 (스피치까지 출력) [GET] : <int:community pk>/minutes/<int:minute pk>/
+  - 회의록 삭제 [DELETE] : <int:community pk>/minutes/<int:minute pk>/delete/
+  - 회의록 수정 (수정할 부분만) [PUT] : <int:community pk>/minutes/<int:minute pk>/update/
     - title
     - content
     - conclusion
@@ -67,24 +68,24 @@
 
 
 - 스피치 (Speech)
-  - 스피치 작성 [POST] : minutes/<int:minute pk>/create/
+  - 스피치 작성 [POST] : <int:community pk>/minutes/<int:minute pk>/create/
     - title
     - content
     - summary
     - cloud_keyword
     - record_file (테스트 X)
     - reference_file (필수 X, 테스트 X)
-  - 스피치 상세 정보 (댓글까지 출력) [GET] : minutes/<int:minute pk>/speech/<int:speech pk>/
-  - 스피치 삭제 [DELETE] : minutes/<int:minute pk>/speech/<int:speech pk>/delete/
-  - 스피치 수정 (수정할 부분만) [PUT] : minutes/<int:minute pk>/speech/<int:speech pk>/update/
+  - 스피치 상세 정보 (댓글까지 출력) [GET] : <int:community pk>/minutes/<int:minute pk>/speech/<int:speech pk>/
+  - 스피치 삭제 [DELETE] : <int:community pk>/minutes/<int:minute pk>/speech/<int:speech pk>/delete/
+  - 스피치 수정 (수정할 부분만) [PUT] : <int:community pk>/minutes/<int:minute pk>/speech/<int:speech pk>/update/
     - title
     - content
     - summary
     - cloud_keyword
     - reference_file (필수 X, 테스트 X)
-  - 댓글 작성 [POST] : minutes/<int:minute pk>/speech/<int:speech pk>/comment/create/
+  - 댓글 작성 [POST] : <int:community pk>/minutes/<int:minute pk>/speech/<int:speech pk>/comment/create/
     - content
-  - 댓글 수정 [PUT] : minutes/<int:minute pk>/comment/speech/<int:speech pk>/<int:comment pk>/update/
+  - 댓글 수정 [PUT] : <int:community pk>/minutes/<int:minute pk>/comment/speech/<int:speech pk>/<int:comment pk>/update/
     - content
-  - 댓글 삭제 [DELETE] : minutes/<int:minute pk>/comment/speech/<int:speech pk>/<int:comment pk>/delete/
+  - 댓글 삭제 [DELETE] : <int:community pk>/minutes/<int:minute pk>/comment/speech/<int:speech pk>/<int:comment pk>/delete/
 
