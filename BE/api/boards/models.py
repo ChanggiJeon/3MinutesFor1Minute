@@ -1,8 +1,10 @@
 from django.db import models
-from community.models import Member
+from community.models import Community, Member
 
 
 class Board(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.PROTECT)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=500)
     is_notice = models.BooleanField(default=False)
@@ -15,6 +17,7 @@ class Board(models.Model):
 
 
 class BoardComment(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.PROTECT)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     content = models.TextField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
