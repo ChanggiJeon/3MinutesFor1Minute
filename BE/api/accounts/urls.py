@@ -16,4 +16,6 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('delete/', views.delete),
+    path('uniquecheck/username/', views.unique_check_username),
+    path('uniquecheck/email/', views.unique_check_email),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -27,10 +27,7 @@ def signup(request):
         return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
     serializers = UserSerializer(data=request.data)
     if serializers.is_valid(raise_exception=True):
-        if not request.data.get('nickname'):
-            user = serializers.save(nickname=username)
-        else:
-            user = serializers.save()
+        user = serializers.save()
         user.set_password(request.data.get('password'))
         user.save()
         return Response(serializers.data, status=status.HTTP_201_CREATED)
@@ -42,3 +39,22 @@ def delete(request):
     user = get_object_or_404(User, username=username)
     user.delete()
     return Response({'delete: 탈퇴 완료'}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def unique_check_username(request):
+    User = get_user_model()
+    username = request.data.get('username')
+    if User.objects.filter(username=username):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def unique_check_email(request):
+    User = get_user_model()
+    email = request.data.get('email')
+    if User.objects.filter(email=email):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_200_OK)
