@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaLock, FaUser, FaUserTag } from 'react-icons/fa';
-import { FiCheck, FiMail } from 'react-icons/fi';
+import { FiMail } from 'react-icons/fi';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { apiSignup } from '../api/accounts';
-import ConfirmMsg from '../components/auth/ConfirmMsg';
 import Divider from '../components/auth/Divider';
 import EmptyMsg from '../components/auth/EmptyMsg';
 import ErrorMsg from '../components/auth/ErrorMsg';
@@ -15,27 +14,8 @@ import FormContainer from '../components/auth/FormContainer';
 import Label from '../components/auth/Label';
 import SubmitButton from '../components/auth/SubmitButton';
 import Title from '../components/auth/Title';
+import ErrorAndCheck from '../components/auth/ErrorAndCheck';
 import routes from '../routes';
-
-function ErrorAndCheck(message, check) {
-	if (message) {
-		return (
-			<ErrorMsg>
-				<IoWarningOutline />
-				{message}
-			</ErrorMsg>
-		);
-	}
-	if (check) {
-		return (
-			<ConfirmMsg>
-				<FiCheck />
-				확인되었습니다.
-			</ConfirmMsg>
-		);
-	}
-	return <EmptyMsg />;
-}
 
 function Signup() {
 	const {
