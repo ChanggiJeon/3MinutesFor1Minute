@@ -38,7 +38,7 @@ def community_create(request):
         member.community = community
         member.authority = True
         member.is_active = True
-        member.nickname = user.nickname
+        member.nickname = user.name
         member.save()
         return Response(community_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -62,7 +62,7 @@ def community_apply(request, community_pk):
         if request.data.get('nickname'):
             serializer.save(user=request.user, community=community)
         else:
-            serializer.save(user=request.user, community=community, nickname=request.user.nickname)
+            serializer.save(user=request.user, community=community, nickname=request.user.name)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response('error: 미입력된 정보가 있습니다.', status=status.HTTP_400_BAD_REQUEST)
 
@@ -161,7 +161,7 @@ def invite_user(request, community_pk, user_pk):
     user = get_object_or_404(User, pk=user_pk)
     serializer = MemberSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        serializer.save(user=user, community=community, nickname=user.nickname)
+        serializer.save(user=user, community=community, nickname=user.name)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
