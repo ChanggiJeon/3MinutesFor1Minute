@@ -3,80 +3,120 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .models import Minute, Participant, Speech, SpeechComment
+from community.models import Community, Member
 from .serializers import MinuteListSerializer, MinuteSerializer, SpeechSerializer, SpeechCommentSerializer
+from community.serializers import MemberSerializer
+
+
+@api_view(['GET'])
+def minute_list(request, community_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    minutes = get_list_or_404(Minute, community=community)
+    serializer = MinuteListSerializer(minutes, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET', 'POST'])
-def minute_list(request):
+def minute_create(request, community_pk):
     if request.method == 'GET':
-        minutes = get_list_or_404(Minute)
-        serializer = MinuteListSerializer(minutes, many=True)
+        community = get_object_or_404(Community, pk=community_pk)
+        members = community.member_set.all()
+        serializer = MemberSerializer(members, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = MinuteSerializer(data=request.data)
+        serializer = MinuteSerializer(data=request.data.minute)
+        me = get_object_or_404(Member, user=request.user)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
-            participant = Participant(minute=minute, is_assignee=True)
-            participant.save()
+
+            for nickname in request.data.nicknames:
+                if me.nickname == nickname:
+                    participant = Participant(minute=minute, is_assignee=True)
+
+                else:
+                    participant = Participant(minute=minute)
+                participant.save()
             serializer = MinuteSerializer(minute)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET', 'DELETE', 'PUT'])
-def minute_detail(request, minute_pk):
+def minute_detail(request, community_pk, minute_pk):
     minute = get_object_or_404(Minute, pk=minute_pk)
+    me = get_object_or_404(Member, user=request.user)
+    assignee = minute.participant_set.filter(is_assignee=True)
 
     if request.method == 'GET':
         serializer = MinuteSerializer(minute)
         return Response(serializer.data)
 
     elif request.method == 'DELETE':
-        minute.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if me == assignee.member or me.is_admin:
+            minute.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     elif request.method == 'PUT':
-        serializer = MinuteSerializer(minute, data=request.data)
+        if minute.is_closed:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+        else:
+            if me == assignee.member or me.is_admin:
+                serializer = MinuteSerializer(minute, data=request.data)
+
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+                    return Response(serializer.data)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET', 'POST', 'DELETE', 'PUT'])
-def speech(request, minute_pk, speech_pk=None):
+def speech(request, community_pk, minute_pk, speech_pk=None):
     if request.method == 'GET':
         speech = get_object_or_404(Speech, pk=speech_pk)
         serializer = SpeechSerializer(speech)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    else:
         minute = get_object_or_404(Minute, pk=minute_pk)
-        participant = get_object_or_404(Participant, pk=request.user.id)
-        serializer = SpeechCommentSerializer(data=request.data)
+        me = get_object_or_404(Member, user=request.user)
+        assignee = minute.participant_set.filter(is_assignee=True)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(minute=minute, participant=participant)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if minute.is_closed:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
-        speech = get_object_or_404(Speech, pk=speech_pk)
-        speech.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            if request.method == 'POST':
+                participant = get_object_or_404(Participant, pk=request.user.id)
+                serializer = SpeechCommentSerializer(data=request.data)
 
-    elif request.method == 'PUT':
-        speech = get_object_or_404(Speech, pk=speech_pk)
-        serializer = SpeechCommentSerializer(speech, data=request.data)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save(minute=minute, participant=participant)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+            elif request.method == 'DELETE':
+                if me == assignee.member or me.is_admin:
+                    speech = get_object_or_404(Speech, pk=speech_pk)
+                    speech.delete()
+                    return Response(status=status.HTTP_204_NO_CONTENT)
+
+            elif request.method == 'PUT':
+                if me == assignee.member or me.is_admin:
+                    speech = get_object_or_404(Speech, pk=speech_pk)
+                    serializer = SpeechCommentSerializer(speech, data=request.data)
+
+                    if serializer.is_valid(raise_exception=True):
+                        serializer.save()
+                        return Response(serializer.data)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST', 'DELETE', 'PUT'])
-def speech_comment(request, minute_pk, speech_pk, comment_pk=None):
+def speech_comment(request, community_pk, minute_pk, speech_pk, comment_pk=None):
+    me = get_object_or_404(Member, user=request.user)
+
     if request.method == 'POST':
         speech = get_object_or_404(Speech, pk=speech_pk)
         serializer = SpeechCommentSerializer(data=request.data)
@@ -87,13 +127,18 @@ def speech_comment(request, minute_pk, speech_pk, comment_pk=None):
 
     elif request.method == 'DELETE':
         comment = get_object_or_404(SpeechComment, pk=comment_pk)
-        comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        if me == comment.member or me.is_admin:
+            comment.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     elif request.method == 'PUT':
         comment = get_object_or_404(SpeechComment, pk=comment_pk)
-        serializer = SpeechCommentSerializer(comment, data=request.data)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+        if me == comment.member or me.is_admin:
+            serializer = SpeechCommentSerializer(comment, data=request.data)
+
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
