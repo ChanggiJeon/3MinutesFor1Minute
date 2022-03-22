@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
 -- 테이블 데이터 myproject.accounts_user:~0 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `accounts_user` DISABLE KEYS */;
 INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `profile_image`, `creatd_at`, `name`) VALUES
-	(2, 'pbkdf2_sha256$320000$SKI0Cygul5x6iv0kSJuOWl$9+FppDPTmVhidh2cjQAzuZWuV53aRYygteMRnz0pIVo=', NULL, 0, 'ssafy', '', '', 'wotjd4725@naver.com', 0, 1, '2022-03-22 17:18:55.113743', '', '2022-03-22 17:18:55.113743', '윤재성');
+	(2, 'pbkdf2_sha256$320000$SKI0Cygul5x6iv0kSJuOWl$9+FppDPTmVhidh2cjQAzuZWuV53aRYygteMRnz0pIVo=', NULL, 1, 'ssafy', '', '', 'wotjd4725@naver.com', 1, 1, '2022-03-22 17:18:55.113743', '', '2022-03-22 17:18:55.113743', '윤재성');
 /*!40000 ALTER TABLE `accounts_user` ENABLE KEYS */;
 
 -- 테이블 myproject.accounts_user_groups 구조 내보내기
