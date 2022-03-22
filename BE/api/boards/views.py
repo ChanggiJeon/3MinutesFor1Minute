@@ -46,7 +46,6 @@ def board_detail(request, community_pk, board_pk):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -77,5 +76,4 @@ def board_comment(request, community_pk, board_pk, comment_pk=None):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-
     return Response(status=status.HTTP_401_UNAUTHORIZED)
