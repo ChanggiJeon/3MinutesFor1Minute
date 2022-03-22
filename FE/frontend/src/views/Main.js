@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import Navbar from '../components/nav/Navbar'
 import MainPoster from '../components/mainpage/MainPoster';
 import MainTextBG from '../components/mainpage/MainTextBG';
 import TextTitle from '../components/common/TextTitle';
@@ -18,8 +17,6 @@ const Msg3 = "Work Less, Better Work"
 function Main () {
   return(
     <>
-      {/* 네비게이션 바 */}
-      <Navbar />
       {/* 메인 포스터 + 소개글 */}
       <MainPoster>
         <MainTextBG>
