@@ -1,6 +1,6 @@
-# **api url**
+# api url
 
-### **공통 (중복되는 부분) : http://127.0.0.1:8000/api/**
+### 공통 (중복되는 부분) : http://127.0.0.1:8000/api/
 
 - 계정 (Account)
   - 회원가입 [POST] : accounts/signup/
