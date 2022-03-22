@@ -15,7 +15,7 @@ class BoardListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = ('id', 'member', 'title', 'is_notice', )
-        read_only_fields = ('member', )
+        read_only_fields = ('id', 'member', )
 
 
 class BoardSerializer(serializers.ModelSerializer):

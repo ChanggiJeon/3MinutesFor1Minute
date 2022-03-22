@@ -1,8 +1,9 @@
 from django.db import models
-from community.models import Member
+from community.models import Community, Member
 
 
 class Minute(models.Model):
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=300)
     conclusion = models.TextField(max_length=300)
@@ -17,6 +18,7 @@ class Minute(models.Model):
 
 
 class Participant(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.PROTECT)
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
     is_assignee = models.BooleanField(default=False)
 
@@ -38,6 +40,7 @@ class Speech(models.Model):
 
 
 class SpeechComment(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.PROTECT)
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
     content = models.TextField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
