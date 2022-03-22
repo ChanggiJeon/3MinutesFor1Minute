@@ -1,8 +1,7 @@
-from tkinter import CASCADE
 from django.db import models
 from django.conf import settings
 
-# Create your models here.
+
 class Community(models.Model):
     name = models.CharField(max_length=16)
     intro = models.CharField(max_length=100, blank=True)
