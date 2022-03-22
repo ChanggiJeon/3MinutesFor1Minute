@@ -46,10 +46,10 @@ def community_create(request):
 def uniquecheck_commnity_name(request):
     community_name = request.data.get('name')
     if not 5 <= len(community_name) <= 16:
-        return Response('error: 커뮤니티 명은 5자 이상 16자 이하로 정해야합니다.', status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 커뮤니티 명은 5자 이상 16자 이하로 정해야합니다.'}, status=status.HTTP_400_BAD_REQUEST)
     if Community.objects.filter(name=community_name):
-        return Response('error: 커뮤니티 명이 중복됩니다.', status=status.HTTP_400_BAD_REQUEST)
-    return Response('complete: 사용 가능한 이름입니다.', status=status.HTTP_200_OK)
+        return Response({'error: 커뮤니티 명이 중복됩니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'complete: 사용 가능한 이름입니다.'}, status=status.HTTP_200_OK)
 
 # 2. 커뮤니티 가입 신청
 @api_view(['POST'])
@@ -57,14 +57,14 @@ def community_apply(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     serializer = MemberSerializer(data=request.data)
     if community.member_set.filter(user_id=request.user.pk).exists():
-        return Response('error: 이미 가입된 커뮤니티 입니다.', status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 이미 가입된 커뮤니티 입니다.'}, status=status.HTTP_400_BAD_REQUEST)
     if serializer.is_valid(raise_exception=True):
         if request.data.get('nickname'):
             serializer.save(user=request.user, community=community)
         else:
             serializer.save(user=request.user, community=community, nickname=request.user.name)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response('error: 미입력된 정보가 있습니다.', status=status.HTTP_400_BAD_REQUEST)
+    return Response({'error: 미입력된 정보가 있습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -76,7 +76,7 @@ def search_for_code(request):
         # serializer = CommunitySearchSerializer(community, context=request.user)
         serializer = CommunitySearchSerializer(community)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response('error: 해당 코드의 커뮤니티가 존재하지 않습니다.', status=status.HTTP_400_BAD_REQUEST)
+    return Response({'error: 해당 코드의 커뮤니티가 존재하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -94,12 +94,12 @@ def search_for_name(request):
 def uniquecheck_member_nickname(request,community_pk):
     nickname = request.data.get('nickname')
     if not 2 <= len(nickname) <= 16:
-        return Response('error: 닉네임은 2자 이상 16자 이하로 입력해주세요.', status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 닉네임은 2자 이상 16자 이하로 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     members = get_list_or_404(Member, community_id=community_pk)
     for member in members:
         if member.nickname == nickname:
-            return Response('error: 중복되는 닉네임이 있습니다.', status=status.HTTP_400_BAD_REQUEST)
-    return Response('complete: 사용 가능한 닉네임입니다.', status=status.HTTP_200_OK)
+            return Response({'error: 중복되는 닉네임이 있습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'complete: 사용 가능한 닉네임입니다.'}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -145,9 +145,9 @@ def find_user(request):
     elif nickname:
         users = User.objects.filter(nickname__icontains=nickname)
     else:
-        return Response('error: 아이디 또는 닉네임을 검색해주세요.', status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 아이디 또는 닉네임을 검색해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     if not users:
-        return Response('error: 해당 유저가 없습니다.', status=status.HTTP_400_BAD_REQUEST) 
+        return Response({'error: 해당 유저가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST) 
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -156,7 +156,7 @@ def find_user(request):
 def invite_user(request, community_pk, user_pk):
     community = get_object_or_404(Community, pk=community_pk)
     if community.member_set.filter(pk=user_pk):
-        return Response('error: 이미 가입한 사용자입니다.', status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 이미 가입한 사용자입니다.'}, status=status.HTTP_400_BAD_REQUEST)
     User = get_user_model()
     user = get_object_or_404(User, pk=user_pk)
     serializer = MemberSerializer(data=request.data)
