@@ -7,6 +7,7 @@ import Login from './views/Login';
 import Index from './views/Index';
 import Signup from './views/Signup';
 import Community from './views/community/Community';
+import ComIndex from './views/community/Index';
 
 function App() {
 	return (
@@ -18,7 +19,9 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
-						<Route path={routes.community} element={<Community />} />
+						<Route path={routes.community} element={<ComIndex />}>
+							<Route index element={<Community />} />
+						</Route>
 					</Route>
 				</Routes>
 			</Router>
