@@ -6,6 +6,7 @@ import Main from './views/Main';
 import Login from './views/Login';
 import Index from './views/Index';
 import Signup from './views/Signup';
+import Community from './views/community/Community';
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
+						<Route path={routes.community} element={<Community />} />
 					</Route>
 				</Routes>
 			</Router>
