@@ -1,4 +1,5 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -7,39 +8,57 @@ from community.models import Community, Member
 from .serializers import BoardListSerializer, BoardSerializer, BoardCommentSerializer
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def board_list(request, community_pk):
-    if request.method == 'GET':
-        community = get_object_or_404(Community, pk=community_pk)
-        boards = get_list_or_404(Board, community=community)
-        serializer = BoardListSerializer(boards, many=True)
-        return Response(serializer.data)
+    community = get_object_or_404(Community, pk=community_pk)
+    boards = get_list_or_404(Board, community=community)
+    serializer = BoardListSerializer(boards, many=True)
+    return Response(serializer.data)
 
-    elif request.method == 'POST':
+
+@swagger_auto_schema(method='POST', request_body=BoardSerializer)
+@api_view(['POST'])
+def board_create(request, community_pk):
+    if request.user.id:
+        community = get_object_or_404(Community, pk=community_pk)
+        me = get_object_or_404(Member, user=request.user, community=community)
         serializer = BoardSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            member = get_object_or_404(Member, user=request.user)
-            community = member.community
-            serializer.save(member=member, community=community)
+            serializer.save(member=me, community=community)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@api_view(['GET', 'DELETE', 'PUT'])
+@api_view(['GET'])
 def board_detail(request, community_pk, board_pk):
-    board = get_object_or_404(Board, pk=board_pk)
-    me = get_object_or_404(Member, user=request.user)
+    community = get_object_or_404(Community, pk=community_pk)
+    board = get_object_or_404(Board, pk=board_pk, community=community)
+    serializer = BoardSerializer(board)
+    return Response(serializer.data)
 
-    if request.method == 'GET':
-        serializer = BoardSerializer(board)
-        return Response(serializer.data)
 
-    elif request.method == 'DELETE':
+@api_view(['DELETE'])
+def board_delete(request, community_pk, board_pk):
+    if request.user.id:
+        community = get_object_or_404(Community, pk=community_pk)
+        board = get_object_or_404(Board, pk=board_pk, community=community)
+        me = get_object_or_404(Member, user=request.user, community=community)
+
         if me == board.member or me.is_admin:
             board.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    elif request.method == 'PUT':
+
+@swagger_auto_schema(method='PUT', request_body=BoardSerializer)
+@api_view(['PUT'])
+def board_update(request, community_pk, board_pk):
+    if request.user.id:
+        community = get_object_or_404(Community, pk=community_pk)
+        board = get_object_or_404(Board, pk=board_pk, community=community)
+        me = get_object_or_404(Member, user=request.user, community=community)
+
         if me == board.member or me.is_admin:
             serializer = BoardSerializer(board, data=request.data)
 
@@ -49,28 +68,46 @@ def board_detail(request, community_pk, board_pk):
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@api_view(['POST', 'DELETE', 'PUT'])
-def board_comment(request, community_pk, board_pk, comment_pk=None):
-    board = get_object_or_404(Board, pk=board_pk)
-    me = get_object_or_404(Member, user=request.user)
-
-    if request.method == 'POST':
-        board = get_object_or_404(Board, pk=board_pk)
+@swagger_auto_schema(method='POST', request_body=BoardCommentSerializer)
+@api_view(['POST'])
+def board_comment_create(request, community_pk, board_pk):
+    if request.user.id:
+        community = get_object_or_404(Community, pk=community_pk)
+        board = get_object_or_404(Board, pk=board_pk, community=community)
+        me = get_object_or_404(Member, user=request.user, community=community)
         serializer = BoardCommentSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save(member=me, board=board)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    elif request.method == 'DELETE':
+
+@api_view(['DELETE'])
+@swagger_auto_schema(request_body=BoardCommentSerializer)
+def board_comment_delete(request, community_pk, board_pk, comment_pk):
+    if request.user.id:
+        community = get_object_or_404(Community, pk=community_pk)
+        board = get_object_or_404(Board, pk=board_pk, community=community)
+        me = get_object_or_404(Member, user=request.user, community=community)
+
         if me == board.member or me.is_admin:
-            comment = get_object_or_404(BoardComment, pk=comment_pk)
+            comment = get_object_or_404(BoardComment, pk=comment_pk, board=board)
             comment.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    elif request.method == 'PUT':
+
+@swagger_auto_schema(method='PUT', request_body=BoardCommentSerializer)
+@api_view(['PUT'])
+def board_comment_update(request, community_pk, board_pk, comment_pk):
+    if request.user.id:
+        community = get_object_or_404(Community, pk=community_pk)
+        board = get_object_or_404(Board, pk=board_pk, community=community)
+        me = get_object_or_404(Member, user=request.user, community=community)
+
         if me == board.member or me.is_admin:
-            comment = get_object_or_404(BoardComment, pk=comment_pk)
+            comment = get_object_or_404(BoardComment, pk=comment_pk, board=board)
             serializer = BoardCommentSerializer(comment, data=request.data)
 
             if serializer.is_valid(raise_exception=True):
