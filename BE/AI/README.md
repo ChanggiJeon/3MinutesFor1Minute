@@ -161,6 +161,7 @@
 
 ```
 1. bin/inference.py에서 50~52줄 사이의 require을 required로 바꾼다.
+2. wav, pcm, flac파일은 load_audio에서 관리해 줌.
 ```
 
 
