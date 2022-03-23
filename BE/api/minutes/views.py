@@ -29,19 +29,20 @@ def minute_create(request, community_pk):
 
     elif request.method == 'POST':
         if request.user.id:
-            serializer = MinuteSerializer(data=request.data.minute)
+            serializer = MinuteSerializer(data=request.data)
 
             if serializer.is_valid(raise_exception=True):
-                serializer.save()
+                serializer.save(community=community)
                 minute = get_object_or_404(Minute, pk=serializer.data['id'])
                 me = get_object_or_404(Member, user=request.user, community=community)
 
-                for nickname in request.data.nicknames:
-                    if me.nickname == nickname:
-                        participant = Participant(minute=minute, is_assignee=True)
+                for participant_nickname in request.data['minute_participants']:
+                    if me.nickname == participant_nickname:
+                        participant = Participant(member=me, minute=minute, is_assignee=True)
 
                     else:
-                        participant = Participant(minute=minute)
+                        member = get_object_or_404(Member, nickname=participant_nickname, community=community)
+                        participant = Participant(member=member, minute=minute)
                     participant.save()
                 serializer = MinuteSerializer(minute)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -50,7 +51,8 @@ def minute_create(request, community_pk):
 
 @api_view(['GET'])
 def minute_detail(request, community_pk, minute_pk):
-    minute = get_object_or_404(Minute, pk=minute_pk)
+    community = get_object_or_404(Community, pk=community_pk)
+    minute = get_object_or_404(Minute, pk=minute_pk, community=community)
     serializer = MinuteSerializer(minute)
     return Response(serializer.data)
 
@@ -61,7 +63,7 @@ def minute_delete(request, community_pk, minute_pk):
         community = get_object_or_404(Community, pk=community_pk)
         minute = get_object_or_404(Minute, pk=minute_pk)
         me = get_object_or_404(Member, user=request.user, community=community)
-        assignee = minute.participant_set.filter(is_assignee=True)
+        assignee = minute.participant_set.get(is_assignee=True)
 
         if me == assignee.member or me.is_admin:
             minute.delete()
@@ -74,10 +76,10 @@ def minute_delete(request, community_pk, minute_pk):
 def minute_update(request, community_pk, minute_pk):
     if request.user.id:
         community = get_object_or_404(Community, pk=community_pk)
-        minute = get_object_or_404(Minute, pk=minute_pk)
+        minute = get_object_or_404(Minute, pk=minute_pk, community=community)
         me = get_object_or_404(Member, user=request.user, community=community)
-        assignee = minute.participant_set.filter(is_assignee=True)
-
+        assignee = minute.participant_set.get(is_assignee=True)
+        print(minute, assignee.member)
         if minute.is_closed:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -92,12 +94,12 @@ def minute_update(request, community_pk, minute_pk):
 
 @swagger_auto_schema(method='POST', request_body=SpeechSerializer)
 @api_view(['POST'])
-def speech_create(request, community_pk, minute_pk, speech_pk=None):
+def speech_create(request, community_pk, minute_pk):
     if request.user.id:
         community = get_object_or_404(Community, pk=community_pk)
-        minute = get_object_or_404(Minute, pk=minute_pk)
+        minute = get_object_or_404(Minute, pk=minute_pk, community=community)
         me = get_object_or_404(Member, user=request.user, community=community)
-        participant = me.participant_set.filter(minute=minute)
+        participant = me.participant_set.get(minute=minute)
         serializer = SpeechSerializer(data=request.data)
 
         if minute.is_closed:
@@ -111,19 +113,21 @@ def speech_create(request, community_pk, minute_pk, speech_pk=None):
 
 @api_view(['GET'])
 def speech_detail(request, community_pk, minute_pk, speech_pk):
-    speech = get_object_or_404(Speech, pk=speech_pk)
+    community = get_object_or_404(Community, pk=community_pk)
+    minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+    speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
     serializer = SpeechSerializer(speech)
     return Response(serializer.data)
 
 
 @api_view(['DELETE'])
-def speech_delete(request, community_pk, minute_pk, speech_pk=None):
+def speech_delete(request, community_pk, minute_pk, speech_pk):
     if request.user.id:
         community = get_object_or_404(Community, pk=community_pk)
-        minute = get_object_or_404(Minute, pk=minute_pk)
-        speech = get_object_or_404(Speech, pk=speech_pk)
+        minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+        speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
         me = get_object_or_404(Member, user=request.user, community=community)
-        participant = me.participant_set.filter(minute=minute)
+        participant = me.participant_set.get(minute=minute)
 
         if minute.is_closed:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -136,13 +140,13 @@ def speech_delete(request, community_pk, minute_pk, speech_pk=None):
 
 @swagger_auto_schema(method='PUT', request_body=SpeechSerializer)
 @api_view(['PUT'])
-def speech_update(request, community_pk, minute_pk, speech_pk=None):
+def speech_update(request, community_pk, minute_pk, speech_pk):
     if request.user.id:
         community = get_object_or_404(Community, pk=community_pk)
-        minute = get_object_or_404(Minute, pk=minute_pk)
-        speech = get_object_or_404(Speech, pk=speech_pk)
+        minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+        speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
         me = get_object_or_404(Member, user=request.user, community=community)
-        participant = me.participant_set.filter(minute=minute)
+        participant = me.participant_set.get(minute=minute)
 
         if minute.is_closed:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -158,10 +162,11 @@ def speech_update(request, community_pk, minute_pk, speech_pk=None):
 
 @swagger_auto_schema(method='POST', request_body=SpeechCommentSerializer)
 @api_view(['POST'])
-def speech_comment_create(request, community_pk, minute_pk, speech_pk, comment_pk=None):
+def speech_comment_create(request, community_pk, minute_pk, speech_pk):
     if request.user.id:
         community = get_object_or_404(Community, pk=community_pk)
-        speech = get_object_or_404(Speech, pk=speech_pk)
+        minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+        speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
         me = get_object_or_404(Member, user=request.user, community=community)
         serializer = SpeechCommentSerializer(data=request.data)
 
@@ -172,10 +177,12 @@ def speech_comment_create(request, community_pk, minute_pk, speech_pk, comment_p
 
 
 @api_view(['DELETE'])
-def speech_comment_delete(request, community_pk, minute_pk, speech_pk, comment_pk=None):
+def speech_comment_delete(request, community_pk, minute_pk, speech_pk, comment_pk):
     if request.user.id:
         community = get_object_or_404(Community, pk=community_pk)
-        comment = get_object_or_404(SpeechComment, pk=comment_pk)
+        minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+        speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
+        comment = get_object_or_404(SpeechComment, pk=comment_pk, speech=speech)
         me = get_object_or_404(Member, user=request.user, community=community)
 
         if me == comment.member:
@@ -186,10 +193,12 @@ def speech_comment_delete(request, community_pk, minute_pk, speech_pk, comment_p
 
 @swagger_auto_schema(method='PUT', request_body=SpeechCommentSerializer)
 @api_view(['PUT'])
-def speech_comment_update(request, community_pk, minute_pk, speech_pk, comment_pk=None):
+def speech_comment_update(request, community_pk, minute_pk, speech_pk, comment_pk):
     if request.user.id:
         community = get_object_or_404(Community, pk=community_pk)
-        comment = get_object_or_404(SpeechComment, pk=comment_pk)
+        minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+        speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
+        comment = get_object_or_404(SpeechComment, pk=comment_pk, speech=speech)
         me = get_object_or_404(Member, user=request.user, community=community)
 
         if me == comment.member:
