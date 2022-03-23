@@ -8,11 +8,12 @@ import logo from '../../assets/logo.png';
 import NavContainer from "./NavContainer";
 import NavItem from "./NavItem";
 import NavList from "./NavList";
+import Logo from "./Logo"
 import { logout } from "../../store/user"
 
 
 const Navigation = styled.nav`
-position: sticky;
+position: fixed;
 height: 80px;
 width: 100%;
 display: flex;
@@ -20,12 +21,6 @@ justify-content: space-between;
 align-items: center;
 box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
 `;
-
-const Logo = styled.img`
-width: 55px;
-height: 55px;
-margin: 15px;
-`
 
 const Logout = styled.div`
 cursor: pointer;
