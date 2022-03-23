@@ -1,3 +1,11 @@
+## 0. 사용법(설치)
+
+#### 1. conda env create -f conda_requirements.txt
+
+#### 2. conda activate ai
+
+
+
 ## 1. STT Model 학습.
 
 #### 1. 로컬 -> 학습 서버로 데이터 전송
