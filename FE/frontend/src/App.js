@@ -8,6 +8,9 @@ import Index from './views/Index';
 import Signup from './views/Signup';
 import Community from './views/community/Community';
 import ComIndex from './views/community/Index';
+import Posts from './views/community/Posts';
+import PostCreate from './views/community/PostCreate';
+import PostDetail from './views/community/PostDetail';
 
 function App() {
 	return (
@@ -21,6 +24,9 @@ function App() {
 						<Route path={routes.signup} element={<Signup />} />
 						<Route path={routes.community} element={<ComIndex />}>
 							<Route index element={<Community />} />
+              <Route path={routes.posts} element={<Posts />} />
+              <Route path={routes.postCreate} element={<PostCreate />} />
+              <Route path={routes.postDetail} element={<PostDetail />} />
 						</Route>
 					</Route>
 				</Routes>
