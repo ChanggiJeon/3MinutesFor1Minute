@@ -55,17 +55,16 @@
     - is_closed (기본 False)
     - deadline
     - reference_file (필수 X, 테스트 X)
-    - minute_participants : [nickname, ..., ] (회의에 참석할 멤버 닉네임들 리스트로)
+    - participants : [nickname, ..., ] (회의에 참석할 멤버 닉네임들 리스트로)
   - 회의록 상세 정보 (스피치까지 출력) [GET] : <int:community pk>/minutes/<int:minute pk>/
   - 회의록 삭제 [DELETE] : <int:community pk>/minutes/<int:minute pk>/delete/
-  - 회의록 수정 (수정할 부분만) [PUT] : <int:community pk>/minutes/<int:minute pk>/update/
+  - 회의록 수정 (수정할 부분만, 회의에 참석한 멤버 수정 불가) [PUT] : <int:community pk>/minutes/<int:minute pk>/update/
     - title
     - content
     - conclusion
     - is_closed (기본 False)
     - deadline
     - reference_file (필수 X, 테스트 X)
-    - minute_participants : [nickname, ..., ] (회의에 참석할 멤버 닉네임들 리스트로)
 
 
 
