@@ -1,12 +1,13 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     # 커뮤니티 생성
     path('create/', views.community_create),
     path('uniquecheck/community_name/', views.uniquecheck_commnity_name),
     # 가입 신청
-    path('apply/<int:community_pk>/',views.community_apply),
+    path('apply/<int:community_pk>/', views.community_apply),
     path('search/code/', views.search_for_code),
     path('search/name/', views.search_for_name),
     path('uniquecheck/<int:community_pk>/nickname/', views.uniquecheck_member_nickname),
@@ -22,5 +23,5 @@ urlpatterns = [
     # 멤버 수정
     path('<int:community_pk>/member/<int:member_pk>/nickname/', views.member_nickname_update),
     path('<int:community_pk>/member/<int:member_pk>/bio/', views.member_bio_update),
-    path('<int:community_pk>/member/<int:member_pk>/withdraw/', views.member_withdraw)
+    path('<int:community_pk>/member/<int:member_pk>/withdraw/', views.member_withdraw),
 ]

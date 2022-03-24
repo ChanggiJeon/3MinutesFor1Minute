@@ -1,5 +1,5 @@
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -27,7 +27,6 @@ def signup(request):
     if len(password) < 8 or len(password) > 20 or not re.findall('[a-z]', password) or not re.findall('[A-Z]', password) \
         or not re.findall('[0-9]+',password) or not re.findall('[`~!@#$%^&*(),<.>/?]+',password):
         return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
-
     serializers = UserSerializer(data=request.data)
 
     if serializers.is_valid(raise_exception=True):
