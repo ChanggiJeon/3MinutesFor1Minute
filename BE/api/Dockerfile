@@ -1,0 +1,4 @@
+FROM
+RUN
+EXPOSE 8000
+CMD []
