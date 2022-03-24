@@ -6,8 +6,8 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Participant
-        fields = ('member', 'is_asigned', )
-        read_only_fields = ('member', )
+        fields = '__all__'
+        read_only_fields = ('minute', 'is_assignee', )
 
 
 class SpeechCommentSerializer(serializers.ModelSerializer):
@@ -36,15 +36,15 @@ class SpeechSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speech
         fields = '__all__'
-        read_only_fields = ('participant', 'minute', )
+        read_only_fields = ('participant', 'minute', 'speech_comments', )
 
 
 class MinuteListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Minute
-        fields = ('id', 'participant', 'title', 'is_closed', 'created_at', )
-        read_only_fields = ('id', 'participant', 'created_at', )
+        fields = ('id', 'community', 'title', 'is_closed', 'created_at', )
+        read_only_fields = ('id', 'community', 'created_at', )
 
 
 class MinuteSerializer(serializers.ModelSerializer):
@@ -64,4 +64,4 @@ class MinuteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minute
         fields = '__all__'
-        read_only_fields = ('participant', 'community', )
+        read_only_fields = ('community', 'minute_speeches', )
