@@ -5,4 +5,4 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     profile_image=models.ImageField(blank=True, upload_to='images/')
     creatd_at=models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=15, blank=True)
