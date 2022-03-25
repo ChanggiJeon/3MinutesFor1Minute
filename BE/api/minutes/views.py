@@ -8,6 +8,7 @@ from .models import Minute, Participant, Speech, SpeechComment
 from community.models import Community, Member
 from .serializers import MinuteListSerializer, MinuteSerializer, SpeechSerializer, SpeechCommentSerializer
 from community.serializers import MemberSerializer
+from ai import ai
 
 
 @api_view(['GET'])

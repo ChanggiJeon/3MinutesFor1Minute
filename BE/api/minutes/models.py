@@ -34,7 +34,7 @@ class Speech(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     record_file = models.FileField(upload_to='record/', null=True)
     reference_file = models.FileField(upload_to='speech/', null=True)
-    
+
     def __str__(self):
         return self.title
 
