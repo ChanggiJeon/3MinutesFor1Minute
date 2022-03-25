@@ -1,4 +1,4 @@
-FROM continuumio/anaconda3
+FROM continuumio/miniconda3
 ENV PYTHONUNBUFFERED 1
 ARG DEBUG
 ARG SECRET_KEY
