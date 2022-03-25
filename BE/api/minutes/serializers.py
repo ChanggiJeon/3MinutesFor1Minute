@@ -64,4 +64,4 @@ class MinuteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minute
         fields = '__all__'
-        read_only_fields = ('community', 'minute_speeches', )
+        read_only_fields = ('community', )
