@@ -13,7 +13,8 @@ import { logout } from "../../store/user"
 
 
 const Navigation = styled.nav`
-position: fixed;
+position: sticky;
+top: 0;
 height: 80px;
 width: 100%;
 display: flex;
