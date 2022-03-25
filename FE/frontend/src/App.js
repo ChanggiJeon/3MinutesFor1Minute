@@ -24,9 +24,9 @@ function App() {
 						<Route path={routes.signup} element={<Signup />} />
 						<Route path={routes.community} element={<ComIndex />}>
 							<Route index element={<Community />} />
-              <Route path={routes.posts} element={<Posts />} />
-              <Route path={routes.postCreate} element={<PostCreate />} />
-              <Route path={routes.postDetail} element={<PostDetail />} />
+              <Route path={`:communityId${routes.posts}`} element={<Posts />} />
+              <Route path={`:communityId${routes.postCreate}`} element={<PostCreate />} />
+              <Route path={`:communityId${routes.postDetail}/:postId`} element={<PostDetail />} />
 						</Route>
 					</Route>
 				</Routes>

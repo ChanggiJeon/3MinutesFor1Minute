@@ -2,25 +2,25 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { apiGetBoardDetail, apiPutBoardDetail, apiDeleteBoardDetail } from '../../api/board';
+import {
+	apiGetBoardDetail,
+	apiPutBoardDetail,
+	apiDeleteBoardDetail,
+} from '../../api/board';
 import Form from '../../components/auth/Form';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
 import SubmitButton from '../../components/auth/SubmitButton';
+import ComMain from '../../components/community/main/ComMain';
+import Background from '../../components/community/board/list/Background';
+import TextTitle from '../../components/common/TextTitle';
 
 function PostDetail() {
-	const communityId = 1;
-	const postId = 1;
-	// const { communityId, postId } = useParams();
+	const { communityId, postId } = useParams();
 	const [post, setPost] = useState({});
 	const [isUpdating, setUpdating] = useState(false);
 	const navigate = useNavigate();
-	const { 
-		register, 
-		handleSubmit, 
-		getValues,
-		setValue,
-	} = useForm({
+	const { register, handleSubmit, getValues, setValue } = useForm({
 		mode: 'all',
 	});
 
@@ -30,12 +30,13 @@ function PostDetail() {
 
 	const getPost = async () => {
 		try {
+			console.log(communityId, postId)
 			await apiGetBoardDetail({ communityId, postId }).then(res => {
 				setPost(res.data);
-				setValue('title', res.data?.title)
-				setValue('content', res.data?.content)
-				setValue('isNotice', res.data?.isNotice)
-				setValue('upload', res.data?.upload)
+				setValue('title', res.data?.title);
+				setValue('content', res.data?.content);
+				setValue('isNotice', res.data?.isNotice);
+				setValue('upload', res.data?.upload);
 			});
 		} catch (e) {
 			// error
@@ -54,25 +55,25 @@ function PostDetail() {
 			// error
 			await Swal.fire({
 				icon: 'error',
-				text: '삭제 실패, 새로 고침 후, 다시 시도하세요.'
-			})
+				text: '삭제 실패, 새로 고침 후, 다시 시도하세요.',
+			});
 		}
-	}
+	};
 
 	const handleDelete = async () => {
 		await Swal.fire({
-      title: '정말 삭제하시겠습니까?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dd3333',
+			title: '정말 삭제하시겠습니까?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#dd3333',
 			cancelButtonText: '취소',
-      confirmButtonText: '삭제'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deletePost();
-      }
-    })
-	}
+			confirmButtonText: '삭제',
+		}).then(result => {
+			if (result.isConfirmed) {
+				deletePost();
+			}
+		});
+	};
 
 	const onValidSubmit = async () => {
 		const { title, content, isNotice, upload } = getValues();
@@ -103,45 +104,57 @@ function PostDetail() {
 	};
 
 	const contents = isUpdating ? (
-		<Form onSubmit={handleSubmit(onValidSubmit)}>
-			<Label htmlFor='title'>
-			<input
-				{...register('title', {
-					required: true,
-				})}
-				type='title'
-				placeholder='제목 없음'
-			/>
-			</Label>
-			<Label htmlFor='isNotice'>
-				공지여부
-				<input 
-					{...register('isNotice')}
-					type='checkbox'
-					/>
-			</Label>
-			<AreaLabel htmlFor='content'>
-				<textarea 
-					{...register('content', {
-						required: true,
-					})}
-					placeholder='내용 없음'
-				/>
-			</AreaLabel>
-			<SubmitButton type='submit'>수정</SubmitButton>
-		</Form>
+		<ComMain>
+			<Background>
+				<TextTitle>글 수정</TextTitle>
+				<Form onSubmit={handleSubmit(onValidSubmit)}>
+					<Label htmlFor='title'>
+						<input
+							{...register('title', {
+								required: true,
+							})}
+							type='title'
+							placeholder='제목 없음'
+						/>
+					</Label>
+					<Label htmlFor='isNotice'>
+						공지여부
+						<input {...register('isNotice')} type='checkbox' />
+					</Label>
+					<AreaLabel htmlFor='content'>
+						<textarea
+							{...register('content', {
+								required: true,
+							})}
+							cols='60'
+							rows='10'
+							placeholder='내용 없음'
+						/>
+					</AreaLabel>
+          <Label htmlFor='upload'>
+            파일첨부
+            <input {...register('upload')} type='file' multiple />
+          </Label>
+					<SubmitButton type='submit'>수정</SubmitButton>
+				</Form>
+			</Background>
+		</ComMain>
 	) : (
-		<>
-			<p>제목 : {post?.title}</p>
-			<p>내용 : {post?.content}</p>
-			<p>작성자 : {post?.author}</p>
-			<p>작성시간 : {post?.date}</p>
-			<p>첨부파일</p>
-			<button type='button' onClick={() => setUpdating(true)}>
-				수정
-			</button>
-			<button type='button' onClick={() => handleDelete()}>삭제</button>
-		</>
+		<ComMain>
+			<Background>
+				<p>제목 : {post?.title}</p>
+				<p>작성자 : {post?.author}</p>
+				<p>작성시간 : {post?.date}</p>
+				<p>내용 : {post?.content}</p>
+				<p>첨부파일</p>
+				<button type='button' onClick={() => setUpdating(true)}>
+					수정
+				</button>
+				<button type='button' onClick={() => handleDelete()}>
+					삭제
+				</button>
+			</Background>
+		</ComMain>
 	);
 
 	return (
