@@ -9,7 +9,7 @@ services:
     container_name: frontend
     volumes:
       - /app/node_modules
-      - ./frontend:/app
+      - ./FE/frontend:/app
     stdin_open: true
 
   # nginx:
