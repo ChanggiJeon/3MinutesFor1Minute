@@ -41,6 +41,7 @@ function Signup() {
 	const handleIdCheck = async () => {
 		// check process
 		const { id } = getValues();
+
 		try {
 			await apiUniqueCheckId({ id }).then(res => {
 				if (res.status === 200) {

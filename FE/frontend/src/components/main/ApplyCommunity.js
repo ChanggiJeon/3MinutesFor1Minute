@@ -8,6 +8,11 @@ import Label from '../auth/Label';
 import RadioContainer from '../auth/RadioContainer';
 import Title from '../auth/Title';
 import EmptyBtn from '../auth/EmptyBtn';
+import {
+	apiSearchCommunityByCode,
+	apiSearchCommunityByName,
+} from '../../api/community';
+import JoinCommunity from './JoinCommunity';
 
 const ResultContainer = styled.div`
 	margin: 20px 0;
@@ -58,9 +63,13 @@ function ApplyCommunity() {
 
 		try {
 			if (searchMode === 'codeMode') {
-				// api
+				await apiSearchCommunityByCode({ code }).then(res => {
+					setResults(res.data);
+				});
 			} else if (searchMode === 'nameMode') {
-				// api
+				await apiSearchCommunityByName({ name }).then(res => {
+					setResults(res.data);
+				});
 			}
 		} catch (e) {
 			// error
@@ -90,14 +99,16 @@ function ApplyCommunity() {
 			<ResultWrapper>
 				<ResultList>
 					{results?.map(e => (
-						<EmptyBtn onClick={() => setTarget(e)}>e?.name</EmptyBtn>
+						<EmptyBtn key={e.id} onClick={() => setTarget(e)}>
+							{e?.name}
+						</EmptyBtn>
 					))}
 				</ResultList>
 			</ResultWrapper>
 		</ResultContainer>
 	);
 
-	return (
+	const applyContents = (
 		<Form onSubmit={handleSubmit(onValidSubmit)}>
 			<Title>커뮤니티 가입</Title>
 			<RadioContainer>
@@ -128,6 +139,8 @@ function ApplyCommunity() {
 			{searchResults}
 		</Form>
 	);
+
+	return target?.id ? <JoinCommunity target={target} /> : applyContents;
 }
 
 export default ApplyCommunity;
