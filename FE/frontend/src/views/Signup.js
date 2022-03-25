@@ -5,7 +5,11 @@ import { FiMail } from 'react-icons/fi';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { apiSignup } from '../api/accounts';
+import {
+	apiSignup,
+	apiUniqueCheckId,
+	apiUniqueCheckEmail,
+} from '../api/accounts';
 import Divider from '../components/auth/Divider';
 import EmptyMsg from '../components/auth/EmptyMsg';
 import ErrorMsg from '../components/auth/ErrorMsg';
@@ -23,6 +27,7 @@ function Signup() {
 		handleSubmit,
 		formState: { errors, isValid },
 		getValues,
+		setError,
 		clearErrors,
 		watch,
 	} = useForm({
@@ -33,14 +38,41 @@ function Signup() {
 	const [idCheck, setIdCheck] = useState(false);
 	const [emailCheck, setEmailCheck] = useState(false);
 
-	const handleIdCheck = () => {
+	const handleIdCheck = async () => {
 		// check process
-		setIdCheck(true);
+		const { id } = getValues();
+
+		try {
+			await apiUniqueCheckId({ id }).then(res => {
+				if (res.status === 200) {
+					setIdCheck(true);
+				}
+			});
+		} catch (e) {
+			if (e.response.status === 400) {
+				setError('id', {
+					message: '이미 사용 중인 아이디 입니다.',
+				});
+			}
+		}
 	};
 
-	const handleEmailCheck = () => {
+	const handleEmailCheck = async () => {
 		// check process
-		setEmailCheck(true);
+		const { email } = getValues();
+		try {
+			await apiUniqueCheckEmail({ email }).then(res => {
+				if (res.status === 200) {
+					setEmailCheck(true);
+				}
+			});
+		} catch (e) {
+			if (e.response.status === 400) {
+				setError('email', {
+					message: '이미 사용 중인 이메일 입니다.',
+				});
+			}
+		}
 	};
 
 	const onValidSubmit = async () => {
