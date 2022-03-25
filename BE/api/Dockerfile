@@ -16,7 +16,6 @@ ENV DATABASE_HOST $DATABASE_HOST
 ENV DATABASE_PORT $DATABASE_PORT
 RUN mkdir /backend
 WORKDIR /backend
-ADD 
 COPY ./ ./
 RUN conda env create -f environment.yaml
 RUN conda activate ai
