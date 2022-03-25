@@ -18,14 +18,14 @@ def signup(request):
     username_check = re.findall('[a-z]', username)
     username_check += re.findall('[A-Z]', username)
 
-    if len(username) < 5 or len(username) > 15 or not username_check or re.findall('[`~!@#$%^&*(),<.>/?]+',username):
+    if len(username) < 5 or len(username) > 15 or not username_check or re.findall('[`~!@#$%^&*(),<.>/?]+', username):
         return Response({'error: 아이디 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
 
     if password != password_confirm:
         return Response({'error: password mismatch'}, status.HTTP_400_BAD_REQUEST)
 
     if len(password) < 8 or len(password) > 20 or not re.findall('[a-z]', password) or not re.findall('[A-Z]', password) \
-        or not re.findall('[0-9]+',password) or not re.findall('[`~!@#$%^&*(),<.>/?]+',password):
+        or not re.findall('[0-9]+', password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', password):
         return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
     serializers = UserSerializer(data=request.data)
 
@@ -41,8 +41,11 @@ def signup(request):
 def delete(request, username):
     User = get_user_model()
     user = get_object_or_404(User, username=username)
-    user.delete()
-    return Response({'delete: 탈퇴 완료'}, status=status.HTTP_204_NO_CONTENT)
+
+    if request.user == user:
+        user.delete()
+        return Response({'delete: 탈퇴 완료'}, status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -65,3 +68,15 @@ def unique_check_email(request, email):
 
     else:
         return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile(request, username):
+    User = get_user_model()
+    user = get_object_or_404(User, username=username)
+
+    if request.user == user:
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
