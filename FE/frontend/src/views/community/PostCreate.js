@@ -9,6 +9,8 @@ import Form from '../../components/auth/Form';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
 import SubmitButton from '../../components/auth/SubmitButton';
+import ComMain from '../../components/community/main/ComMain';
+import Background from '../../components/community/board/list/Background';
 
 function PostCreate() {
 	const {
@@ -54,7 +56,8 @@ function PostCreate() {
 	};
 
 	return (
-		<Container>
+		<ComMain>
+      <Background>
 			<Form onSubmit={handleSubmit(onValidSubmit)}>
 				<TextTitle>게시글 작성</TextTitle>
 				<Label htmlFor='title'>
@@ -89,7 +92,8 @@ function PostCreate() {
         </Label>
 				<SubmitButton disabled={!isValid}>작성하기</SubmitButton>
 			</Form>
-		</Container>
+      </Background>
+		</ComMain>
 	);
 }
 

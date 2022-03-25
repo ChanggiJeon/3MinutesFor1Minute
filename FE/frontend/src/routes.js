@@ -5,8 +5,8 @@ const routes = {
 	signup: '/signup',
 	community: '/community',
   posts: '/posts',
-  postCreate: '/postcreate',
-  postDetail: '/postdetail/:postId',
+  postCreate: '/posts/postcreate',
+  postDetail: '/posts/postdetail/:postId',
 };
 
 export default routes;
