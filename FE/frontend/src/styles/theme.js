@@ -10,6 +10,7 @@ const theme = {
 		accentColor: _.oceanBlue,
 		warnColor: _.darkRed,
 		confirmColor: _.green,
+		timerColor: _.blueGreen
 	},
 };
 
