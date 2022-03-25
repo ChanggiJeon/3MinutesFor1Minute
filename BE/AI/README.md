@@ -1,6 +1,6 @@
 ## 0. 사용법(설치)
 
-#### 1. conda env create -f conda_requirements.txt(에러뜸!)
+#### 1. conda env create -f environment.yaml
 
 #### 2. conda activate ai
 
