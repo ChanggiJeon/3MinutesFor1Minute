@@ -42,17 +42,11 @@ export const apiSignup = ({
 export const apiUniqueCheckId = ({ id }) =>
 	axios({
 		method: 'get',
-		url: `${BASE_URL}/accounts/uniquecheck/username/`,
-		params: {
-			username: id,
-		},
+		url: `${BASE_URL}/accounts/uniquecheck/username/${id}/`,
 	});
 
 export const apiUniqueCheckEmail = ({ email }) =>
 	axios({
 		method: 'get',
-		url: `${BASE_URL}/accounts/uniquecheck/email/`,
-		params: {
-			email,
-		},
+		url: `${BASE_URL}/accounts/uniquecheck/email/${email}/`,
 	});
