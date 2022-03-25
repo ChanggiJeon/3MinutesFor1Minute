@@ -24,10 +24,15 @@ services:
     #   - "80:80"
       # - "443:443"
 
-  # backend:
-  #   build:
-  #     dockerfile: Dockerfile
-  #     context: ./backend
-  #   container_name: free_backend
-  #   volumes:
-  #     - ./backend:/app
+  backend:
+    build:
+      context: ./BE/api
+    container_name: backend
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - "8000"
+    restart: always
+    volumes:
+      - ./BE/api:/app
+    env_file:
+      - ./BE/api/.env
