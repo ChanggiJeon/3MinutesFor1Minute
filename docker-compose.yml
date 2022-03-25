@@ -2,15 +2,16 @@ version: "3.7"
 services:
   frontend:
     build:
-      dockerfile: Dockerfile
       context: ./FE/frontend
       # args:
       #   REACT_APP_API_URL: ${REACT_APP_API_URL}
     container_name: frontend
+    rm -r home/
     volumes:
       - /app/node_modules
       - ./FE/frontend:/app
-    stdin_open: true
+    ports:
+      - 80:80
 
   # nginx:
   #   restart: always
