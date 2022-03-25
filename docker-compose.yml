@@ -6,7 +6,6 @@ services:
       # args:
       #   REACT_APP_API_URL: ${REACT_APP_API_URL}
     container_name: frontend
-    rm -r home/
     volumes:
       - /app/node_modules
       - ./FE/frontend:/app
