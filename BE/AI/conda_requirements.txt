@@ -1,4 +1,4 @@
-name: ai
+name: next
 channels:
   - pytorch
   - conda-forge

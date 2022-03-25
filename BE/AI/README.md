@@ -1,8 +1,25 @@
 ## 0. 사용법(설치)
 
-#### 1. conda env create -f conda_requirements.txt
+#### 1. conda env create -f conda_requirements.txt(에러뜸!)
 
 #### 2. conda activate ai
+
+#### (장고에 AI 합친 뒤, 다시 conda환경 설정할 예정입니다.)
+
+
+
+#### Google STT API사용시()
+
+```
+1.리눅스 SDK 설치
+https://cloud.google.com/sdk/docs/install#linux
+윈도우 SDK 설치
+https://cloud.google.com/sdk/docs/install#windows
+
+2.설치 후 google계정 연결하고, 설정 해야함.(개인적으로 테스트 원하시면 말씀해주세요.)
+```
+
+
 
 
 

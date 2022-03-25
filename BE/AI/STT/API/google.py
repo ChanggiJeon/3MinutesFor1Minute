@@ -1,7 +1,6 @@
 from google.cloud import storage
-from Summarize.summarize import summery
 import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="C:/Users/multicampus/Desktop/S06P22D202/BE/AI/STT/API/ssafy-345204-8ee8c7463811.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="./ssafy-345204-8ee8c7463811.json"
 
 
 def upload_file(file_path, file_name):
