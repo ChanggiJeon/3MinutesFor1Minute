@@ -4,14 +4,12 @@ FROM node:16-alpine3.11 as build-stage
 RUN mkdir /app
 # 기본 경로 설정
 WORKDIR /app
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL $REACT_APP_API_URL
 COPY ./ ./
 RUN npm install
 RUN npm run build
 
 FROM nginx
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx/default.conf /etc/nginx/conf.d
 COPY --from=build-stage /app/build /usr/share/nginx/html
-EXPOSE 3000
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
