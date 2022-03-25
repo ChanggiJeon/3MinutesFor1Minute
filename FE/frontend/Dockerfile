@@ -1,4 +1,8 @@
-FROM node:lts-alpine as build-stage
+# as -> dockerfile이 멀티일 때
+FROM node:16-alpine3.11 as build-stage
+# 폴더 생성
+RUN mkdir /app
+# 기본 경로 설정
 WORKDIR /app
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL $REACT_APP_API_URL
