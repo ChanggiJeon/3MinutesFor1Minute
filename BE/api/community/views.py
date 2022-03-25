@@ -23,7 +23,9 @@ def make_random_code():
     return code
 
 
+@swagger_auto_schema(method='POST', request_body=CommunitySerializer)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def community_create(request):
     while True:
         code = make_random_code()
@@ -47,9 +49,8 @@ def community_create(request):
 
 
 @api_view(['GET'])
-def uniquecheck_commnity_name(request):
-    community_name = request.data.get('name')
-
+@permission_classes([IsAuthenticated])
+def uniquecheck_community_name(request, community_name):
     if not 5 <= len(community_name) <= 16:
         return Response({'error: 커뮤니티 명은 5자 이상 16자 이하로 정해야합니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -59,7 +60,9 @@ def uniquecheck_commnity_name(request):
 
 
 # 2. 커뮤니티 가입 신청
+@swagger_auto_schema(method='POST', request_body=MemberSerializer)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def community_apply(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     serializer = MemberSerializer(data=request.data)
@@ -78,21 +81,20 @@ def community_apply(request, community_pk):
 
 
 @api_view(['GET'])
-def search_for_code(request):
-    code = request.data.get('private_code')
+@permission_classes([IsAuthenticated])
+def search_for_code(request, code):
     code = code.upper()
     community = get_object_or_404(Community, private_code=code)
 
     if community:
-        # serializer = CommunitySearchSerializer(community, context=request.user)
         serializer = CommunitySearchSerializer(community)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({'error: 해당 코드의 커뮤니티가 존재하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
-def search_for_name(request):
-    keyword = request.data.get('keyword')
+@permission_classes([IsAuthenticated])
+def search_for_name(request, keyword):
     communities = Community.objects.filter(name__icontains=keyword)
 
     if communities:
@@ -102,9 +104,8 @@ def search_for_name(request):
 
 
 @api_view(['GET'])
-def uniquecheck_member_nickname(request,community_pk):
-    nickname = request.data.get('nickname')
-
+@permission_classes([IsAuthenticated])
+def uniquecheck_member_nickname(request, community_pk, nickname):
     if not 2 <= len(nickname) <= 16:
         return Response({'error: 닉네임은 2자 이상 16자 이하로 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
     members = get_list_or_404(Member, community_id=community_pk)
@@ -115,7 +116,9 @@ def uniquecheck_member_nickname(request,community_pk):
     return Response({'complete: 사용 가능한 닉네임입니다.'}, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(method='PUT', request_body=CommunitySerializer)
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def community_detail_update_or_delete(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
 
@@ -136,6 +139,7 @@ def community_detail_update_or_delete(request, community_pk):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def community_get_members(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     members = community.member_set.all()
@@ -144,6 +148,7 @@ def community_get_members(request, community_pk):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def community_delete_member(request, community_pk, member_pk):
     community = get_object_or_404(Community, pk=community_pk)
     member = community.member_set.get(pk=member_pk)
@@ -153,16 +158,12 @@ def community_delete_member(request, community_pk, member_pk):
 
 # 구성원 초대
 @api_view(['GET'])
-def find_user(request):
-    username = request.data.get('username')
-    nickname = request.data.get('nickname')
+@permission_classes([IsAuthenticated])
+def find_user(request, keyword):
     User = get_user_model()
 
-    if username:
-        users = User.objects.filter(username__icontains=username)
-
-    elif nickname:
-        users = User.objects.filter(nickname__icontains=nickname)
+    if keyword:
+        users = User.objects.filter(username__icontains=keyword) | User.objects.filter(name__icontains=keyword)
 
     else:
         return Response({'error: 아이디 또는 닉네임을 검색해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -175,6 +176,7 @@ def find_user(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def invite_user(request, community_pk, user_pk):
     community = get_object_or_404(Community, pk=community_pk)
 
@@ -190,22 +192,10 @@ def invite_user(request, community_pk, user_pk):
 
 
 # 멤버 수정
-@api_view(['POST'])
-def member_nickname_update(request,community_pk, member_pk):
-    community = get_object_or_404(Community, pk=community_pk)
-    member = community.member_set.get(id=member_pk)
-
-    if member.user != request.user:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
-    serializer = MemberSerializer(instance=member, data=request.data)
-
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['POST'])
-def member_bio_update(request,community_pk, member_pk):
+@swagger_auto_schema(method='PUT', request_body=MemberSerializer)
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def member_update(request, community_pk, member_pk):
     community = get_object_or_404(Community, pk=community_pk)
     member = community.member_set.get(id=member_pk)
 
@@ -219,14 +209,12 @@ def member_bio_update(request,community_pk, member_pk):
 
 
 @api_view(['DELETE'])
-def member_withdraw(request,community_pk,member_pk):
+@permission_classes([IsAuthenticated])
+def member_withdraw(request, community_pk, member_pk):
     community = get_object_or_404(Community, pk=community_pk)
     member = community.member_set.get(id=member_pk)
 
     if member.user != request.user:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    if member.user != request.user:
-        Response(status=status.HTTP_401_UNAUTHORIZED)
     member.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
