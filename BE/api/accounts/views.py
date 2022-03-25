@@ -1,16 +1,15 @@
-import re
-
-from django.shortcuts import get_object_or_404, render
-
-# rest_framework
-from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
-from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
+import re
 
-# Create your views here.
+
+@swagger_auto_schema(method='POST', request_body=UserSerializer)
 @api_view(['POST'])
 def signup(request):
     username = request.data.get('username')
@@ -18,43 +17,51 @@ def signup(request):
     password_confirm = request.data.get('password_confirm')
     username_check = re.findall('[a-z]', username)
     username_check += re.findall('[A-Z]', username)
-    if len(username) < 5 or len(username) > 16 or not username_check or re.findall('[`~!@#$%^&*(),<.>/?]+',username):
+
+    if len(username) < 5 or len(username) > 15 or not username_check or re.findall('[`~!@#$%^&*(),<.>/?]+',username):
         return Response({'error: 아이디 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
+
     if password != password_confirm:
         return Response({'error: password mismatch'}, status.HTTP_400_BAD_REQUEST)
+
     if len(password) < 8 or len(password) > 20 or not re.findall('[a-z]', password) or not re.findall('[A-Z]', password) \
         or not re.findall('[0-9]+',password) or not re.findall('[`~!@#$%^&*(),<.>/?]+',password):
         return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
     serializers = UserSerializer(data=request.data)
+
     if serializers.is_valid(raise_exception=True):
         user = serializers.save()
         user.set_password(request.data.get('password'))
         user.save()
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
+
 @api_view(['DELETE'])
-def delete(request):
-    username = request.data.get('username')
+@permission_classes([IsAuthenticated])
+def delete(request, username):
     User = get_user_model()
     user = get_object_or_404(User, username=username)
     user.delete()
     return Response({'delete: 탈퇴 완료'}, status=status.HTTP_204_NO_CONTENT)
 
+
 @api_view(['GET'])
-def unique_check_username(request):
+def unique_check_username(request, username):
     User = get_user_model()
-    username = request.data.get('username')
+
     if User.objects.filter(username=username):
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
     else:
         return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
-def unique_check_email(request):
+def unique_check_email(request, email):
     User = get_user_model()
-    email = request.data.get('email')
+
     if User.objects.filter(email=email):
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
     else:
         return Response(status=status.HTTP_200_OK)
