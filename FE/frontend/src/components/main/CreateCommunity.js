@@ -86,6 +86,7 @@ function CreateCommunity() {
 					type='name'
 					placeholder='커뮤니티 이름'
 					maxLength='16'
+					onChange={() => setNameCheck(false)}
 					onInput={() => clearErrors('result')}
 				/>
 				<IconBtn type='button' onClick={handleNameCheck}>

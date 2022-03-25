@@ -38,3 +38,21 @@ export const apiSignup = ({
 			email,
 		},
 	});
+
+export const apiUniqueCheckId = ({ id }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/uniquecheck/username/`,
+		params: {
+			username: id,
+		},
+	});
+
+export const apiUniqueCheckEmail = ({ email }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/uniquecheck/email/`,
+		params: {
+			email,
+		},
+	});

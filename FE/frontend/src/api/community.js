@@ -19,7 +19,7 @@ export const apiUniqueCheckCommunityName = ({ name }) =>
 	axios({
 		method: 'get',
 		url: `${BASE_URL}/community/uniquecheck/community_name/`,
-		data: {
+		params: {
 			name,
 		},
 		headers: {
