@@ -8,6 +8,9 @@ import Index from './views/Index';
 import Signup from './views/Signup';
 import Community from './views/community/Community';
 import ComIndex from './views/community/Index';
+import Posts from './views/community/Posts';
+import PostCreate from './views/community/PostCreate';
+import PostDetail from './views/community/PostDetail';
 import Records from './views/community/minutes/Records';
 
 function App() {
@@ -20,10 +23,13 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
-						<Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
-							<Route index element={<Community />} />
+            <Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
+              <Route index element={<Community />} />
 							<Route path={routes.records} element={<Records />} />
-						</Route>
+              <Route path={routes.posts} element={<Posts />} />
+              <Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
+              <Route path={routes.postCreate} element={<PostCreate />} />
+            </Route>
 					</Route>
 				</Routes>
 			</Router>
