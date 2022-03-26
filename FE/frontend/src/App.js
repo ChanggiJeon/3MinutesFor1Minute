@@ -22,12 +22,12 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
-						<Route path={routes.community} element={<ComIndex />}>
-							<Route index element={<Community />} />
-              <Route path={`:communityId${routes.posts}`} element={<Posts />} />
-              <Route path={`:communityId${routes.postCreate}`} element={<PostCreate />} />
-              <Route path={`:communityId${routes.postDetail}/:postId`} element={<PostDetail />} />
-						</Route>
+            <Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
+              <Route index element={<Community />} />
+              <Route path={routes.posts} element={<Posts />} />
+              <Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
+              <Route path={routes.postCreate} element={<PostCreate />} />
+            </Route>
 					</Route>
 				</Routes>
 			</Router>

@@ -4,9 +4,10 @@ const routes = {
 	login: '/login',
 	signup: '/signup',
 	community: '/community',
-  posts: '/posts',
-  postCreate: '/posts/postcreate',
-  postDetail: '/posts/postdetail/:postId',
+  posts: 'posts',
+  postCreate: 'posts/postcreate',
+  postDetail: 'posts/:postId',
+
 };
 
 export default routes;

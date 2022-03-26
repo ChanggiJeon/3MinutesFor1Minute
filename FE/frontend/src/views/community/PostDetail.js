@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -7,13 +8,34 @@ import {
 	apiPutBoardDetail,
 	apiDeleteBoardDetail,
 } from '../../api/board';
-import Form from '../../components/auth/Form';
+import routes from '../../routes';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
 import SubmitButton from '../../components/auth/SubmitButton';
 import ComMain from '../../components/community/main/ComMain';
 import Background from '../../components/community/board/list/Background';
+import Header from '../../components/community/board/list/Header';
 import TextTitle from '../../components/common/TextTitle';
+import BackBtn from '../../components/community/board/list/BackBtn';
+import SmallBtn from '../../components/community/board/list/SmallBtn';
+import SLink from '../../components/community/board/list/SLink';
+import Btns from '../../components/community/board/list/Btns';
+import NForm from '../../components/community/board/list/NForm';
+
+const Detail = styled.div`
+	{
+		display: flex;
+		flex-direction: column;
+    padding: 15px;
+		border: 1px solid black;
+		margin-top: 15px;
+		flex-wrap: wrap;
+
+    p {
+      margin: 5px;
+    }
+	}
+`;
 
 function PostDetail() {
 	const { communityId, postId } = useParams();
@@ -30,7 +52,7 @@ function PostDetail() {
 
 	const getPost = async () => {
 		try {
-			console.log(communityId, postId)
+			// console.log(communityId, postId)
 			await apiGetBoardDetail({ communityId, postId }).then(res => {
 				setPost(res.data);
 				setValue('title', res.data?.title);
@@ -103,66 +125,84 @@ function PostDetail() {
 		}
 	};
 
+  // isUpdating True -> 수정 False -> 글 상세보기
 	const contents = isUpdating ? (
-		<ComMain>
-			<Background>
+    // True
+		<Background>
+			<Header>
 				<TextTitle>글 수정</TextTitle>
-				<Form onSubmit={handleSubmit(onValidSubmit)}>
-					<Label htmlFor='title'>
-						<input
-							{...register('title', {
-								required: true,
-							})}
-							type='title'
-							placeholder='제목 없음'
-						/>
-					</Label>
-					<Label htmlFor='isNotice'>
-						공지여부
-						<input {...register('isNotice')} type='checkbox' />
-					</Label>
-					<AreaLabel htmlFor='content'>
-						<textarea
-							{...register('content', {
-								required: true,
-							})}
-							cols='60'
-							rows='10'
-							placeholder='내용 없음'
-						/>
-					</AreaLabel>
-          <Label htmlFor='upload'>
-            파일첨부
-            <input {...register('upload')} type='file' multiple />
-          </Label>
-					<SubmitButton type='submit'>수정</SubmitButton>
-				</Form>
-			</Background>
-		</ComMain>
+				<BackBtn>
+					<SLink
+						to={`${routes.community}/${communityId}${routes.postDetail}/${post.id}`}
+					>
+						◀
+					</SLink>
+				</BackBtn>
+			</Header>
+			<NForm onSubmit={handleSubmit(onValidSubmit)}>
+				<Label htmlFor='title'>
+					<input
+						{...register('title', {
+							required: true,
+						})}
+						type='title'
+						placeholder='제목 없음'
+					/>
+				</Label>
+				<Label htmlFor='isNotice'>
+					공지여부
+					<input {...register('isNotice')} type='checkbox' />
+				</Label>
+				<AreaLabel htmlFor='content'>
+					<textarea
+						{...register('content', {
+							required: true,
+						})}
+						cols='60'
+						rows='10'
+						placeholder='내용 없음'
+					/>
+				</AreaLabel>
+				<Label htmlFor='upload'>
+					파일첨부
+					<input {...register('upload')} type='file' multiple />
+				</Label>
+				<SubmitButton type='submit'>수정</SubmitButton>
+			</NForm>
+		</Background>
 	) : (
-		<ComMain>
-			<Background>
-				<p>제목 : {post?.title}</p>
-				<p>작성자 : {post?.author}</p>
-				<p>작성시간 : {post?.date}</p>
-				<p>내용 : {post?.content}</p>
-				<p>첨부파일</p>
-				<button type='button' onClick={() => setUpdating(true)}>
-					수정
-				</button>
-				<button type='button' onClick={() => handleDelete()}>
-					삭제
-				</button>
-			</Background>
-		</ComMain>
+    // False
+		<Background>
+			<Header>
+				<TextTitle>글 상세보기</TextTitle>
+				<BackBtn>
+					<SLink to={`${routes.community}/${communityId}${routes.posts}`}>◀</SLink>
+				</BackBtn>
+			</Header>
+      <Detail>
+        <p>제목 : {post?.title}</p>
+        <p>작성자 : {post?.author}</p>
+        <p>작성시간 : {post?.date}</p>
+        <p>내용 : {post?.content}</p>
+        <p>첨부파일 {post?.upload}</p>
+
+        {/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
+        <Btns>
+          <SmallBtn type='button' onClick={() => setUpdating(true)}>
+            수정
+          </SmallBtn>
+          <SmallBtn type='button' onClick={() => handleDelete()}>
+            삭제
+          </SmallBtn>
+        </Btns>
+
+        <p>댓글</p>
+
+      </Detail>
+		</Background>
 	);
 
-	return (
-		<div>
-			{contents}
-			<p>댓글</p>
-		</div>
-	);
+	return <ComMain>{contents}</ComMain>;
 }
 
 export default PostDetail;

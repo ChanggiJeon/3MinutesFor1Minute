@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 
+// 하얀 배경
 const Background = styled.div`
   width: 96%;
   height: 80%;
-  background-color: #FFFFFF;
-  border-radius: 50px;
   padding: 10px;
   margin: 40px;
+  background-color: inherit;
+
 `
 
 export default Background;

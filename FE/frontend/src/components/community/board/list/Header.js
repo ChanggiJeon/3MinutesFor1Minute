@@ -1,14 +1,13 @@
 import styled from 'styled-components'
 
+// Board Title과 BackBtn, WriteBtn 묶은 Div
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 97%;
-  height: 15%;
-  background-color: #FFFFFF;
-  border-radius: 50px;
-  padding: 10px;
+  height: 5%;
+  padding: 20px;
   align-items: center;
+  border-bottom: 3px solid black;
 `
 
 export default Header;

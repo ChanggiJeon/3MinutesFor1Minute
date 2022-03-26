@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { apiCreateboard } from '../../api/board';
-import Container from '../../components/common/Container';
-import TextTitle from '../../components/common/TextTitle';
-import Form from '../../components/auth/Form';
+import routes from '../../routes';
+import { apiCreateBoard } from '../../api/board';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
-import SubmitButton from '../../components/auth/SubmitButton';
+import RightBtn from '../../components/community/board/list/BackBtn';
+import SLink from '../../components/community/board/list/SLink';
 import ComMain from '../../components/community/main/ComMain';
 import Background from '../../components/community/board/list/Background';
+import Header from '../../components/community/board/list/Header';
+import BoardTitle from '../../components/community/board/list/BoardTitle';
+import NForm from '../../components/community/board/list/NForm';
+import SubmitButton from '../../components/auth/SubmitButton';
 
 function PostCreate() {
 	const {
@@ -31,7 +35,7 @@ function PostCreate() {
 		let date = '';
 
 		try {
-			await apiCreateboard({
+			await apiCreateBoard({
 				communityId,
 				title,
 				content,
@@ -57,42 +61,48 @@ function PostCreate() {
 
 	return (
 		<ComMain>
-      <Background>
-			<Form onSubmit={handleSubmit(onValidSubmit)}>
-				<TextTitle>게시글 작성</TextTitle>
-				<Label htmlFor='title'>
-					<input
-						{...register('title', {
-							required: true,
-						})}
-						type='title'
-						placeholder='제목 없음'
-					/>
-				</Label>
-				{/* 관리자이면 공지인지 아닌지 설정 가능한 체크박스 나온다 */}
-				{true ? (
-					<Label htmlFor='isNotice'>
-						공지여부
-						<input {...register('isNotice')} type='checkbox' />
+			<Background>
+        <Header>
+          <BoardTitle>게시글 작성</BoardTitle>
+          <RightBtn>
+            <SLink to={`${routes.community}/${communityId}${routes.posts}`}>◀</SLink>
+          </RightBtn>
+        </Header>
+				<NForm onSubmit={handleSubmit(onValidSubmit)}>
+					<Label htmlFor='title'>
+						<input
+							{...register('title', {
+								required: true,
+							})}
+							type='title'
+							placeholder='제목 없음'
+						/>
 					</Label>
-				) : null}
-				<AreaLabel htmlFor='content'>
-					<textarea
-						{...register('content', {
-							required: true,
-						})}
-						cols='60'
-						rows='10'
-						placeholder='내용 없음'
-					/>
-				</AreaLabel>
-        <Label htmlFor='upload'>
-				  파일첨부
-				  <input {...register('upload')} type='file' multiple />
-        </Label>
-				<SubmitButton disabled={!isValid}>작성하기</SubmitButton>
-			</Form>
-      </Background>
+          
+					{/* 관리자이면 공지인지 아닌지 설정 가능한 체크박스 나온다 */}
+					{true ? (
+						<Label htmlFor='isNotice'>
+							공지여부
+							<input {...register('isNotice')} type='checkbox' />
+						</Label>
+					) : null}
+					<AreaLabel htmlFor='content'>
+						<textarea
+							{...register('content', {
+								required: true,
+							})}
+							cols='60'
+							rows='10'
+							placeholder='내용 없음'
+						/>
+					</AreaLabel>
+					<Label htmlFor='upload'>
+						파일첨부
+						<input {...register('upload')} type='file' multiple />
+					</Label>
+					<SubmitButton disabled={!isValid}>작성하기</SubmitButton>
+				</NForm>
+			</Background>
 		</ComMain>
 	);
 }
