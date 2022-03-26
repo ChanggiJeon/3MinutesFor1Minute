@@ -8,13 +8,10 @@ import Index from './views/Index';
 import Signup from './views/Signup';
 import Community from './views/community/Community';
 import ComIndex from './views/community/Index';
-<<<<<<< HEAD
 import Posts from './views/community/Posts';
 import PostCreate from './views/community/PostCreate';
 import PostDetail from './views/community/PostDetail';
-=======
 import Records from './views/community/minutes/Records';
->>>>>>> 65511f5af772645d1c5392251296665ed7e5510c
 
 function App() {
 	return (
