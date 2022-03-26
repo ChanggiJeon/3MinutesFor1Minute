@@ -5,7 +5,7 @@ import postsReducer from './posts';
 export default configureStore({
 	reducer: {
 		user: userReducer,
-    posts: postsReducer,
+		posts: postsReducer,
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware().concat(authMiddleware),
