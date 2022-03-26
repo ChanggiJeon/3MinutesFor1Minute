@@ -1,5 +1,8 @@
 FROM continuumio/miniconda3
 ENV PYTHONUNBUFFERED 1
+RUN apt-get update
+RUN apt-get install default-libmysqlclient-dev -y
+RUN apt-get -y install gcc
 ARG DEBUG
 ARG SECRET_KEY
 ARG ALLOWED_HOSTS
@@ -21,5 +24,6 @@ RUN conda env create -f tmp.yml
 RUN echo "source activate ai" > ~/.bashrc
 ENV PATH /opt/conda/envs/nenv/bin:$PATH
 RUN pip install --upgrade pip
+RUN pip install --upgrade setuptools
 RUN pip install gunicorn
 RUN pip install -r tmp.txt
