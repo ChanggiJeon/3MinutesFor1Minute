@@ -3,11 +3,12 @@ const routes = {
 	main: '/',
 	login: '/login',
 	signup: '/signup',
+	// community
 	community: '/community',
+	records: 'records',
   posts: 'posts',
   postCreate: 'posts/postcreate',
   postDetail: 'posts/:postId',
-
 };
 
 export default routes;

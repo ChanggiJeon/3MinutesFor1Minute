@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './user';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import userReducer, { authMiddleware } from './user';
 import postsReducer from './posts';
 
 export default configureStore({
@@ -7,4 +7,6 @@ export default configureStore({
 		user: userReducer,
     posts: postsReducer,
 	},
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware().concat(authMiddleware),
 });

@@ -11,7 +11,7 @@ export const apiLogin = ({ username, password }) =>
 		},
 	});
 
-export const apiRefreshToken = refresh =>
+export const apiRefreshToken = ({ refresh }) =>
 	axios({
 		method: 'post',
 		url: `${BASE_URL}/accounts/api/token/refresh/`,
@@ -37,4 +37,16 @@ export const apiSignup = ({
 			name,
 			email,
 		},
+	});
+
+export const apiUniqueCheckId = ({ id }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/uniquecheck/username/${id}/`,
+	});
+
+export const apiUniqueCheckEmail = ({ email }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/uniquecheck/email/${email}/`,
 	});

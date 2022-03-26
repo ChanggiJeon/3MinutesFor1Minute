@@ -17,8 +17,6 @@ const GlobalStyles = createGlobalStyle`
 		font-family: 'HoengseongHanu';
 	}
 
-
-
 	@font-face {
 		font-family: 'EliceDigitalBaeum-Bd';
 		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_elice@1.0/EliceDigitalBaeum-Bd.woff2') format('woff2');
@@ -32,6 +30,23 @@ const GlobalStyles = createGlobalStyle`
 		font-weight: normal;
 		font-style: normal;
 	}
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: inherit;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${props => props.theme.sidebarColor};
+    border-radius: 10px;
+  }
+
+  html {
+    scrollbar-color: ${props => props.theme.sidebarColor};
+    scrollbar-width: 10px;
+  }
+
 `;
 
 export default GlobalStyles;
