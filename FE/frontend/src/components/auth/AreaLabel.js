@@ -5,7 +5,6 @@ const AreaLabel = styled.label`
 	display: flex;
 	align-items: start;
 	flex-direction: column;
-	margin: 20px 0;
 
 	textarea {
 		margin: 10px 0;

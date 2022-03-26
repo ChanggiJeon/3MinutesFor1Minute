@@ -48,11 +48,17 @@ class CustomSpeechSerializer(SpeechSerializer):
 
 
 class MinuteListSerializer(serializers.ModelSerializer):
+    assignee = serializers.SerializerMethodField('assign')
+
+    def assign(self, minute):
+        participant = Participant.objects.filter(minute=minute, is_assignee=True)
+        serializer = ParticipantSerializer(participant, many=True)
+        return serializer.data
 
     class Meta:
         model = Minute
-        fields = ('id', 'community', 'title', 'is_closed', 'created_at', )
-        read_only_fields = ('id', 'community', 'created_at', )
+        fields = ('title', 'is_closed', 'deadline', 'created_at', 'assignee', )
+        read_only_fields = ('created_at', )
 
 
 class MinuteSerializer(serializers.ModelSerializer):

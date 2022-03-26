@@ -11,7 +11,7 @@ export const apiLogin = ({ username, password }) =>
 		},
 	});
 
-export const apiRefreshToken = refresh =>
+export const apiRefreshToken = ({ refresh }) =>
 	axios({
 		method: 'post',
 		url: `${BASE_URL}/accounts/api/token/refresh/`,

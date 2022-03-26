@@ -1,9 +1,0 @@
-DEBUG=True
-SECRET_KEY=django-insecure-jjrl%&6eo9lan6tk$9m-k+q2v&znre!jxqlbe@%y0ykmrnga3m
-ALLOWED_HOSTS=https://j6d202.p.ssafy.io,http://j6d202.p.ssafy.io,http://localhost
-DATABASE_NAME=myproject
-DATABASE_USER=root
-DATABASE_PASS=ssafy
-DATABASE_HOST=localhost
-DATABASE_PORT=3307
-CACHE_URL=memcache://127.0.0.1:11211,127.0.0.1:11212,127.0.0.1:11213

@@ -3,8 +3,9 @@ const routes = {
 	main: '/',
 	login: '/login',
 	signup: '/signup',
+	// community
 	community: '/community',
-	records: '/community/records',
+	records: 'records',
 };
 
 export default routes;

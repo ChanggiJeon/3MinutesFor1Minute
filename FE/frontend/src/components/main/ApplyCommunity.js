@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import Form from '../auth/Form';
 import IconBtn from '../auth/IconBtn';
@@ -73,6 +74,10 @@ function ApplyCommunity() {
 			}
 		} catch (e) {
 			// error
+			Swal.fire({
+				icon: 'info',
+				text: '검색 결과가 없습니다.',
+			});
 		}
 	};
 
