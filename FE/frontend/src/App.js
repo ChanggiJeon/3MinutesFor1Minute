@@ -9,6 +9,8 @@ import Signup from './views/Signup';
 import Community from './views/community/Community';
 import ComIndex from './views/community/Index';
 import Records from './views/community/minutes/Records';
+import Error404 from './views/Error404';
+import Members from './views/community/Members';
 
 function App() {
 	return (
@@ -23,8 +25,10 @@ function App() {
 						<Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
 							<Route index element={<Community />} />
 							<Route path={routes.records} element={<Records />} />
+							<Route path={routes.members} element={<Members />} />
 						</Route>
 					</Route>
+					<Route path='*' element={<Error404 />} />
 				</Routes>
 			</Router>
 		</Provider>

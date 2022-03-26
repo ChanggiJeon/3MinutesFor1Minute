@@ -63,3 +63,12 @@ export const apiApplyCommunity = ({ communityId, nickname, bio }) =>
 			...setToken(),
 		},
 	});
+
+export const apiGetCommunityMembers = ({ communityId }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/${communityId}/member/`,
+		headers: {
+			...setToken(),
+		},
+	});
