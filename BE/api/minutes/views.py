@@ -6,9 +6,29 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Minute, Participant, Speech, SpeechComment
 from community.models import Community, Member
-from .serializers import MinuteListSerializer, MinuteSerializer, SpeechSerializer, SpeechCommentSerializer
+from .serializers import (
+    MinuteListSerializer,
+    MinuteSerializer,
+    CustomMinuteSerializer,
+    SpeechSerializer,
+    CustomSpeechSerializer,
+    SpeechCommentSerializer
+)
 from community.serializers import MemberSerializer
-from ai import ai
+import sys
+sys.path.append('.')
+from AI.STT.API.google import upload_file, transcribe_gcs
+from AI.Summarize.summarize import summery
+from AI.Wordslist.wordslist import wordslist
+from config.settings import MEDIA_ROOT
+
+
+def AI(file_path, file_name):
+    upload_file(file_path, file_name)
+    text = transcribe_gcs(file_name)
+    summary = summery(text)
+    cload_keyword = wordslist(text)
+    return text, summary, cload_keyword
 
 
 @api_view(['GET'])
@@ -20,7 +40,7 @@ def minute_list(request, community_pk):
     return Response(serializer.data)
 
 
-@swagger_auto_schema(method='POST', request_body=MinuteSerializer)
+@swagger_auto_schema(method='POST', request_body=CustomMinuteSerializer)
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def minute_create(request, community_pk):
@@ -95,7 +115,7 @@ def minute_update(request, community_pk, minute_pk):
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@swagger_auto_schema(method='POST', request_body=SpeechSerializer)
+@swagger_auto_schema(method='POST', request_body=CustomSpeechSerializer)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def speech_create(request, community_pk, minute_pk):
@@ -110,6 +130,12 @@ def speech_create(request, community_pk, minute_pk):
 
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
+        # speech = get_object_or_404(Speech, pk=serializer.data['id'])
+        # file = speech.record_file
+        # file_path = str(MEDIA_ROOT) + '/record/'
+        # file_name = str(file)[7:]
+        # text, summary, cload_keyword = AI(file_path, file_name)
+        # serializer = SpeechSerializer(speech, content=text, summary=summary, cload_keyword=cload_keyword)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
