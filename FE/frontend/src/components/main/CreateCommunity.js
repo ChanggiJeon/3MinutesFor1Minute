@@ -51,13 +51,14 @@ function CreateCommunity() {
 		const { name, isPrivate, intro } = getValues();
 		try {
 			// api
-			await apiCreateCommunity({ name, isPrivate, intro });
+			const response = await apiCreateCommunity({ name, isPrivate, intro });
+			const { id } = response.data;
 			// alert
 			await Swal.fire({
 				icon: 'success',
 				text: `${name} 커뮤니티가 생성되었습니다.`,
 			});
-			navigate(routes.community);
+			navigate(`${routes.community}/${id}`);
 		} catch (e) {
 			// e.response.status
 			setError('result', { message: '커뮤니티 생성에 실패하였습니다.' });
@@ -106,6 +107,7 @@ function CreateCommunity() {
 					onInput={() => clearErrors('result')}
 				/>
 			</Label>
+			<EmptyMsg />
 			<AreaLabel htmlFor='intro'>
 				커뮤니티 소개
 				<textarea {...register('intro')} onInput={() => clearErrors('result')} />

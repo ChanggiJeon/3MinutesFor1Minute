@@ -66,12 +66,16 @@ function JoinCommunity({ target }) {
 				icon: 'success',
 				text: `${target.name} 커뮤니티에 가입되었습니다.`,
 			});
-			navigate(routes.community);
+			navigate(`${routes.community}/${target.id}`);
 		} catch (e) {
-			await Swal.fire({
-				icon: 'error',
-				text: '커뮤니티 가입 오류, 다시 시도하세요.',
-			});
+			const { data, status } = e.response;
+
+			if (status === 400) {
+				await Swal.fire({
+					icon: 'error',
+					text: data[0],
+				});
+			}
 		}
 	};
 
@@ -108,8 +112,8 @@ function JoinCommunity({ target }) {
 				</SubmitButton>
 			</Label>
 			{ErrorAndCheck(errors?.nickname?.message, nicknameCheck)}
-			<TextSubTitle>{target.name}</TextSubTitle>
 			<AreaLabel htmlFor='bio'>
+				<TextSubTitle>{target.name}</TextSubTitle>
 				<textarea {...register('bio')} onInput={() => clearErrors('result')} />
 			</AreaLabel>
 			<SubmitButton type='submit' disabled={!isValid || !nicknameCheck}>
