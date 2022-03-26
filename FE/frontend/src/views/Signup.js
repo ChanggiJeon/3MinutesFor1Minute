@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 import { FaLock, FaUser, FaUserTag } from 'react-icons/fa';
 import { FiMail } from 'react-icons/fi';
 import { IoWarningOutline } from 'react-icons/io5';
@@ -37,6 +38,13 @@ function Signup() {
 	const passwordMatch = watch('password');
 	const [idCheck, setIdCheck] = useState(false);
 	const [emailCheck, setEmailCheck] = useState(false);
+	const { isLoggedIn } = useSelector(state => state.user);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigate(routes.main);
+		}
+	}, [isLoggedIn]);
 
 	const handleIdCheck = async () => {
 		// check process
