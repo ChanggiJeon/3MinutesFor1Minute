@@ -1,14 +1,10 @@
 import styled from 'styled-components';
+import SubmitButton from '../../../auth/SubmitButton';
 
-const MainBtn = styled.button`
-  background-color: none;
-  font-size: 36px;
-  padding: 18px 70px;
-  border: 6px solid ${props => props.theme.fontColor};
-  border-radius: 15px;
-  margin: 40px 80px;
-  cursor: pointer;
-  text-decoration: none;
-`
+// posts(글 목록) 페이지 작성하기 버튼
+const WriteBtn = styled(SubmitButton)`
+  padding: 15px;
+  width: 20%;
+`;
 
-export default MainBtn;
+export default WriteBtn;
