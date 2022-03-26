@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaUsers } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
 import Swal from 'sweetalert2';
+import routes from '../../routes';
 import AreaLabel from '../auth/AreaLabel';
 import IconBtn from '../auth/IconBtn';
 import EmptyMsg from '../auth/EmptyMsg';
@@ -29,6 +31,7 @@ function CreateCommunity() {
 		mode: 'all',
 	});
 	const [nameCheck, setNameCheck] = useState(false);
+	const navigate = useNavigate();
 
 	const handleNameCheck = async () => {
 		// check process
@@ -39,7 +42,7 @@ function CreateCommunity() {
 		} catch (e) {
 			Swal.fire({
 				icon: 'error',
-				text: '중복된 커뮤니티 이름입니다.',
+				text: '이미 사용 중인 커뮤니티 이름입니다.',
 			});
 		}
 	};
@@ -48,12 +51,14 @@ function CreateCommunity() {
 		const { name, isPrivate, intro } = getValues();
 		try {
 			// api
-			await apiCreateCommunity({ name, isPrivate, intro });
+			const response = await apiCreateCommunity({ name, isPrivate, intro });
+			const { id } = response.data;
 			// alert
 			await Swal.fire({
 				icon: 'success',
 				text: `${name} 커뮤니티가 생성되었습니다.`,
 			});
+			navigate(`${routes.community}/${id}`);
 		} catch (e) {
 			// e.response.status
 			setError('result', { message: '커뮤니티 생성에 실패하였습니다.' });
@@ -86,6 +91,7 @@ function CreateCommunity() {
 					type='name'
 					placeholder='커뮤니티 이름'
 					maxLength='16'
+					onChange={() => setNameCheck(false)}
 					onInput={() => clearErrors('result')}
 				/>
 				<IconBtn type='button' onClick={handleNameCheck}>
@@ -101,6 +107,7 @@ function CreateCommunity() {
 					onInput={() => clearErrors('result')}
 				/>
 			</Label>
+			<EmptyMsg />
 			<AreaLabel htmlFor='intro'>
 				커뮤니티 소개
 				<textarea {...register('intro')} onInput={() => clearErrors('result')} />
