@@ -37,22 +37,24 @@ def parse_audio(audio_path: str, del_silence: bool = False, audio_extension: str
 
     return torch.FloatTensor(feature).transpose(0, 1)
 
+def getText(audio_path):
+    parser = argparse.ArgumentParser(description='KoSpeech')
+    # parser.add_argument('--audio_path', type=str, required=True)
+    opt = parser.parse_args()
 
-parser = argparse.ArgumentParser(description='KoSpeech')
-parser.add_argument('--audio_path', type=str, required=True)
-opt = parser.parse_args()
+    feature = parse_audio(audio_path, del_silence=True)
+    input_length = torch.LongTensor([len(feature)])
+    vocab = KsponSpeechVocabulary('C:/Users/multicampus/Desktop/kospeech/data/vocab/aihub_character_vocabs.csv')
 
-feature = parse_audio(opt.audio_path, del_silence=True)
-input_length = torch.LongTensor([len(feature)])
-vocab = KsponSpeechVocabulary('C:/Users/multicampus/Desktop/kospeech/data/vocab/aihub_character_vocabs.csv')
+    model = torch.load('C:/Users/multicampus/Desktop/models/model.pt', map_location=lambda storage, loc: storage).to('cpu')
+    if isinstance(model, nn.DataParallel):
+        model = model.module
+    model.eval()
 
-model = torch.load('C:/Users/multicampus/Desktop/S06P22D202/BE/AI/STT/2/model.pt', map_location=lambda storage, loc: storage).to('cpu')
-if isinstance(model, nn.DataParallel):
-    model = model.module
-model.eval()
+    model.device = 'cpu'
+    y_hats = model.recognize(feature.unsqueeze(0), input_length)
 
-model.device = 'cpu'
-y_hats = model.recognize(feature.unsqueeze(0), input_length)
+    sentence = vocab.label_to_string(y_hats.cpu().detach().numpy())
+    return sentence
 
-sentence = vocab.label_to_string(y_hats.cpu().detach().numpy())
-print(sentence)
+print(getText("C:/Users/multicampus/Desktop/S06P22D202/BE/AI/article.wav"))
