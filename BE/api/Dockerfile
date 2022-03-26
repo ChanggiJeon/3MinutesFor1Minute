@@ -18,7 +18,7 @@ RUN mkdir /backend
 WORKDIR /backend
 COPY ./ ./
 RUN conda env create -f environment.yaml
-RUN conda activate ai
+RUN echo "source activate ai" > ~/.bashrc
+ENV PATH /opt/conda/envs/nenv/bin:$PATH
 RUN pip install --upgrade pip
 RUN pip install gunicorn
-ENV PATH /opt/conda/envs/ai/bin:$PATH
