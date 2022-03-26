@@ -25,31 +25,28 @@ function PostCreate() {
 	} = useForm({
 		mode: 'all',
 	});
-	// const { communityId } = useParams();
-	const communityId = 1;
+	const { communityId } = useParams();
 	const navigate = useNavigate();
 
 	const onValidSubmit = async () => {
 		const { title, content, isNotice, upload } = getValues();
-		let postId = 0;
-		let date = '';
 
 		try {
-			await apiCreateBoard({
+			const response = await apiCreateBoard({
 				communityId,
 				title,
 				content,
 				isNotice,
 				upload,
-			}).then(res => {
-				postId = res?.data?.post_id;
-				date = res?.data?.date;
-			});
+			})
+			console.log(response.data)
+			const { id: postId } = response.data;
+
 			await Swal.fire({
 				icon: 'success',
 				text: '게시글이 성공적으로 작성되었습니다.',
 			});
-			navigate('');
+			navigate(`${routes.community}/${communityId}/${routes.posts}/${postId}`);
 		} catch (e) {
 			// error
 			await Swal.fire({
@@ -62,12 +59,16 @@ function PostCreate() {
 	return (
 		<ComMain>
 			<Background>
-        <Header>
-          <BoardTitle>게시글 작성</BoardTitle>
-          <RightBtn>
-            <SLink to={`${routes.community}/${communityId}${routes.posts}`}>◀</SLink>
-          </RightBtn>
-        </Header>
+				<Header>
+					<BoardTitle>게시글 작성</BoardTitle>
+					<RightBtn
+						onClick={() =>
+							navigate(`${routes.community}/${communityId}/${routes.posts}`)
+						}
+					>
+						◀
+					</RightBtn>
+				</Header>
 				<NForm onSubmit={handleSubmit(onValidSubmit)}>
 					<Label htmlFor='title'>
 						<input
@@ -78,7 +79,7 @@ function PostCreate() {
 							placeholder='제목 없음'
 						/>
 					</Label>
-          
+
 					{/* 관리자이면 공지인지 아닌지 설정 가능한 체크박스 나온다 */}
 					{true ? (
 						<Label htmlFor='isNotice'>

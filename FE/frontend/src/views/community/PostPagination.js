@@ -46,9 +46,9 @@ function PostPagination({ total, limit, page, setPage }) {
 
 			{numPages > 0 && Array(numPages)
 				.fill()
-				.map((e, i) => (
+				.map((_, i) => (
 					<Button
-						key={e}
+						key={Math.random()}
 						onClick={() => setPage(i + 1)}
 						aria-current={page === i + 1 ? 'page' : null}
 					>

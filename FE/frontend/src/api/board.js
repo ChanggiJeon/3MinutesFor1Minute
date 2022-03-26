@@ -9,11 +9,11 @@ export const apiCreateBoard = ({ communityId, title, content, isNotice, upload }
       title,
       content,
       is_notice: isNotice,
-      upload,
+      // upload,
     },
-    // headers: {
-    //   ...setToken(),
-    // }
+    headers: {
+      ...setToken(),
+    }
   });
 
 export const apiCreateComment = ({ communityId, postId, content }) => 
@@ -23,18 +23,27 @@ export const apiCreateComment = ({ communityId, postId, content }) =>
     data: {
       content,
     },
+    headers: {
+      ...setToken(),
+    }
   });
 
 export const apiGetBoards = ({ communityId }) =>
   axios({
     method: 'get',
     url: `${BASE_URL}/${communityId}/boards/`,
+    headers: {
+      ...setToken(),
+    }
   });
 
 export const apiGetBoardDetail = ({ communityId, postId }) =>
   axios({
     method: 'get',
     url: `${BASE_URL}/${communityId}/boards/${postId}/`,
+    headers: {
+      ...setToken(),
+    }
   });
 
 export const apiPutBoardDetail = ({ communityId, postId, title, content, isNotice, upload }) => 
@@ -47,6 +56,9 @@ export const apiPutBoardDetail = ({ communityId, postId, title, content, isNotic
       is_notice: isNotice,
       upload,
     },
+    headers: {
+      ...setToken(),
+    }
   });
 
 export const apiPutComment = ({ communityId, postId, commentId, content }) => 
@@ -56,15 +68,18 @@ export const apiPutComment = ({ communityId, postId, commentId, content }) =>
     data: {
       content,
     },
+    headers: {
+      ...setToken(),
+    }
   });
 
 export const apiDeleteBoardDetail = ({ communityId, postId }) =>
   axios({
     method: 'delete',
     url: `${BASE_URL}/${communityId}/boards/${postId}/delete/`,
-    // headers: {
-    //   ...setToken(),
-    // },
+    headers: {
+      ...setToken(),
+    },
   });
 
 export const apiDeleteComment = ({ communityId, postId, commentId, content }) => 
@@ -74,4 +89,7 @@ export const apiDeleteComment = ({ communityId, postId, commentId, content }) =>
     data: {
       content,
     },
+    headers: {
+      ...setToken(),
+    }
   });
