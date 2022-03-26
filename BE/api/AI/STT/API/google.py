@@ -1,7 +1,5 @@
 from google.cloud import storage
 import os
-
-
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./ssafy-345204-8ee8c7463811.json"
 
 
@@ -43,6 +41,6 @@ def transcribe_gcs(file_name):
     return STT_text
 
 
-if __name__ == "__main__":
-    upload_file("C:/Users/multicampus/Desktop/S06P22D202/BE/api/media/test/", "article.wav")
-    print(transcribe_gcs("article.wav"))
+# if __name__ == "__main__":
+#     upload_file("C:/Users/multicampus/Desktop/S06P22D202/BE/api/media/test/", "article.wav")
+#     print(transcribe_gcs("article.wav"))

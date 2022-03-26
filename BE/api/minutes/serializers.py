@@ -36,7 +36,15 @@ class SpeechSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speech
         fields = '__all__'
-        read_only_fields = ('participant', 'minute', 'speech_comments', )
+        read_only_fields = ('participant', 'minute', )
+
+
+class CustomSpeechSerializer(SpeechSerializer):
+
+    class Meta:
+        model = Speech
+        fields = '__all__'
+        read_only_fields = ('participant', 'minute', 'content', 'summary', 'cloud_keyword', )
 
 
 class MinuteListSerializer(serializers.ModelSerializer):
@@ -65,3 +73,12 @@ class MinuteSerializer(serializers.ModelSerializer):
         model = Minute
         fields = '__all__'
         read_only_fields = ('community', )
+
+
+class CustomMinuteSerializer(MinuteSerializer):
+    participants = serializers.ListField()
+
+    class Meta:
+        model = Minute
+        fields = '__all__'
+        read_only_fields = ('community', 'conclusion', 'is_closed', )

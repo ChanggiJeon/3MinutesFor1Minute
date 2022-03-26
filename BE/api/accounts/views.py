@@ -18,7 +18,7 @@ def signup(request):
     username_check = re.findall('[a-z]', username)
     username_check += re.findall('[A-Z]', username)
 
-    if len(username) < 5 or len(username) > 15 or not username_check or re.findall('[`~!@#$%^&*(),<.>/?]+', username):
+    if len(username) < 5 or len(username) > 16 or not username_check or re.findall('[`~!@#$%^&*(),<.>/?]+', username):
         return Response({'error: 아이디 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
 
     if password != password_confirm:
