@@ -17,7 +17,7 @@ ENV DATABASE_PORT $DATABASE_PORT
 RUN mkdir /backend
 WORKDIR /backend
 COPY ./ ./
-RUN conda env create -f environment.yaml
+RUN conda env create -f environment.yml
 RUN conda activate ai
 RUN pip install --upgrade pip
 RUN pip install gunicorn
