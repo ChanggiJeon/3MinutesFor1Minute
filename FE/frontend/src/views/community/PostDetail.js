@@ -131,12 +131,8 @@ function PostDetail() {
 		<Background>
 			<Header>
 				<TextTitle>글 수정</TextTitle>
-				<BackBtn>
-					<SLink
-						to={`${routes.community}/${communityId}${routes.postDetail}/${post.id}`}
-					>
-						◀
-					</SLink>
+				<BackBtn onClick={() => navigate(`${routes.community}/${communityId}${routes.postDetail}/${post.id}`)}>
+					◀
 				</BackBtn>
 			</Header>
 			<NForm onSubmit={handleSubmit(onValidSubmit)}>
@@ -175,8 +171,8 @@ function PostDetail() {
 		<Background>
 			<Header>
 				<TextTitle>글 상세보기</TextTitle>
-				<BackBtn>
-					<SLink to={`${routes.community}/${communityId}${routes.posts}`}>◀</SLink>
+				<BackBtn onClick={() => navigate(`${routes.community}/${communityId}/${routes.posts}`)}>
+					◀
 				</BackBtn>
 			</Header>
       <Detail>
