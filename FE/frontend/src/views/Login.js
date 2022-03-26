@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
 import { MdOutlineLock } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/user';
 import routes from '../routes';
 import Divider from '../components/auth/Divider';
@@ -37,25 +37,28 @@ function Login() {
 	const dispatch = useDispatch();
 	const [isFindIdMode, setFindIdmode] = useState(false);
 	const [isFindPwMode, setFindPwmode] = useState(false);
+	const { isLoggedIn } = useSelector(state => state.user);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigate(routes.main);
+		}
+	}, [isLoggedIn]);
 
 	const onValidSubmit = async () => {
 		const { id, password } = getValues();
 
 		try {
 			// api
-			await apiLogin({ username: id, password }).then(res => {
-				const {
-					data: { access, refresh },
-				} = res;
-
-				localStorage.setItem('access', access);
-				localStorage.setItem('refresh', refresh);
-			});
+			const response = await apiLogin({ username: id, password });
+			const { access, refresh } = response.data;
 			dispatch(
 				login({
 					isLoggedIn: true,
 					// username: '',
 					// profile: '',
+					access,
+					refresh,
 				})
 			);
 			clearErrors('result');
