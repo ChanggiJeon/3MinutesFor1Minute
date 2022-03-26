@@ -46,7 +46,7 @@ feature = parse_audio(opt.audio_path, del_silence=True)
 input_length = torch.LongTensor([len(feature)])
 vocab = KsponSpeechVocabulary('C:/Users/multicampus/Desktop/kospeech/data/vocab/aihub_character_vocabs.csv')
 
-model = torch.load('C:/Users/multicampus/Desktop/kospeech/model.pt', map_location=lambda storage, loc: storage).to('cpu')
+model = torch.load('C:/Users/multicampus/Desktop/S06P22D202/BE/AI/STT/2/model.pt', map_location=lambda storage, loc: storage).to('cpu')
 if isinstance(model, nn.DataParallel):
     model = model.module
 model.eval()
