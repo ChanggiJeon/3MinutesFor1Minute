@@ -36,15 +36,29 @@ class SpeechSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speech
         fields = '__all__'
-        read_only_fields = ('participant', 'minute', 'speech_comments', )
+        read_only_fields = ('participant', 'minute', )
+
+
+class CustomSpeechSerializer(SpeechSerializer):
+
+    class Meta:
+        model = Speech
+        fields = '__all__'
+        read_only_fields = ('participant', 'minute', 'content', 'summary', 'cloud_keyword', )
 
 
 class MinuteListSerializer(serializers.ModelSerializer):
+    assignee = serializers.SerializerMethodField('assign')
+
+    def assign(self, minute):
+        participant = Participant.objects.filter(minute=minute, is_assignee=True)
+        serializer = ParticipantSerializer(participant, many=True)
+        return serializer.data
 
     class Meta:
         model = Minute
-        fields = ('id', 'community', 'title', 'is_closed', 'created_at', )
-        read_only_fields = ('id', 'community', 'created_at', )
+        fields = ('title', 'is_closed', 'deadline', 'created_at', 'assignee', )
+        read_only_fields = ('created_at', )
 
 
 class MinuteSerializer(serializers.ModelSerializer):
@@ -65,3 +79,12 @@ class MinuteSerializer(serializers.ModelSerializer):
         model = Minute
         fields = '__all__'
         read_only_fields = ('community', )
+
+
+class CustomMinuteSerializer(MinuteSerializer):
+    participants = serializers.ListField()
+
+    class Meta:
+        model = Minute
+        fields = '__all__'
+        read_only_fields = ('community', 'conclusion', 'is_closed', )

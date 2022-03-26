@@ -3,7 +3,6 @@
 ### 공통 (중복되는 부분) : http://127.0.0.1:8000/api/
 
 - 계정 (Account)
-
   - 로그인 [POST] : api/token/
     - 아이디 : username (string)
     - 비밀번호 : password (string)
@@ -14,6 +13,7 @@
   - 회원 탈퇴 [DELETE] : delete/<str : username>/
   - 아이디 중복 확인 [GET] : uniquecheck/username/<str : username>/
   - 이메일 중복 확인 [GET] : uniquecheck/email/<str : email>/
+  - 프로필 [GET] : profile/<str : username>/
 
 
 
