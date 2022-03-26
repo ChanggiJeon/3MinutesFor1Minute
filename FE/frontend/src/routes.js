@@ -6,6 +6,7 @@ const routes = {
 	// community
 	community: '/community',
 	records: 'records',
+	members: 'members',
 };
 
 export default routes;
