@@ -9,6 +9,7 @@ import Signup from './views/Signup';
 import Community from './views/community/Community';
 import ComIndex from './views/community/Index';
 import Records from './views/community/minutes/Records';
+import MinutesList from './views/community/minutes/MinutesList';
 
 function App() {
 	return (
@@ -23,6 +24,7 @@ function App() {
 						<Route path={routes.community} element={<ComIndex />}>
 							<Route index element={<Community />} />
 							<Route path={routes.records} element={<Records />} />
+							<Route path={routes.minutesList} element={<MinutesList />} />
 						</Route>
 					</Route>
 				</Routes>
