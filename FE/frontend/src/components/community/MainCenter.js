@@ -7,7 +7,7 @@ const Main = styled.div`
   justify-content: center;
   height: 85%;
   width: 80%;
-  margin: 20px 0px 0px 270px;
+  margin: 40px 0px 0px 270px;
 `
 
 export default Main;
