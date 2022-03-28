@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { apiGetBoards } from '../../api/board';
 import routes from '../../routes';
 import Table from '../../components/common/Table';
-import ComMain from '../../components/community/main/ComMain';
+import ComMain from '../../components/community/MainStart';
 import Background from '../../components/community/board/list/Background';
 import BackBtn from '../../components/community/board/list/BackBtn';
 import WriteBtn from '../../components/community/board/list/WriteBtn';
