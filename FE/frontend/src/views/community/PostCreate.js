@@ -9,7 +9,7 @@ import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
 import RightBtn from '../../components/community/board/list/BackBtn';
 import SLink from '../../components/community/board/list/SLink';
-import ComMain from '../../components/community/main/ComMain';
+import ComMain from '../../components/community/MainStart';
 import Background from '../../components/community/board/list/Background';
 import Header from '../../components/community/board/list/Header';
 import BoardTitle from '../../components/community/board/list/BoardTitle';
@@ -38,8 +38,7 @@ function PostCreate() {
 				content,
 				isNotice,
 				upload,
-			})
-			console.log(response.data)
+			});
 			const { id: postId } = response.data;
 
 			await Swal.fire({
