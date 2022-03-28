@@ -18,6 +18,8 @@ import torch.nn as nn
 import numpy as np
 import torchaudio
 from torch import Tensor
+from hanspell import spell_checker
+import re
 
 from kospeech.vocabs.ksponspeech import KsponSpeechVocabulary
 from kospeech.data.audio.core import load_audio
@@ -55,6 +57,30 @@ def getText(audio_path):
     y_hats = model.recognize(feature.unsqueeze(0), input_length)
 
     sentence = vocab.label_to_string(y_hats.cpu().detach().numpy())
-    return sentence
+    sentence = sentence[0]
+    
+    text = sentence.replace('\n',' ')
+    text = ' '.join(text.split())
+    p = re.compile('\S\b*다\s')
+    text = re.sub(p,'다. ',text)
+    p = re.compile('[.]+')
+    text = re.sub(p,'.',text)
+    input_convert = text.replace('.','.#').split('#')
+    input_list =  [""]
 
-print(getText("C:/Users/multicampus/Desktop/S06P22D202/BE/AI/article.wav"))
+    for i in input_convert:
+        if len(input_list[-1]) + len(i) < 500:
+            input_list[-1] += i
+        else:
+            input_list.append(i)  
+    
+    result = spell_checker.check(input_list)
+
+    fixed_text = ''
+    for i in result:
+        fixed_text += i.checked
+
+    return fixed_text
+
+text = getText("C:/Users/multicampus/Desktop/models/test.wav")
+print(text)
