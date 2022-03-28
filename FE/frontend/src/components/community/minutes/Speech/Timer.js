@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { BsAlarmFill } from 'react-icons/bs';
-import TextTitle from '../../common/TextTitle';
+import TextTitle from '../../../common/TextTitle';
 
 const StyledTimer = styled(TextTitle)`
 	display: flex;
