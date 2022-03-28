@@ -7,7 +7,7 @@ fi
 
 domains="j6d202.p.ssafy.io"
 rsa_key_size=4096
-data_path="../certbot"
+data_path="./FE/frontend/certbot"
 email="wotjd4725@gmail.com" # Adding a valid address is strongly recommended
 staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
 
