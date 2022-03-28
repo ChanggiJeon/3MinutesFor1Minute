@@ -20,8 +20,8 @@ class Member(models.Model):
     bio = models.CharField(max_length=100, blank=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
-    profile_image = models.ImageField(upload_to='images/', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    profile_image = models.ImageField(upload_to='images/', null=True)
 
     def __str__(self):
         return self.nickname
