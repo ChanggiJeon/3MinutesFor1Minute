@@ -1,6 +1,7 @@
 import torch
 from transformers import PreTrainedTokenizerFast
 from transformers import BartForConditionalGeneration
+from gensim.summarization.summarizer import summarize
 
 tokenizer = PreTrainedTokenizerFast.from_pretrained('digit82/kobart-summarization')
 model = BartForConditionalGeneration.from_pretrained('digit82/kobart-summarization')
@@ -25,3 +26,4 @@ LG에너지솔루션이 캐나다에 미국 완성차 업체 스텔란티스와 
 종목별 전체 거래대금 대비 공매도 거래대금의 비중으로는 포스코케미칼(18.40%), 호텔신라(18.18%), 엔지켐생명과학(17.33%) 등이 LG에너지솔루션의 뒤를 이었다.
 유가증권시장과 코스닥시장 전체 공매도 거래대금은 지난 14일 1조17억원까지 늘었다가 증시가 반등하면서 지난 25일 4500억원대로 감소했다."""
 print(summery(text))
+print(summarize(text, ratio=0.4))
