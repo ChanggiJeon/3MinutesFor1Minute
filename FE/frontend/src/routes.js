@@ -3,21 +3,15 @@ const routes = {
 	main: '/',
 	login: '/login',
 	signup: '/signup',
-<<<<<<< HEAD
 	// community
 	community: '/community',
 	records: 'records',
 	minutesList: 'minutes',
-  posts: 'posts',
-  postCreate: 'posts/postcreate',
-  postDetail: 'posts/:postId',
-=======
-	community: '/community/:communityId',
-	minutesList: '/community/:communityId/minutes',
-	minutesDetail: '/community/:communityId/minutes/detail',
-	minutesCreate: '/community/:communityId/minutes/speechCreate',
-	records: '/community/:communityId/records',
->>>>>>> d758960 (Feat/FE/Add : minutes list)
+	minutesDetail: 'minutes/detail',
+	minutesCreate: 'minutes/speechCreate',
+	posts: 'posts',
+	postCreate: 'posts/postcreate',
+	postDetail: 'posts/:postId',
 };
 
 export default routes;
