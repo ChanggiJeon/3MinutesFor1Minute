@@ -176,8 +176,17 @@ https://cloud.google.com/sdk/docs/install#windows
     2. 실행중인 process확인결과 실행중인 것으로 나옴
     3. 하지만 5000step마다 생성되어야할 모델이 생성되지 않는 것을 보아, 어떠한 문제가 발생된 듯 싶음
     4. 정확히 어떠한 문제인지 파악 불가
-    5. forground로 실행하여 학습 진행(배치사이즈 64, augmentation 사용 x) >>> 성공!!
+    5. foreground 실행하여 학습 진행(배치사이즈 64, augmentation 사용 x) >>> 성공!!
     ```
+    
+ 4. Validate set 문제
+
+    ```
+    1. train : validate = 520,000 : 100,000 으로 잡아서 학습을 진행시킴
+    2. foreground로 진행하다 보니, validate 도중에 logger가 찍히지 않아서 오랜 시간 응답없음으로 서버 연결이 끊킴! => 코드를 변경하여 로그를 가끔씩 찍을 수 있도록 변경
+    ```
+
+    
 
 
 
@@ -227,5 +236,23 @@ https://github.com/seujung/KoBART-summarization
 정확도가 알라꿍달라꿍보다 높음.(체감상)
 KoBART pre-trainning모델을 사용하고, Dacon 한국어 문서 생성요약 AI 경진대회의 학습 데이터로
 fine-tuning한 모델을 사용함.(학습 예정)
+```
+
+
+
+#### 4. pororo
+
+```
+설치가 엄청나게 복잡함.
+21년 이후 commit이 없고, windows에서는 설치하기 힘든 라이브러리와, 구버전의 cuda를 깔아야하고(이를 위해 파이썬 버전도 3.7이하로 해야함.), 여러 에러들을 발생시킴.
+```
+
+
+
+#### 5. textRank
+
+```
+설치 및 사용이 매우 쉬우나, 요약 성능이 찾아본 모델중 가장 떨어짐.
+설치시 gensim==3.8.3버전으로 설치해야함.(이후 버전은 gensim에서 summarization을 지원하지 x)
 ```
 
