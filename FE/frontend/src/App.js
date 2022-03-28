@@ -8,6 +8,9 @@ import Index from './views/Index';
 import Signup from './views/Signup';
 import Community from './views/community/Community';
 import ComIndex from './views/community/Index';
+import Posts from './views/community/Posts';
+import PostCreate from './views/community/PostCreate';
+import PostDetail from './views/community/PostDetail';
 import Records from './views/community/minutes/Records';
 import Error404 from './views/Error404';
 import Members from './views/community/Members';
@@ -26,6 +29,9 @@ function App() {
 							<Route index element={<Community />} />
 							<Route path={routes.records} element={<Records />} />
 							<Route path={routes.members} element={<Members />} />
+							<Route path={routes.posts} element={<Posts />} />
+							<Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
+							<Route path={routes.postCreate} element={<PostCreate />} />
 						</Route>
 					</Route>
 					<Route path='*' element={<Error404 />} />

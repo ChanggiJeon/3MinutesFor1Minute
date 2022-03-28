@@ -25,6 +25,8 @@ def board_create(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     me = get_object_or_404(Member, user=request.user, community=community)
     serializer = BoardSerializer(data=request.data)
+    print('1')
+    print(serializer)
 
     if serializer.is_valid(raise_exception=True):
         serializer.save(member=me, community=community)
