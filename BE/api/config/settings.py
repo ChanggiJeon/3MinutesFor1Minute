@@ -69,7 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 CORS_ORIGIN_WHITELIST = env.list('ALLOWED_HOSTS')
 CORS_ALLOW_CREDENTIALS = True
 
