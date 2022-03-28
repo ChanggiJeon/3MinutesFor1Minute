@@ -24,4 +24,4 @@ function MinutesList() {
   )
 }
 
-export default MinutesList
+export default MinutesList;
