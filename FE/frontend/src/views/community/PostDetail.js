@@ -12,7 +12,7 @@ import routes from '../../routes';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
 import SubmitButton from '../../components/auth/SubmitButton';
-import ComMain from '../../components/community/main/ComMain';
+import ComMain from '../../components/community/MainStart';
 import Background from '../../components/community/board/list/Background';
 import Header from '../../components/community/board/list/Header';
 import TextTitle from '../../components/common/TextTitle';

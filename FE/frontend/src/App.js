@@ -12,6 +12,9 @@ import Posts from './views/community/Posts';
 import PostCreate from './views/community/PostCreate';
 import PostDetail from './views/community/PostDetail';
 import Records from './views/community/minutes/Records';
+import MinutesList from './views/community/minutes/MinutesList';
+import MinutesDetail from './views/community/minutes/MinutesDetail';
+import SpeechCreate from './views/community/minutes/SpeechCreate';
 
 function App() {
 	return (
@@ -23,13 +26,16 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
-            <Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
-              <Route index element={<Community />} />
+						<Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
+							<Route index element={<Community />} />
 							<Route path={routes.records} element={<Records />} />
-              <Route path={routes.posts} element={<Posts />} />
-              <Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
-              <Route path={routes.postCreate} element={<PostCreate />} />
-            </Route>
+							<Route path={routes.posts} element={<Posts />} />
+							<Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
+							<Route path={routes.postCreate} element={<PostCreate />} />
+							<Route path={routes.minutesList} element={<MinutesList />} />
+							<Route path={routes.minutesDetail} element={<MinutesDetail />} />
+							<Route path={routes.minutesCreate} element={<SpeechCreate />} />
+						</Route>
 					</Route>
 				</Routes>
 			</Router>

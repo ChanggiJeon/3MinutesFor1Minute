@@ -6,9 +6,12 @@ const routes = {
 	// community
 	community: '/community',
 	records: 'records',
-  posts: 'posts',
-  postCreate: 'posts/postcreate',
-  postDetail: 'posts/:postId',
+	minutesList: 'minutes',
+	minutesDetail: 'minutes/detail',
+	minutesCreate: 'minutes/speechCreate',
+	posts: 'posts',
+	postCreate: 'posts/postcreate',
+	postDetail: 'posts/:postId',
 };
 
 export default routes;
