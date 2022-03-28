@@ -21,7 +21,7 @@ services:
     container_name: certbot_service
     volumes:
       - ./FE/frontend/certbot/conf:/etc/letsencrypt
-      - ./FE/frontend/certbot/:/var/www/certbot
+      - ./FE/frontend/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   # nginx:
