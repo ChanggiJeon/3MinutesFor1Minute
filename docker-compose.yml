@@ -1,6 +1,7 @@
 version: "3.7"
 services:
   frontend:
+    restart: unless-stopped
     build:
       context: ./FE/frontend
       # args:
@@ -37,14 +38,16 @@ services:
       # - "443:443"
 
   backend:
+    restart: unless-stopped
     build:
       context: ./BE/api
     container_name: backend
-    command: bash -c "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"::
+    # command: bash -c "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     ports:
       - "8000:8000"
-    restart: always
-    volumes:
-      - ./BE/api:/app
     env_file:
       - ./BE/api/.env
+    volumes:
+      - ./BE/api:/app
+    entrypoint:
+      /backend/wsgi-entrypoint.sh
