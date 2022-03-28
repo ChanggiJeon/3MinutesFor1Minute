@@ -49,6 +49,6 @@ services:
       - ./BE/api/.env
     volumes:
       - ./BE/api:/app
-    command: chmod +x docker/backend/wsgi-entrypoint.sh
+    command: chmod +x backend/wsgi-entrypoint.sh
     entrypoint:
       /backend/wsgi-entrypoint.sh
