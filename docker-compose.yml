@@ -9,7 +9,7 @@ services:
     volumes:
       - /app/node_modules
       - ./FE/frontend:/app
-      - ./etc/letsencrypt:/cert
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - 80:80
       - 443:443
