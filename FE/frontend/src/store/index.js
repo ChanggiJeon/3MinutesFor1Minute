@@ -1,4 +1,8 @@
-import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import {
+	combineReducers,
+	configureStore,
+	getDefaultMiddleware,
+} from '@reduxjs/toolkit';
 import userReducer, { authMiddleware } from './user';
 import postsReducer from './posts';
 import minutesReducer from './minutes';
