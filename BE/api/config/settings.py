@@ -70,7 +70,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-CORS_ORIGIN_WHITELIST = env.list('ALLOWED_HOSTS')
+CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST')
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'config.urls'
