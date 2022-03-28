@@ -24,3 +24,5 @@ tzdata
 uritemplate
 urllib3
 yacs
+gensim
+pillow
