@@ -3,8 +3,10 @@ from transformers import PreTrainedTokenizerFast
 from transformers import BartForConditionalGeneration
 from gensim.summarization.summarizer import summarize
 
+
 tokenizer = PreTrainedTokenizerFast.from_pretrained('digit82/kobart-summarization')
 model = BartForConditionalGeneration.from_pretrained('digit82/kobart-summarization')
+
 
 def summery(text : str):
     raw_input_ids = tokenizer.encode(text)
@@ -12,6 +14,7 @@ def summery(text : str):
     summary_ids = model.generate(torch.tensor([input_ids]),  num_beams=4,  max_length=512,  eos_token_id=1)
     output = tokenizer.decode(summary_ids.squeeze().tolist(), skip_special_tokens=True)
     return output
+
 
 text = """LG에너지솔루션이 러시아의 우크라이나 침공이 시작된 이후 국내 증시에서 공매도 거래대금이 가장 많았던 종목인 것으로 나타났다.
 26일 한국거래소에 따르면 LG에너지솔루션은 코스피200에 편입된 지난 11일부터 전날까지 공매도 거래대금이 9217억원을 기록했다. 이는 공매도 대상인 코스피200·코스닥150지수 종목 가운데 가장 많은 액수다.

@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { setToken } from './utils';
-
-const BASE_URL = 'http://127.0.0.1:8000/api'
+import { BASE_URL,setToken } from './utils';
 
 async function getAllMinutes( communityId ) {
 	try {
