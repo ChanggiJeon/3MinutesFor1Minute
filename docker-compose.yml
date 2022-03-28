@@ -9,20 +9,12 @@ services:
     volumes:
       - /app/node_modules
       - ./FE/frontend:/app
-      - ./FE/frontend/certbot/conf:/etc/letsencrypt
-      - ./FE/frontend/certbot/www:/var/www/certbot
+      - ./etc/letsencrypt:/cert
     ports:
       - 80:80
       - 443:443
     depends_on:
       - backend
-  certbot:
-    image: certbot/certbot
-    container_name: certbot_service
-    volumes:
-      - ./FE/frontend/certbot/conf:/etc/letsencrypt
-      - ./FE/frontend/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   # nginx:
   #   restart: always
