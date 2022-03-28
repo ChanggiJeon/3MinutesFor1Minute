@@ -38,7 +38,7 @@ function PostCreate() {
 				content,
 				isNotice,
 				upload,
-			})
+			});
 			const { id: postId } = response.data;
 
 			await Swal.fire({
