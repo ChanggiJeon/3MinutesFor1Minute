@@ -12,6 +12,7 @@ import Posts from './views/community/Posts';
 import PostCreate from './views/community/PostCreate';
 import PostDetail from './views/community/PostDetail';
 import Records from './views/community/minutes/Records';
+import MinutesList from './views/community/minutes/MinutesList';
 
 function App() {
 	return (
@@ -29,7 +30,8 @@ function App() {
               <Route path={routes.posts} element={<Posts />} />
               <Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
               <Route path={routes.postCreate} element={<PostCreate />} />
-            </Route>
+							<Route path={routes.minutesList} element={<MinutesList />} />
+						</Route>
 					</Route>
 				</Routes>
 			</Router>

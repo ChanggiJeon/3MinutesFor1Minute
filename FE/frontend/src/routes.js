@@ -6,6 +6,7 @@ const routes = {
 	// community
 	community: '/community',
 	records: 'records',
+	minutesList: 'minutes',
   posts: 'posts',
   postCreate: 'posts/postcreate',
   postDetail: 'posts/:postId',

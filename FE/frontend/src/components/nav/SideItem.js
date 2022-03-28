@@ -1,17 +1,16 @@
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const SideItem = styled.div`
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 2rem;
-  font-size: 20px;
-  align-items: center;
-  justify-content: start;
-  width: 75%;
-  height: 150px;
-  margin-top: 1rem;
-`
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 0 2rem;
+	font-size: 20px;
+	align-items: center;
+	justify-content: start;
+	width: 75%;
+	height: 150px;
+	margin-top: 1rem;
+`;
 
 export default SideItem;

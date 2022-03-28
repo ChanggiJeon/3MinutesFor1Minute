@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import SidebarData from './SidebarData'
+import sidebarData from './SidebarData'
 import SidebarMenu from './SidebarMenu'
 import SideItems from './SideItmes'
 import SideItemLinks from './SideItemLinks'
@@ -18,9 +18,11 @@ const SideSubItemLinks = styled(SideItemLinks)`
 `
 
 function Sidebar() {
+  const dataSet = sidebarData()
+
   return (
     <SidebarMenu>
-      {SidebarData.map((item) => (
+      {dataSet.map((item) => (
         item.name === 'Minutes' ? (
           <SideItem key={item.name}>
             {item.icon}

@@ -17,7 +17,7 @@ const RecordsWave = styled.div`
   border: solid 10px ${props => props.theme.accentColor};
 	border-radius: 100%;
 	padding: 140px;
-	margin-top: 2vh;
+	margin-top: 1vh;
 	${props => props.status !== 'recording' && `display: none;`}
 	${props =>
 		props.status === 'recording' &&
