@@ -10,4 +10,5 @@ urlpatterns = [
     path('delete/<username>/', views.delete),
     path('uniquecheck/username/<username>/', views.unique_check_username),
     path('uniquecheck/email/<email>/', views.unique_check_email),
+    path('profile/<username>/', views.profile),
 ]

@@ -1,4 +1,51 @@
-# api url
+## 1. 가상환경 구축
+
+#### 0. Conda 가상환경 중 AI가 있으면 삭제한다.
+
+```
+conda env remove -n ai
+```
+
+#### 1. 설치
+
+```
+conda env create -f environment.yaml
+conda activate AI
+conda install -c conda-forge brotlipy
+pip install -r requirements.txt
+```
+
+
+
+## 2. BackEnd 실행
+
+#### 	1. conda activate AI
+
+#### 	2. F1 => python: Select Interpreter에서 AI로 설정.
+
+#### 	3. python manage.py runserver
+
+#### 	4. http://127.0.0.1:8000/swagger/ (스웨거)
+
+
+
+#### 주의 : env파일 받아서 api폴더에 넣고 .env로 이름 바꿔줘야함!
+
+
+
+## 3. DB 구축
+
+#### 1. mysql workbench를 열고, + 버튼을 눌러서 connections를 만든다.
+
+#### 2. 적당한 Name 주고, Port: 3307, Username: root, Password: ssafy.
+
+#### 3. myproject.sql로 DB 입력.
+
+
+
+
+
+## 4. api url
 
 ### 공통 (중복되는 부분) : http://127.0.0.1:8000/api/
 
