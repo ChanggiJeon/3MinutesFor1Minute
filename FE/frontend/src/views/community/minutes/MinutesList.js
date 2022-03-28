@@ -8,6 +8,8 @@ import ContentsList from '../../../components/community/minutes/list/ContentsLis
 
 const MinutesContainer = styled(Container)`
 	align-content: flex-start;
+	width: 85%;
+	height: 85%;
 `;
 
 function MinutesList() {

@@ -14,7 +14,7 @@ function ContentsList() {
 	return (
 		<ListBox>
 			{minutesList.map(minutes => (
-				<MinutesItem key={minutes.id} id={minutes.id} title={minutes.title} />
+				<MinutesItem key={minutes.id} title={minutes.title} />
 			))}
 		</ListBox>
 	);
