@@ -18,7 +18,7 @@ services:
     depends_on:
       - backend
   certbot:
-    image: sertbot/certbot
+    image: certbot/certbot
     container_name: certbot_service
     volumes:
       - ../certbot/conf:/etc/letsencrypt
