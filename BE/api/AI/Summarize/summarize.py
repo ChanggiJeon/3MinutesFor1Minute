@@ -2,8 +2,10 @@ import torch
 from transformers import PreTrainedTokenizerFast
 from transformers import BartForConditionalGeneration
 
+
 tokenizer = PreTrainedTokenizerFast.from_pretrained('digit82/kobart-summarization')
 model = BartForConditionalGeneration.from_pretrained('digit82/kobart-summarization')
+
 
 def summery(text : str):
     raw_input_ids = tokenizer.encode(text)
@@ -11,6 +13,7 @@ def summery(text : str):
     summary_ids = model.generate(torch.tensor([input_ids]),  num_beams=4,  max_length=512,  eos_token_id=1)
     output = tokenizer.decode(summary_ids.squeeze().tolist(), skip_special_tokens=True)
     return output
+
 
 text = """LG에너지솔루션이 러시아의 우크라이나 침공이 시작된 이후 국내 증시에서 공매도 거래대금이 가장 많았던 종목인 것으로 나타났다.
 26일 한국거래소에 따르면 LG에너지솔루션은 코스피200에 편입된 지난 11일부터 전날까지 공매도 거래대금이 9217억원을 기록했다. 이는 공매도 대상인 코스피200·코스닥150지수 종목 가운데 가장 많은 액수다.
@@ -24,4 +27,6 @@ LG에너지솔루션이 캐나다에 미국 완성차 업체 스텔란티스와 
 한편, LG에너지솔루션 다음으로는 삼성전자(7129억원), 두산중공업(4957억원), HMM(4024억원), 카카오(2869억원) 등의 공매도 거래대금이 많았다.
 종목별 전체 거래대금 대비 공매도 거래대금의 비중으로는 포스코케미칼(18.40%), 호텔신라(18.18%), 엔지켐생명과학(17.33%) 등이 LG에너지솔루션의 뒤를 이었다.
 유가증권시장과 코스닥시장 전체 공매도 거래대금은 지난 14일 1조17억원까지 늘었다가 증시가 반등하면서 지난 25일 4500억원대로 감소했다."""
-print(summery(text))
+
+
+# print(summery(text))
