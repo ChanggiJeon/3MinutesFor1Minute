@@ -35,4 +35,4 @@ RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 RUN pip install gunicorn
 RUN pip install -r requirements.txt
-RUN python py-hanspell-master/setup.py install
+RUN python AI/STT/hanspell/setup.py install
