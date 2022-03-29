@@ -4,8 +4,6 @@ RUN apt-get update
 RUN apt-get install default-libmysqlclient-dev -y
 RUN apt-get -y install gcc
 RUN apt-get install gcc g++ -y
-RUN chmod +x wsgi-entrypoint.sh
-RUN chmod +x manage.py
 ARG DEBUG
 ARG SECRET_KEY
 ARG ALLOWED_HOSTS
@@ -35,4 +33,4 @@ RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 RUN pip install gunicorn
 RUN pip install -r requirements.txt
-RUN python py-hanspell-master/setup.py install
+# RUN python AI/STT/hanspell/setup.py install
