@@ -81,5 +81,5 @@ def getText(audio_path):
 
     return fixed_text
 
-text = getText("C:/Users/multicampus/Desktop/models/test.wav")
-print(text)
+# text = getText("C:/Users/multicampus/Desktop/models/test.wav")
+# print(text)
