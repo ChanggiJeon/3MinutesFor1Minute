@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer
@@ -11,6 +11,7 @@ import re
 
 @swagger_auto_schema(method='POST', request_body=UserSerializer)
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signup(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -27,6 +28,7 @@ def signup(request):
     if len(password) < 8 or len(password) > 20 or not re.findall('[a-z]', password) or not re.findall('[A-Z]', password) \
         or not re.findall('[0-9]+', password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', password):
         return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
+
     serializers = UserSerializer(data=request.data)
 
     if serializers.is_valid(raise_exception=True):
@@ -37,7 +39,6 @@ def signup(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete(request, username):
     User = get_user_model()
     user = get_object_or_404(User, username=username)
@@ -49,6 +50,7 @@ def delete(request, username):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def unique_check_username(request, username):
     User = get_user_model()
 
@@ -60,6 +62,7 @@ def unique_check_username(request, username):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def unique_check_email(request, email):
     User = get_user_model()
 
@@ -71,7 +74,6 @@ def unique_check_email(request, email):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def profile(request, username):
     User = get_user_model()
     user = get_object_or_404(User, username=username)
