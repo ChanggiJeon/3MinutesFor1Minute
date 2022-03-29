@@ -26,8 +26,6 @@ ENV DATABASE_PORT $DATABASE_PORT
 RUN mkdir /backend
 WORKDIR /backend
 COPY ./ ./
-RUN chmod +x backend/BE/api/wsgi-entrypoint.sh
-RUN chmod +x backend/BE/api/manage.py
 RUN conda env create -f tmp.yml
 RUN echo "source activate ai" > ~/.bashrc
 ENV PATH /opt/conda/envs/nenv/bin:$PATH
@@ -35,4 +33,4 @@ RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 RUN pip install gunicorn
 RUN pip install -r requirements.txt
-RUN python AI/STT/hanspell/setup.py install
+# RUN python AI/STT/hanspell/setup.py install
