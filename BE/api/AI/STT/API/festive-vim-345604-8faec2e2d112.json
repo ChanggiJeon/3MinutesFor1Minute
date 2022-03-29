@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "festive-vim-345604",
+  "private_key_id": "8faec2e2d112e16b3c083895d4ea11c3f5bf6e97",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC4S6luPlJ9I4na\nil82bn81kjIJTr9OA7f0sq0buJfn+Rxocja8KbAiwx60Z357dP9truOW58BdL+Ig\nZ4AsiS9jnZffQ3oCoCxXQUQB8uWmIQaHyS6rMMwUge9sXx5eNTpgeV0oH8wcWIkv\n6Nvu8B9EB9QazN1QygmSHrvkIwDLgcUU+3MUgcVQ/Em5iM6+VXNICXiLy358fnTA\nDl00Iguc7BZzjD5i9C7Sp/hzQJnIEaYvWW+Ovotd6Vdus6j/Hh9hmSgwVe8GP49q\nMp43mFNoUp9CuM0XGwdm3JvESlWsuCNQKGD+jPa8CQC6kkxrMu/xvjCgkZBsC1A7\nLroxgUuTAgMBAAECggEALHRvz7xvyGjIqXMkSWx4+fKkaDNbGRXziy6IbD3oQpgH\n/rfCNTw3FQONBgZK77vGm24Kzw1jDPdua9ObiuKikDxk9IGBzl1VpMyE+5VcSOkB\nesKQI9I3ACFhn/oHyMC9LqVHz9Rvt0yx9uEMIERCvnXG95oALqs1iM4qE3tQB0aC\nrwxIjUaFMUuEAzkfW6RLb+g+dWeivnhfbz3u5a95GlE8Lreb7abUkH6kEQyLLbC0\nfzUXB0R6e7RA2k+a1ulylohVfh3mBvWflBfeKmKbh54MR8qHqbqqRQFO/jQ3168F\ndo1Zgze24NK820QUYrHoTSyauwWi+E02spEEcObaFQKBgQDqEeQF+1oNA+mC2UrD\nWpPdZ3pMk4x2MIFJw0T57k0Oz5dbf1msxyTVA9hNHqb6pBYPofEhu9cnKP+BxfMr\n7avsosHZ4rul0NIEdcoaStBIeTDxLV5mk9vEok+xAQYzDQRiW9C/tUH49VCrsad6\notnDFmIbFCVu7YRDXQZh9jxe7QKBgQDJj/IleNfgdvizJ/ZtDvRst6Jxz63eXHjs\nMa2GKRLocyiHfZ8lX33svszf9RIqLUm6dJruHuSsxr43M51WYX7esRf/8Sl6PN/n\nJpXvT2W5Kvl9FWFnrrr1Ez45JAEuX8FF79n/UItJjfut6iAxHHZfa7aDEsjfeywl\ncgtPG4yEfwKBgQClgaj+IdB2y4FdqE+Y+n77WqO7ackz+PAyPASVxM5v3pFjfRTn\nepisll9niHkBWOzQeO2LsMpdQjwIgvOC6Ddcx2jSq+OLR7B4vuD83lGQLUFSB4Zs\nebg3vZ0jx1me12F2Ov3L0Fqpsqwr+x41NNlNfJI6G3Cskv2mtCxDMF1XsQKBgQC8\n8w/QSOQ2K9EgQYok2iwP7mV9w23+UTmaUUeVyNNMzQdlXEHgSxBE6ugr2hVZLHM9\nMyo5pwQ/Y1/VZ7FK1MKWB/WznGOBj6dljSpo2ElHuB2BQJW7GHVyYMOn1TS2QFVy\nNlJpoRuxrEQO2Les0j21XcgOP4HG3jSYNbycP/sOCQKBgG4AoySlhScYiQrrECPZ\nG283JGecbc1whedQuNmLXzWbJGAJ4e/N90v+An6lPSeVH5DDLs8X1IUJv357nKZh\niA28hLQ0DrBV66RmgraRp1w8eBqHSr8V3jUaeJ59gxRe8xV87v89MclrUdepmOB7\nuMka62jV3QkfMlDu7U8+TiOA\n-----END PRIVATE KEY-----\n",
+  "client_email": "ssafy-772@festive-vim-345604.iam.gserviceaccount.com",
+  "client_id": "106240497899033663891",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ssafy-772%40festive-vim-345604.iam.gserviceaccount.com"
+}
