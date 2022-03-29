@@ -1,7 +1,6 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Board, BoardComment
@@ -10,7 +9,6 @@ from .serializers import BoardListSerializer, BoardSerializer, BoardCommentSeria
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def board_list(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     boards = get_list_or_404(Board, community=community)
@@ -20,13 +18,10 @@ def board_list(request, community_pk):
 
 @swagger_auto_schema(method='POST', request_body=BoardSerializer)
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def board_create(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     me = get_object_or_404(Member, user=request.user, community=community)
     serializer = BoardSerializer(data=request.data)
-    print('1')
-    print(serializer)
 
     if serializer.is_valid(raise_exception=True):
         serializer.save(member=me, community=community)
@@ -34,7 +29,6 @@ def board_create(request, community_pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def board_detail(request, community_pk, board_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
@@ -43,7 +37,6 @@ def board_detail(request, community_pk, board_pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def board_delete(request, community_pk, board_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
@@ -57,7 +50,6 @@ def board_delete(request, community_pk, board_pk):
 
 @swagger_auto_schema(method='PUT', request_body=BoardSerializer)
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
 def board_update(request, community_pk, board_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
@@ -74,7 +66,6 @@ def board_update(request, community_pk, board_pk):
 
 @swagger_auto_schema(method='POST', request_body=BoardCommentSerializer)
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def board_comment_create(request, community_pk, board_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
@@ -87,7 +78,6 @@ def board_comment_create(request, community_pk, board_pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def board_comment_delete(request, community_pk, board_pk, comment_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
@@ -102,7 +92,6 @@ def board_comment_delete(request, community_pk, board_pk, comment_pk):
 
 @swagger_auto_schema(method='PUT', request_body=BoardCommentSerializer)
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
 def board_comment_update(request, community_pk, board_pk, comment_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
