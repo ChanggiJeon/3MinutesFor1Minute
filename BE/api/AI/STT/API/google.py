@@ -1,4 +1,6 @@
 from google.cloud import storage
+import os, sys
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from hanspell import spell_checker
 import re
 import os
