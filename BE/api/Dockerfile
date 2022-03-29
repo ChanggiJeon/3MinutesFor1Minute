@@ -31,4 +31,5 @@ ENV PATH /opt/conda/envs/nenv/bin:$PATH
 RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 RUN pip install gunicorn
-RUN pip install -r tmp.txt
+RUN pip install -r requirements.txt
+RUN python py-hanspell-master/setup.py install
