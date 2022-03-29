@@ -1,16 +1,20 @@
 version: "3.7"
 services:
-  frontend:
+  nginx:
+    restart: unless-stopped
     build:
       context: ./FE/frontend
       # args:
       #   REACT_APP_API_URL: ${REACT_APP_API_URL}
-    container_name: frontend
     volumes:
       - /app/node_modules
       - ./FE/frontend:/app
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - 80:80
+      - 443:443
+    depends_on:
+      - backend
 
   # nginx:
   #   restart: always
@@ -25,14 +29,16 @@ services:
       # - "443:443"
 
   backend:
+    restart: unless-stopped
     build:
       context: ./BE/api
-    container_name: backend
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
-    expose:
-      - "8000"
-    restart: always
-    volumes:
-      - ./BE/api:/app
+    # command: bash -c "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
     env_file:
       - ./BE/api/.env
+    volumes:
+      - ./BE/api:/backend
+    command: chmod +x backend/wsgi-entrypoint.sh
+    entrypoint:
+      /backend/wsgi-entrypoint.sh
