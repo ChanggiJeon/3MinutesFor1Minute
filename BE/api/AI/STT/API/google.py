@@ -63,6 +63,6 @@ def transcribe_gcs(file_name):
 
 # if __name__ == "__main__":
 
-upload_file("C:/Users/multicampus/Desktop/S06P22D202/BE/api/", "media/test/article.wav")
+# upload_file("C:/Users/multicampus/Desktop/S06P22D202/BE/api/", "media/test/article.wav")
 # text = transcribe_gcs("article.wav")
 # print(text)
