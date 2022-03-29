@@ -4,8 +4,6 @@ RUN apt-get update
 RUN apt-get install default-libmysqlclient-dev -y
 RUN apt-get -y install gcc
 RUN apt-get install gcc g++ -y
-RUN chmod +x wsgi-entrypoint.sh
-RUN chmod +x manage.py
 ARG DEBUG
 ARG SECRET_KEY
 ARG ALLOWED_HOSTS
@@ -28,6 +26,8 @@ ENV DATABASE_PORT $DATABASE_PORT
 RUN mkdir /backend
 WORKDIR /backend
 COPY ./ ./
+RUN chmod +x backend/BE/api/wsgi-entrypoint.sh
+RUN chmod +x backend/BE/api/manage.py
 RUN conda env create -f tmp.yml
 RUN echo "source activate ai" > ~/.bashrc
 ENV PATH /opt/conda/envs/nenv/bin:$PATH
