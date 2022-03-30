@@ -18,14 +18,14 @@ class Minute(models.Model):
 
 
 class Participant(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.PROTECT)
+    member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
     is_assignee = models.BooleanField(default=False)
 
 
 class Speech(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
-    participant = models.OneToOneField(Participant, on_delete=models.PROTECT)
+    participant = models.OneToOneField(Participant, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=2000, blank=True)
     summary = models.TextField(max_length=400, blank=True)
@@ -40,7 +40,7 @@ class Speech(models.Model):
 
 
 class SpeechComment(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.PROTECT)
+    member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
     content = models.TextField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
