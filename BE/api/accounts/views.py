@@ -73,8 +73,8 @@ def unique_check_email(request, email):
 
     else:
         code = make_random_code()
-        message = f"아래 코드를 입력해주세요.\n\n코드 : {code}\n\n감사합니다."
-        mail_title = "이메일 인증을 완료해주세요."
+        message = f"아래의 인증번호를 사용하여 이메일 주소 인증을 완료하면 다음 단계로 진행이 가능합니다.\n\n인증번호 : {code}\n\n감사합니다."
+        mail_title = "3Minutes for 1Minute 회원가입을 위한 인증번호 발송 메일입니다."
         mail_to = email
         email = EmailMessage(mail_title, message, to=[mail_to])
         email.send()
@@ -82,11 +82,22 @@ def unique_check_email(request, email):
 
 
 @api_view(['GET'])
-def profile(request, username):
+def profile(request):
     User = get_user_model()
-    user = get_object_or_404(User, username=username)
+    user = get_object_or_404(User, pk=request.user.pk)
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
 
-    if request.user == user:
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def find_username(request, email, name):
+    User = get_user_model()
+    user = get_object_or_404(User, email=email, name=name)
+    username = user.username
+    message = f"회원님의 아이디는 아래와 같습니다.\n\n아이디 : {username}\n\n감사합니다."
+    mail_title = "3Minutes for 1Minute 회원님의 아이디입니다."
+    mail_to = email
+    email = EmailMessage(mail_title, message, to=[mail_to])
+    email.send()
+    return Response(status=status.HTTP_200_OK)
