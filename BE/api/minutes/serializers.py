@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from .models import Minute, Participant, Speech, SpeechComment
-from community.serializers import MemberListSerializer, MemberSerializer
+from community.serializers import CustomMemberSerializer
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
+    member = CustomMemberSerializer()
 
     class Meta:
         model = Participant
@@ -23,7 +24,8 @@ class SpeechListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Speech
-        fields = ('title', )
+        fields = ('id', 'title', )
+        read_only_fields = ('id', )
 
 
 class SpeechSerializer(serializers.ModelSerializer):
@@ -53,8 +55,7 @@ class MinuteListSerializer(serializers.ModelSerializer):
 
     def assign(self, minute):
         participant = Participant.objects.get(minute=minute, is_assignee=True)
-        member = participant.member
-        serializer = MemberSerializer(member)
+        serializer = ParticipantSerializer(participant)
         return serializer.data
 
     class Meta:
@@ -69,8 +70,7 @@ class MinuteSerializer(serializers.ModelSerializer):
 
     def mp_filter(self, minute):
         participants = Participant.objects.filter(minute=minute)
-        members = [participant.member for participant in participants]
-        serializer = MemberListSerializer(members, many=True)
+        serializer = ParticipantSerializer(participants, many=True)
         return serializer.data
 
     def ms_filter(self, minute):
