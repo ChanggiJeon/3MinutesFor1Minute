@@ -41,7 +41,7 @@ def community_create(request):
         member = Member()
         member.user = request.user
         member.community = community
-        member.authority = True
+        member.is_admin = True
         member.is_active = True
         member.nickname = user.name
         member.save()
@@ -179,8 +179,7 @@ def find_user(request, keyword):
 @permission_classes([IsAuthenticated])
 def invite_user(request, community_pk, user_pk):
     community = get_object_or_404(Community, pk=community_pk)
-
-    if community.member_set.filter(pk=user_pk):
+    if community.member_set.filter(user_id=user_pk):
         return Response({'error: 이미 가입한 사용자입니다.'}, status=status.HTTP_400_BAD_REQUEST)
     User = get_user_model()
     user = get_object_or_404(User, pk=user_pk)
