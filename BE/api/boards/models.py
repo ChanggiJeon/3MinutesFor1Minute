@@ -3,7 +3,7 @@ from community.models import Community, Member
 
 
 class Board(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.PROTECT)
+    member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=500)
@@ -17,7 +17,7 @@ class Board(models.Model):
 
 
 class BoardComment(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.PROTECT)
+    member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     content = models.TextField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
