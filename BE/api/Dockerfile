@@ -1,9 +1,12 @@
 FROM continuumio/miniconda3
 ENV PYTHONUNBUFFERED 1
+
 RUN apt-get update
 RUN apt-get install default-libmysqlclient-dev -y
 RUN apt-get -y install gcc
 RUN apt-get install gcc g++ -y
+RUN apt install default-jdk -y
+
 ARG DEBUG
 ARG SECRET_KEY
 ARG ALLOWED_HOSTS
@@ -13,7 +16,7 @@ ARG DATABASE_USER
 ARG DATABASE_PASS
 ARG DATABASE_HOST
 ARG DATABASE_PORT
-#아래는 넣고 시험 해보기
+
 ENV DEBUG $DEBUG
 ENV SECRET_KEY $SECRET_KEY
 ENV ALLOWED_HOSTS $ALLOWED_HOSTS
@@ -23,15 +26,14 @@ ENV DATABASE_USER $DATABASE_USER
 ENV DATABASE_PASS $DATABASE_PASS
 ENV DATABASE_HOST $DATABASE_HOST
 ENV DATABASE_PORT $DATABASE_PORT
+
 RUN mkdir /backend
 WORKDIR /backend
 COPY ./ ./
 RUN conda env create -f tmp.yml
-RUN echo "conda activate ai" > ~/.bashrc
+RUN echo "conda activate ai" >> ~/.bashrc
 ENV PATH /opt/conda/envs/nenv/bin:$PATH
 RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 RUN pip install gunicorn
 RUN pip install -r requirements.txt
-# RUN python AI/STT/hanspell/setup.py install
-#
