@@ -33,6 +33,13 @@ class MemberSerializer(serializers.ModelSerializer):
         read_only_fields = ('user', 'community', 'is_admin', 'is_active', )
 
 
+class CustomMemberSerializer(MemberSerializer):
+
+    class Meta:
+        model = Member
+        fields = ('nickname', )
+
+
 class CommunityDetailSerializer(serializers.ModelSerializer):
     member_set = MemberListSerializer(many=True)
 
