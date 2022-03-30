@@ -170,7 +170,7 @@ def find_user(request, keyword):
 def invite_user(request, community_pk, user_pk):
     community = get_object_or_404(Community, pk=community_pk)
 
-    if community.member_set.filter(user_id=user_pk):
+    if community.member_set.filter(pk=user_pk):
         return Response({'error: 이미 가입한 사용자입니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     User = get_user_model()
