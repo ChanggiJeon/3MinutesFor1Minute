@@ -6,6 +6,8 @@
 conda env remove -n ai
 ```
 
+
+
 #### 1. 설치
 
 ```
@@ -27,8 +29,6 @@ pip install -r requirements.txt
 
 4. http://127.0.0.1:8000/swagger/ (스웨거)
 
-
-
 주의 : env파일 받아서 api폴더에 넣고 .env로 이름 바꿔줘야함!
 
 
@@ -43,14 +43,11 @@ pip install -r requirements.txt
 
 
 
-
-
-## 4. api url
+## 4. API 설계
 
 ### 공통 (중복되는 부분) : http://127.0.0.1:8000/api/
 
 - 계정 (Account)
-
   - 로그인 [POST] : api/token/
     - 아이디 : username (string)
     - 비밀번호 : password (string)
@@ -61,7 +58,7 @@ pip install -r requirements.txt
   - 회원 탈퇴 [DELETE] : delete/<str : username>/
   - 아이디 중복 확인 [GET] : uniquecheck/username/<str : username>/
   - 이메일 중복 확인 [GET] : uniquecheck/email/<str : email>/
-
+  - 프로필 [GET] : profile/<str : username>/
 
 
 
@@ -101,7 +98,7 @@ pip install -r requirements.txt
 
   1. 커뮤니티 멤버 초대
 
-  - 커뮤니티 멤버 초대 [POST] : invite/<int : community_pk>/<int : user_pk>/
+  - 커뮤니티 멤버 초대 [GET] : invite/<int : community_pk>/<int : user_pk>/
   - 유저 검색 [GET] : invite/search/<str : keyword>/
 
   1. 커뮤니티 멤버 개인 정보 수정 및 탈퇴
@@ -113,9 +110,7 @@ pip install -r requirements.txt
 
 
 
-
 - 게시글 (Board)
-
   - 글 목록 출력 [GET] : <int : community_pk>/boards/
   - 글 작성 [POST] : <int : community_pk>/boards/create/
     - title
@@ -137,9 +132,7 @@ pip install -r requirements.txt
 
 
 
-
 - 회의록 (Minute)
-
   - 회의록 목록 출력 [GET] : <int : community_pk>/minutes/
   - 회의록 작성 (멤버 목록 호출) [GET] : <int : community_pk>/minutes/create/
   - 회의록 작성 (진짜 생성) [POST] : <int : community_pk>/minutes/create/
@@ -162,9 +155,7 @@ pip install -r requirements.txt
 
 
 
-
 - 스피치 (Speech)
-
   - 스피치 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/create/
     - title
     - content

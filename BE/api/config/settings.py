@@ -178,3 +178,13 @@ SWAGGER_SETTINGS = {
         },
     },
 }
+
+EMIAL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'wjsckdrl0122@gmail.com'
+EMAIL_HOST_PASSWORD = 'zkdltmxm11!'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+REDIRECT_PAGE = 'http://localhost:3000/login'
