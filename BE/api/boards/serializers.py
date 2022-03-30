@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Board, BoardComment
-from community.serializers import MemberSerializer
+from community.serializers import CustomMemberSerializer
 
 
 class BoardCommentSerializer(serializers.ModelSerializer):
@@ -12,7 +12,7 @@ class BoardCommentSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
-    member = MemberSerializer()
+    member = CustomMemberSerializer()
 
     class Meta:
         model = Board
