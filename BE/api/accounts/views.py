@@ -1,10 +1,16 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
+from config.settings import REDIRECT_PAGE
+from .models import User
 from .serializers import UserSerializer
 import re
 
@@ -34,8 +40,31 @@ def signup(request):
     if serializers.is_valid(raise_exception=True):
         user = serializers.save()
         user.set_password(request.data.get('password'))
+        user.is_active=False
         user.save()
+        current_site = get_current_site(request)
+        domain = current_site.domain
+        uidb = urlsafe_base64_encode(force_bytes(user.pk))
+        token = urlsafe_base64_encode(force_bytes(user.email))
+        message = f"아래 링크를 클릭하면 회원가입 인증이 완료됩니다.\n\n회원가입 링크 : http://{domain}/api/accounts/activate/{uidb}/{token}/\n\n감사합니다."
+        mail_title = "이메일 인증을 완료해주세요."
+        mail_to = user.email
+        email = EmailMessage(mail_title, message, to=[mail_to])
+        email.send()
         return Response(serializers.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def activate(request, uidb, token):
+    uid = force_str(urlsafe_base64_decode(uidb))
+    user = get_object_or_404(User, pk=uid)
+    mail = force_str(urlsafe_base64_decode(token))
+    if mail == user.email:
+        user.is_active = True
+        user.save()
+        return redirect(REDIRECT_PAGE)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])

@@ -169,8 +169,10 @@ def find_user(request, keyword):
 @api_view(['POST'])
 def invite_user(request, community_pk, user_pk):
     community = get_object_or_404(Community, pk=community_pk)
+
     if community.member_set.filter(user_id=user_pk):
         return Response({'error: 이미 가입한 사용자입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
     User = get_user_model()
     user = get_object_or_404(User, pk=user_pk)
     serializer = MemberSerializer(data=request.data)
