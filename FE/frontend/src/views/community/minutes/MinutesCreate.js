@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -17,6 +18,10 @@ import ContentBox from '../../../components/community/minutes/create/ContentBox'
 import DateTime from '../../../components/community/minutes/create/DateTime';
 import InputFile from '../../../components/community/minutes/create/InputFile';
 import LabelFile from '../../../components/community/minutes/create/LabelFile';
+import OpenIcon from '../../../components/community/minutes/create/OpenIcon';
+import CloseIcon from '../../../components/community/minutes/create/CloseIcon';
+import HeaderBox from '../../../components/community/HeaderBox';
+import BtnBox from '../../../components/community/BtnBox';
 
 const CreateForm = styled(Form)`
 	flex-direction: row;
@@ -47,10 +52,10 @@ const TextLabel = styled(AreaLabel)`
 	}
 `;
 const CompleteBtn = styled(BlueMdBtn)`
-	margin-left: 350px;
+	margin-right: 10px;
 `;
 const CancelBtn = styled(RedMdBtn)`
-	margin-left: 10px;
+	margin-right: 15px;
 `;
 const ErrorMsg = styled.div`
 	padding-top: 5px;
@@ -66,6 +71,7 @@ const Br = styled.div`
 const TextUpload = styled(TextContent)`
 	font-size: 16px;
 `;
+const Span = styled.span``;
 
 function MinutesCreate() {
 	// useform 설정
@@ -92,29 +98,59 @@ function MinutesCreate() {
 			memberIds: [],
 			referenceFile: data.upload,
 		};
-		dispatch(createMinutesByData(request)).then(res => {
-			const { community, id } = res.payload;
-			navigate(`/community/${community}/minutes/${id}`);
-		});
+		let formData = new FormData();
+		console.log('data', data);
+		for (let i = 0; i < data.upload.length; i += 1) {
+			formData.append(`data.upload${i}`, data.upload[i]);
+		}
+		formData.append('enctype', 'multipart/form-data');
+		formData.append('title', data.title);
+		formData.append('content', data.content);
+		formData.append('memberIds', []);
+		formData.append('deadline', data.Dday);
+		formData.append('comId', communityId);
+		try {
+			console.log('form11111', formData);
+			dispatch(createMinutesByData(formData)).then(res => {
+				console.log(res.payload);
+				const { community, id } = res.payload;
+				navigate(`/community/${community}/minutes/${id}`);
+			});
+		} catch (error) {
+			console.log(error);
+		}
+		// dispatch(createMinutesByData(request)).then(res => {
+		// 	console.log(res.payload);
+		// 	const { community, id } = res.payload;
+		// 	navigate(`/community/${community}/minutes/${id}`);
+		// });
 	}
 	// 업로드 된 파일 표시하기 위한 변수
 	const uploadedFiles = watch('upload');
 	const fileList = uploadedFiles ? Object.values(uploadedFiles) : [];
-	console.log(uploadedFiles);
 
 	return (
 		<CreateContainer>
-			<TextSubTitle>회의록 작성</TextSubTitle>
-			<CompleteBtn type='submit' form='createForm'>
-				작성 완료
-			</CompleteBtn>
-			<CancelBtn
-				onClick={() =>
-					navigate(`${routes.community}/${communityId}/${routes.minutesList}`)
-				}
-			>
-				작성 취소
-			</CancelBtn>
+			<HeaderBox>
+				<TextSubTitle>
+					회의록 작성
+					{/* <Span onClick={toggleIsClosed}>
+						{isClosed ? <CloseIcon /> : <OpenIcon />}
+					</Span> */}
+				</TextSubTitle>
+				<BtnBox>
+					<CompleteBtn type='submit' form='createForm'>
+						작성 완료
+					</CompleteBtn>
+					<CancelBtn
+						onClick={() =>
+							navigate(`${routes.community}/${communityId}/${routes.minutesList}`)
+						}
+					>
+						작성 취소
+					</CancelBtn>
+				</BtnBox>
+			</HeaderBox>
 			<DivLine />
 			<ContentBox>
 				<CreateForm id='createForm' onSubmit={handleSubmit(onValidSubmit)}>

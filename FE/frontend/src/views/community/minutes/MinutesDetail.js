@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DetailMinutesById, DeleteMinutesById } from '../../../store/minutes';
+import routes from '../../../routes';
 import Container from '../../../components/community/Container';
 import Main from '../../../components/community/MainStart';
 import TextSubTitle from '../../../components/common/TextSubTitle';
@@ -12,7 +13,7 @@ import ContentBox from '../../../components/common/ContentBox';
 import HeaderBox from '../../../components/community/HeaderBox';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
-import routes from '../../../routes';
+import BtnBox from '../../../components/community/BtnBox';
 
 const ContentsContainer = styled(Container)`
 	flex-direction: column;
@@ -20,6 +21,7 @@ const ContentsContainer = styled(Container)`
 	margin-top: 15px;
 	width: 50%;
 	height: 600px;
+	overflow-y: scroll;
 `;
 const SpeechContainer = styled(Container)`
 	flex-direction: column;
@@ -27,12 +29,6 @@ const SpeechContainer = styled(Container)`
 	border-radius: 15px;
 	margin-top: 15px;
 	width: 40%;
-`;
-const BtnBox = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	width: 60%;
 `;
 const UpdateBtn = styled(BlueMdBtn)`
 	margin-right: 10px;
@@ -52,7 +48,7 @@ function MinutesDetail() {
 	}, []);
 	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
 	const deleteMinutes = () => {
-		setIsDeleted('true');
+		setIsDeleted('deleted');
 	};
 	useEffect(() => {
 		if (isDeleted) {
