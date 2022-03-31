@@ -19,8 +19,9 @@ export const fetchMinutesByComId = createAsyncThunk(
 export const createMinutesByData = createAsyncThunk(
 	`${name}/CREATE_MINUTES`,
 	async data => {
-		const { comId, ...request } = data;
-		const response = await createMinutes(comId, request);
+		// const { comId, ...request } = data;
+		const comId = data.get('comId');
+		const response = await createMinutes(comId, data);
 		return response;
 	}
 );
