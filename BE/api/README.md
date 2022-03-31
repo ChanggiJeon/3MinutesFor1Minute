@@ -98,7 +98,7 @@ pip install -r requirements.txt
   1. 커뮤니티 멤버 관리
 
   - 커뮤니티 멤버 조회 [GET] : <int : community_pk>/member/
-  - 커뮤니티 멤버 삭제 [DELETE] : <int : community_pk>/member/<int : member_pk>/
+  - 커뮤니티 멤버 삭제 [DELETE] : <int : community_pk>/member/<int : member_pk>/withdraw/
 
   1. 커뮤니티 멤버 초대
 

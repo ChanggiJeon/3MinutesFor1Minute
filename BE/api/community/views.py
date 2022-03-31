@@ -10,6 +10,8 @@ from accounts.serializers import UserSerializer
 import string
 import random
 
+from community import serializers
+
 
 # 1. 커뮤니티 생성
 # 난수 생성 함수
@@ -119,8 +121,9 @@ def community_detail_update_or_delete(request, community_pk):
     if request.method == 'GET':
         serializer = CommunityDetailSerializer(community)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    elif request.method == 'PUT':
+    if not community.member_set.filter(is_admin=True, user_id=request.user.id):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    if request.method == 'PUT':
         serializer = CommunitySerializer(instance=community, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
@@ -138,6 +141,28 @@ def community_get_members(request, community_pk):
     members = community.member_set.all()
     serializer = MemberSerializer(members, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+# 가입 승인
+@api_view(['GET'])
+def members_get_waiting(request, community_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    if community.member_set.filter(user_id=request.user.id, is_admin=True):
+        waiting_members = community.member_set.filter(is_active=False)
+        serializer = MemberSerializer(waiting_members, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['PUT'])
+def approve_waiting_member(request, community_pk, member_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    if community.member_set.filter(user_id=request.user.id, is_admin=True):
+        waiting_member = get_object_or_404(Member, pk=member_pk)
+        waiting_member.is_active = True
+        ret = waiting_member.save()
+        serializer = MemberSerializer(ret)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 # 구성원 초대
