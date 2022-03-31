@@ -73,3 +73,5 @@ uritemplate==4.1.1
 werkzeug==2.0.3
 yacs==0.1.8
 yarl==1.7.2
+gensim==3.8.3
+Pillow==8.4.0

@@ -51,11 +51,11 @@ export const apiUniqueCheckEmail = ({ email }) =>
 		url: `${BASE_URL}/accounts/uniquecheck/email/${email}/`,
 	});
 
-export const apiGetMyProfile = ({ username }) => 
-  axios({
-    method: 'get',
-    url: `${BASE_URL}/accounts/profile/${username}/`,
-    headers: {
-      ...setToken(),
-    }
-  })
+export const apiGetMyProfile = () =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/profile/`,
+		headers: {
+			...setToken(),
+		},
+	});
