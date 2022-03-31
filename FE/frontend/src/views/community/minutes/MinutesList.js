@@ -27,8 +27,8 @@ function MinutesList() {
 	const { communityId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	useEffect(async () => {
-		await dispatch(fetchMinutesByComId(communityId));
+	useEffect( () => {
+		dispatch(fetchMinutesByComId(communityId));
 	}, []);
 
 	return (

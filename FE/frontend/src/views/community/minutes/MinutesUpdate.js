@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -70,7 +69,7 @@ const TextUpload = styled(TextContent)`
 
 function MinutesUpdate() {
 	// 필요한 함수 설정
-	const { communityId } = useParams();
+	const { communityId, minutesId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	// 기본 데이터 입력
@@ -90,6 +89,7 @@ function MinutesUpdate() {
 	function onValidSubmit(data) {
 		const request = {
 			comId: communityId,
+			minId: minutesId,
 			title: data.title,
 			content: data.content,
 			deadline: data.Dday,
