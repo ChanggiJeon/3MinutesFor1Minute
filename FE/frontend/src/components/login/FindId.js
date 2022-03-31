@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaUserTag } from 'react-icons/fa';
 import { FiMail } from 'react-icons/fi';
 import { IoWarningOutline } from 'react-icons/io5';
 import Swal from 'sweetalert2';
+import { apiFindId } from '../../api/accounts';
 import EmptyMsg from '../auth/EmptyMsg';
 import ErrorMsg from '../auth/ErrorMsg';
 import Form from '../auth/Form';
@@ -21,19 +23,22 @@ function FindId() {
 	} = useForm({
 		mode: 'all',
 	});
+	const [isLoading, setLoading] = useState(false);
 
 	const onValidSubmit = async () => {
 		const { name, email } = getValues();
+
 		try {
-			// api
-			// alert
+			setLoading(true);
+			await apiFindId({ email, name });
 			Swal.fire({
 				icon: 'success',
 				text: '아이디를 이메일로 전송하였습니다.',
 			});
 		} catch (e) {
-			// e.response.status
-			setError('result', { message: '존재하지 않는 회원 정보 입니다.' });
+			setError('result', { message: '일치하는 회원정보가 없습니다.' });
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -75,7 +80,7 @@ function FindId() {
 						required: '이름를 입력하세요.',
 						minLength: {
 							value: 2,
-							message: '이름을 2자 이상 입력하세요.',
+							message: '2자 이상 입력하세요.',
 						},
 						pattern: {
 							value: /^[ㄱ-ㅎㅏ-ㅢ가-힣]*$/,
@@ -107,8 +112,8 @@ function FindId() {
 				/>
 			</Label>
 			{EmailError}
-			<SubmitButton type='submit' disabled={!isValid}>
-				찾 기
+			<SubmitButton type='submit' disabled={!isValid || isLoading}>
+				{isLoading ? '로딩중' : '찾 기'}
 			</SubmitButton>
 		</Form>
 	);
