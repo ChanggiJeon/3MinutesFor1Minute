@@ -1,6 +1,6 @@
 ## 1. 가상환경 구축
 
-#### 0. Conda 가상환경 중 AI가 있으면 삭제한다.
+#### 0. Conda 가상환경 중 AI가 있으면 삭제
 
 ```
 conda env remove -n ai
@@ -23,13 +23,13 @@ pip install -r requirements.txt
 
 1. conda activate AI
 
-2. F1 => python: Select Interpreter에서 AI로 설정.
+2. F1 => python: Select Interpreter에서 AI로 설정
 
 3. python manage.py runserver
 
 4. http://127.0.0.1:8000/swagger/ (스웨거)
 
-주의 : env파일 받아서 api폴더에 넣고 .env로 이름 바꿔줘야함!
+주의 : env 파일 받아서 api 폴더에 넣고 .env로 이름 바꿔줘야함!
 
 
 
@@ -37,17 +37,18 @@ pip install -r requirements.txt
 
 1. mysql workbench를 열고, + 버튼을 눌러서 connections를 만든다.
 
-2. 적당한 Name 주고, Port: 3307, Username: root, Password: ssafy.
+2. 적당한 Name 주고, Port: 3307, Username: root, Password: ssafy
 
-3. myproject.sql로 DB 입력.
+3. myproject.sql로 DB 입력
 
 
 
-## 4. API 설계
+## 4. api url
 
 ### 공통 (중복되는 부분) : http://127.0.0.1:8000/api/
 
 - 계정 (Account)
+
   - 로그인 [POST] : api/token/
     - 아이디 : username (string)
     - 비밀번호 : password (string)
@@ -59,6 +60,9 @@ pip install -r requirements.txt
   - 아이디 중복 확인 [GET] : uniquecheck/username/<str : username>/
   - 이메일 중복 확인 [GET] : uniquecheck/email/<str : email>/
   - 프로필 [GET] : profile/<str : username>/
+  - 아이디 찾기 [GET] : find/username/<str : email>/<str : name>/
+  - 비밀번호 찾기 [GET] : find/password/<str : username>/<str : email>/<str : name>/
+
 
 
 
@@ -110,7 +114,9 @@ pip install -r requirements.txt
 
 
 
+
 - 게시글 (Board)
+
   - 글 목록 출력 [GET] : <int : community_pk>/boards/
   - 글 작성 [POST] : <int : community_pk>/boards/create/
     - title
@@ -132,7 +138,9 @@ pip install -r requirements.txt
 
 
 
+
 - 회의록 (Minute)
+
   - 회의록 목록 출력 [GET] : <int : community_pk>/minutes/
   - 회의록 작성 (멤버 목록 호출) [GET] : <int : community_pk>/minutes/create/
   - 회의록 작성 (진짜 생성) [POST] : <int : community_pk>/minutes/create/
@@ -155,7 +163,9 @@ pip install -r requirements.txt
 
 
 
+
 - 스피치 (Speech)
+
   - 스피치 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/create/
     - title
     - content
