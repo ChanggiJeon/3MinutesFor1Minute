@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useDispatch } from 'react-redux';
 import routes from '../../../routes';
+import { createMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
@@ -16,6 +18,8 @@ import ContentBox from '../../../components/community/minutes/create/ContentBox'
 import DateTime from '../../../components/community/minutes/create/DateTime';
 import InputFile from '../../../components/community/minutes/create/InputFile';
 import LabelFile from '../../../components/community/minutes/create/LabelFile';
+import CancelBtn from '../../../components/community/minutes/CancelBtn';
+import CompleteBtn from '../../../components/community/minutes/CompleteBtn';
 
 const CreateForm = styled(Form)`
 	flex-direction: row;
@@ -30,12 +34,6 @@ const CreateContainer = styled(Container)`
 	width: 750px;
 	height: auto;
 	margin: 15px 20%;
-`;
-const CompleteBtn = styled(BlueMdBtn)`
-	margin-left: 350px;
-`;
-const CancelBtn = styled(RedMdBtn)`
-	margin-left: 15px;
 `;
 const InputLabel = styled(Label)`
 	width: 600px;
@@ -67,6 +65,7 @@ const TextUpload = styled(TextContent)`
 `;
 
 function MinutesCreate() {
+	// useform 설정
 	const {
 		register,
 		handleSubmit,
@@ -76,15 +75,28 @@ function MinutesCreate() {
 	} = useForm({
 		mode: 'onChange',
 	});
+	// 필요한 함수 설정
 	const { communityId } = useParams();
 	const navigate = useNavigate();
-	// 폼 제출 로직
-	const onValidSubmit = data => {
-		console.log(data);
-	};
+	const dispatch = useDispatch();
+	// form 제출 로직
+	function onValidSubmit(data) {
+		const request = {
+			comId: communityId,
+			title: data.title,
+			content: data.content,
+			deadline: data.Dday,
+			participants: [],
+			reference_file: data.upload,
+		};
+		dispatch(createMinutesByData(request)).then(res => {
+			const { community, id } = res.payload;
+			navigate(`/community/${community}/minutes/${id}`);
+		});
+	}
 	// 업로드 된 파일 표시하기 위한 변수
 	const uploadedFiles = watch('upload');
-	let fileList = uploadedFiles ? Object.values(uploadedFiles) : [];
+	const fileList = uploadedFiles ? Object.values(uploadedFiles) : [];
 
 	return (
 		<CreateContainer>
