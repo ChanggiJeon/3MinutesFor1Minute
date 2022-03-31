@@ -58,7 +58,7 @@ export async function deleteMinutes(communityId, minutesId) {
 	try {
 		const response = await axios({
 			method: 'delete',
-			url: `${BASE_URL}/${communityId}/minutes/${minutesId}/delete`,
+			url: `${BASE_URL}/${communityId}/minutes/${minutesId}/delete/`,
 			headers: {
 				...setToken(),
 			},
