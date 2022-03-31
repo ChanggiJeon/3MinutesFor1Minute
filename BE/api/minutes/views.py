@@ -56,13 +56,19 @@ def minute_create(request, community_pk):
             serializer.save(community=community)
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
             me = get_object_or_404(Member, user=request.user, community=community)
-            participant = Participant(member=me, minute=minute, is_assignee=True)
+            member_ids = set(request.data['member_ids'])
+            member_ids.add(me.id)
 
-            for participant_nickname in request.data['participants']:
-                member = get_object_or_404(Member, nickname=participant_nickname, community=community)
-                participant = Participant(member=member, minute=minute)
+            for member_id in member_ids:
+                if member_id == me.id:
+                    assignee = Participant(member=me, minute=minute, is_assignee=True)
+                    assignee.save()
 
-            participant.save()
+                else:
+                    member = get_object_or_404(Member, pk=member_id, community=community)
+                    participant = Participant(member=member, minute=minute)
+                    participant.save()
+
             serializer = MinuteSerializer(minute)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
