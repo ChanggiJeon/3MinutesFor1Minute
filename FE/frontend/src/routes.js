@@ -20,6 +20,8 @@ const routes = {
 		`${
 			communityId ? `${routes.community(communityId)}/` : ''
 		}minutes/speechCreate`,
+	// speech
+	speechCreate: 'minutes/speechCreate',
 	// posts
 	posts: (communityId = '') =>
 		`${communityId ? `${routes.community(communityId)}/` : ''}posts`,
