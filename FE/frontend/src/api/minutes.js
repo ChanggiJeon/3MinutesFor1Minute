@@ -16,22 +16,12 @@ export async function getAllMinutes(communityId) {
 	}
 }
 
-export async function createMinutes(communityId, formData) {
+export async function createMinutes(communityId, data) {
 	try {
-		console.log('formData', formData);
-		// const { title, content, deadline, memberIds, referenceFile } = data;
-
 		const response = await axios({
 			method: 'post',
 			url: `${BASE_URL}/${communityId}/minutes/create/`,
-			data: formData,
-			// {
-			// 	title,
-			// 	content,
-			// 	deadline,
-			// 	reference_file: referenceFile[0],
-			// 	member_ids: memberIds,
-			// },
+			data,
 			headers: {
 				...setToken(),
 				'Content-Type': 'multipart/form-data',

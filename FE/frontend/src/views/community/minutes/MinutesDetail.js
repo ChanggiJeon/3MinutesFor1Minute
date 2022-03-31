@@ -30,10 +30,21 @@ const SpeechContainer = styled(Container)`
 	margin-top: 15px;
 	width: 40%;
 `;
+const TopBtnBox = styled(BtnBox)`
+	width: 60%;
+`;
 const UpdateBtn = styled(BlueMdBtn)`
 	margin-right: 10px;
 `;
 const DeleteBtn = styled(RedMdBtn)`
+	margin-right: 10px;
+`;
+const SpeechBox = styled.div`
+	display: flex;
+	flex-direction: column;
+	height: 500px;
+`;
+const SpeechCreateBtn = styled(BlueMdBtn)`
 	margin-right: 10px;
 `;
 
@@ -63,7 +74,7 @@ function MinutesDetail() {
 			<ContentsContainer>
 				<HeaderBox>
 					<TextSubTitle>회의 내용</TextSubTitle>
-					<BtnBox>
+					<TopBtnBox>
 						<UpdateBtn
 							onClick={() =>
 								navigate(
@@ -74,7 +85,7 @@ function MinutesDetail() {
 							수정
 						</UpdateBtn>
 						<DeleteBtn onClick={deleteMinutes}>삭제</DeleteBtn>
-					</BtnBox>
+					</TopBtnBox>
 				</HeaderBox>
 				<DivLine />
 				<TextContent>작성 일자 : {singleMinutes.createdAt}</TextContent>
@@ -96,6 +107,18 @@ function MinutesDetail() {
 					<TextSubTitle>스피치</TextSubTitle>
 				</HeaderBox>
 				<DivLine />
+				<SpeechBox>speech</SpeechBox>
+				<BtnBox>
+					<SpeechCreateBtn
+						onClick={() =>
+							navigate(
+								`${routes.community}/${params.communityId}/minutes/${params.minutesId}/recordCreate`
+							)
+						}
+					>
+						스피치 등록
+					</SpeechCreateBtn>
+				</BtnBox>
 			</SpeechContainer>
 		</Main>
 	);

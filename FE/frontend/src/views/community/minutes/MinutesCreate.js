@@ -98,21 +98,16 @@ function MinutesCreate() {
 			memberIds: [],
 			referenceFile: data.upload,
 		};
-		let formData = new FormData();
-		console.log('data', data);
-		for (let i = 0; i < data.upload.length; i += 1) {
-			formData.append(`data.upload${i}`, data.upload[i]);
-		}
+		const formData = new FormData();
+		formData.append(`reference_file`, data.upload);
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('title', data.title);
 		formData.append('content', data.content);
-		formData.append('memberIds', []);
+		formData.append('member_ids', []);
 		formData.append('deadline', data.Dday);
 		formData.append('comId', communityId);
 		try {
-			console.log('form11111', formData);
 			dispatch(createMinutesByData(formData)).then(res => {
-				console.log(res.payload);
 				const { community, id } = res.payload;
 				navigate(`/community/${community}/minutes/${id}`);
 			});
