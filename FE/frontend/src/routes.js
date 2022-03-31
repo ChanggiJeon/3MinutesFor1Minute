@@ -7,7 +7,7 @@ const routes = {
 	community: '/community',
 	records: 'records',
 	minutesList: 'minutes',
-	minutesDetail: 'minutes/detail',
+	minutesDetail: 'minutes/:minutesId',
 	minutesCreate: 'minutes/minutesCreate',
 	speechCreate: 'minutes/speechCreate',
 	posts: 'posts',

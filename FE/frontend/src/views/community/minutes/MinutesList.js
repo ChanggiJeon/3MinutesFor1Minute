@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import routes from '../../../routes';
 import Container from '../../../components/community/Container';
 import Main from '../../../components/community/MainCenter';
@@ -8,6 +10,7 @@ import DivLine from '../../../components/community/main/DivLine';
 import MainBox from '../../../components/community/minutes/list/MainBox';
 import ContentsList from '../../../components/community/minutes/list/ContentsList';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
+import { fetchMinutesByComId } from '../../../store/minutes';
 
 const MinutesContainer = styled(Container)`
 	align-content: flex-start;
@@ -23,6 +26,10 @@ const CreateBtn = styled(BlueMdBtn)`
 function MinutesList() {
 	const { communityId } = useParams();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	useEffect(async () => {
+		await dispatch(fetchMinutesByComId(communityId));
+	}, []);
 
 	return (
 		<Main>

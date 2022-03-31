@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import NumBox from './textBox/NumBox';
 import TitleBox from './textBox/TitleBox';
@@ -12,24 +13,32 @@ const Minutes = styled.li`
 	justify-content: start;
 	width: 100%;
 	height: 50px;
+	cursor: pointer;
 `;
 
-function MinutesItem({ title, date, deadline }) {
-	const today = new Date().getDate();
-	const Dday =
-		deadline.substr(8, 2) - today < 0
-			? '종료'
-			: `D-${deadline.substr(8, 2) - today}`;
-
+function MinutesItem({ minId, title, date, deadline, author }) {
+	// 디데이 구하는 공식
+	const today = new Date();
+	const deadLine = new Date(deadline);
+	const gap = deadLine.getTime() - today.getTime();
+	const result = Math.ceil(gap / (1000 * 60 * 60 * 24));
+	const Dday = gap > 0 ? `D-${result}` : '종료';
+	// 클릭 시 디테일 페이지 이동에 필요한 함수값
+	const { communityId } = useParams();
+	const navigate = useNavigate();
 	return (
-		<Minutes>
+		<Minutes
+			onClick={() => {
+				navigate(`/community/${communityId}/minutes/${minId}`);
+			}}
+		>
 			<NumBox>0</NumBox>
 			<TitleBox>{title}</TitleBox>
 			<DateBox>
 				{date.substr(2, 2)}/{date.substr(5, 2)}/{date.substr(8, 2)}{' '}
 				{date.substr(11, 5)}
 			</DateBox>
-			<AuthorBox>작성자</AuthorBox>
+			<AuthorBox>{author}</AuthorBox>
 			<DeadlineBox>{Dday}</DeadlineBox>
 		</Minutes>
 	);
