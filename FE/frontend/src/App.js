@@ -17,6 +17,7 @@ import Members from './views/community/Members';
 import MinutesList from './views/community/minutes/MinutesList';
 import MinutesDetail from './views/community/minutes/MinutesDetail';
 import SpeechCreate from './views/community/minutes/SpeechCreate';
+import Admin from './views/community/Admin';
 
 function App() {
 	return (
@@ -28,16 +29,17 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
-						<Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
+						<Route path={routes.community()} element={<ComIndex />}>
 							<Route index element={<Community />} />
-							<Route path={routes.records} element={<Records />} />
-							<Route path={routes.members} element={<Members />} />
-							<Route path={routes.posts} element={<Posts />} />
-							<Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
-							<Route path={routes.postCreate} element={<PostCreate />} />
-							<Route path={routes.minutesList} element={<MinutesList />} />
-							<Route path={routes.minutesDetail} element={<MinutesDetail />} />
-							<Route path={routes.minutesCreate} element={<SpeechCreate />} />
+							<Route path={routes.admin()} element={<Admin />} />
+							<Route path={routes.records()} element={<Records />} />
+							<Route path={routes.members()} element={<Members />} />
+							<Route path={routes.posts()} element={<Posts />} />
+							<Route path={routes.postDetail()} element={<PostDetail />} />
+							<Route path={routes.postCreate()} element={<PostCreate />} />
+							<Route path={routes.minutesList()} element={<MinutesList />} />
+							<Route path={routes.minutesDetail()} element={<MinutesDetail />} />
+							<Route path={routes.minutesCreate()} element={<SpeechCreate />} />
 						</Route>
 					</Route>
 					<Route path='*' element={<Error404 />} />

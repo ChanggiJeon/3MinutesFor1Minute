@@ -4,15 +4,29 @@ const routes = {
 	login: '/login',
 	signup: '/signup',
 	// community
-	community: '/community',
-	records: 'records',
-	members: 'members',
-	minutesList: 'minutes',
-	minutesDetail: 'minutes/detail',
-	minutesCreate: 'minutes/speechCreate',
-	posts: 'posts',
-	postCreate: 'posts/postcreate',
-	postDetail: 'posts/:postId',
+	community: (communityId = ':communityId') => `/community/${communityId}`,
+	admin: (communityId = '') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}admin`,
+	members: (communityId = '') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}members`,
+	records: (communityId = '') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}records`,
+	// minutes
+	minutesList: (communityId = '') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}minutes`,
+	minutesDetail: (communityId = '') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}minutes/detail`,
+	minutesCreate: (communityId = '') =>
+		`${
+			communityId ? `${routes.community(communityId)}/` : ''
+		}minutes/speechCreate`,
+	// posts
+	posts: (communityId = '') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}posts`,
+	postCreate: (communityId = '') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}posts/postcreate`,
+	postDetail: (communityId = '', postId = ':postId') =>
+		`${communityId ? `${routes.community(communityId)}/` : ''}posts/${postId}`,
 };
 
 export default routes;

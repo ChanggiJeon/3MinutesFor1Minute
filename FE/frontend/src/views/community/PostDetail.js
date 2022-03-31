@@ -23,17 +23,15 @@ import Btns from '../../components/community/board/list/Btns';
 import NForm from '../../components/community/board/list/NForm';
 
 const Detail = styled.div`
-	{
-		display: flex;
-		flex-direction: column;
-    padding: 15px;
-		border: 1px solid black;
-		margin-top: 15px;
-		flex-wrap: wrap;
+	display: flex;
+	flex-direction: column;
+	padding: 15px;
+	border: 1px solid black;
+	margin-top: 15px;
+	flex-wrap: wrap;
 
-    p {
-      margin: 5px;
-    }
+	p {
+		margin: 5px;
 	}
 `;
 
@@ -72,7 +70,7 @@ function PostDetail() {
 				icon: 'success',
 				text: '게시글이 삭제되었습니다.',
 			});
-			navigate('');
+			navigate(routes.posts(communityId));
 		} catch (e) {
 			// error
 			await Swal.fire({
@@ -125,15 +123,13 @@ function PostDetail() {
 		}
 	};
 
-  // isUpdating True -> 수정 False -> 글 상세보기
+	// isUpdating True -> 수정 False -> 글 상세보기
 	const contents = isUpdating ? (
-    // True
+		// True
 		<Background>
 			<Header>
 				<TextTitle>글 수정</TextTitle>
-				<BackBtn onClick={() => navigate(`${routes.community}/${communityId}${routes.postDetail}/${post.id}`)}>
-					◀
-				</BackBtn>
+				<BackBtn onClick={() => setUpdating(false)}>◀</BackBtn>
 			</Header>
 			<NForm onSubmit={handleSubmit(onValidSubmit)}>
 				<Label htmlFor='title'>
@@ -167,34 +163,31 @@ function PostDetail() {
 			</NForm>
 		</Background>
 	) : (
-    // False
+		// False
 		<Background>
 			<Header>
 				<TextTitle>글 상세보기</TextTitle>
-				<BackBtn onClick={() => navigate(`${routes.community}/${communityId}/${routes.posts}`)}>
-					◀
-				</BackBtn>
+				<BackBtn onClick={() => navigate(routes.posts(communityId))}>◀</BackBtn>
 			</Header>
-      <Detail>
-        <p>제목 : {post?.title}</p>
-        <p>작성자 : {post?.author}</p>
-        <p>작성시간 : {post?.date}</p>
-        <p>내용 : {post?.content}</p>
-        <p>첨부파일 {post?.upload}</p>
+			<Detail>
+				<p>제목 : {post?.title}</p>
+				<p>작성자 : {post?.author}</p>
+				<p>작성시간 : {post?.date}</p>
+				<p>내용 : {post?.content}</p>
+				<p>첨부파일 {post?.upload}</p>
 
-        {/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
-        <Btns>
-          <SmallBtn type='button' onClick={() => setUpdating(true)}>
-            수정
-          </SmallBtn>
-          <SmallBtn type='button' onClick={() => handleDelete()}>
-            삭제
-          </SmallBtn>
-        </Btns>
+				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
+				<Btns>
+					<SmallBtn type='button' onClick={() => setUpdating(true)}>
+						수정
+					</SmallBtn>
+					<SmallBtn type='button' onClick={() => handleDelete()}>
+						삭제
+					</SmallBtn>
+				</Btns>
 
-        <p>댓글</p>
-
-      </Detail>
+				<p>댓글</p>
+			</Detail>
 		</Background>
 	);
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from './utils';
+import { BASE_URL, setToken } from './utils';
 
 export const apiLogin = ({ username, password }) =>
 	axios({
@@ -50,3 +50,12 @@ export const apiUniqueCheckEmail = ({ email }) =>
 		method: 'get',
 		url: `${BASE_URL}/accounts/uniquecheck/email/${email}/`,
 	});
+
+export const apiGetMyProfile = ({ username }) => 
+  axios({
+    method: 'get',
+    url: `${BASE_URL}/accounts/profile/${username}/`,
+    headers: {
+      ...setToken(),
+    }
+  })

@@ -8,12 +8,13 @@ import routes from '../../routes';
 const Container = styled.div`
 	height: 100vh;
 	display: flex;
+	overflow: hidden;
 `;
 
 const OutletContainer = styled.div`
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
+	overflow-y: scroll;
 `;
 
 function ComIndex() {
