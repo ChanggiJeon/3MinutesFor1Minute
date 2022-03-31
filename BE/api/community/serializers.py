@@ -18,6 +18,13 @@ class CommunitySearchSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', )
 
 
+class MemberListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Member
+        fields = '__all__'
+
+
 class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -26,13 +33,14 @@ class MemberSerializer(serializers.ModelSerializer):
         read_only_fields = ('user', 'community', 'is_admin', 'is_active', )
 
 
+class CustomMemberSerializer(MemberSerializer):
+
+    class Meta:
+        model = Member
+        fields = ('nickname', )
+
+
 class CommunityDetailSerializer(serializers.ModelSerializer):
-
-    class MemberListSerializer(serializers.ModelSerializer):
-
-        class Meta:
-            model = Member
-            fields = '__all__'
     member_set = MemberListSerializer(many=True)
 
     class Meta:

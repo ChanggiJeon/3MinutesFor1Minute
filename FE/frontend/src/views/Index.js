@@ -40,20 +40,20 @@ function Index() {
 		}
 	}, []);
 
-	// useEffect(async () => {
-	// 	if (isLoggedIn) {
-	// 		try {
-	// 			const response = await apiGetMyProfile({ username: 'test' });
-	// 			dispatch(
-	// 				getUserData({
-	// 					...response.data,
-	// 				})
-	// 			);
-	// 		} catch (e) {
-	// 			dispatch(logout());
-	// 		}
-	// 	}
-	// }, [isLoggedIn]);
+	useEffect(async () => {
+		if (isLoggedIn) {
+			try {
+				const response = await apiGetMyProfile();
+				dispatch(
+					getUserData({
+						...response.data,
+					})
+				);
+			} catch (e) {
+				dispatch(logout());
+			}
+		}
+	}, [isLoggedIn]);
 
 	return (
 		<Container>
