@@ -3,6 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 const userInitialState = {
 	isLoggedIn: false,
 	username: '',
+	name: '',
+	email: '',
+	id: 0,
 	profile: '',
 };
 
@@ -16,6 +19,7 @@ const user = createSlice({
 			return { isLoggedIn };
 		},
 		logout: (_, __) => userInitialState,
+		getUserData: (state, action) => ({ ...state, ...action.payload }),
 	},
 });
 
@@ -33,6 +37,6 @@ export const authMiddleware = _ => next => action => {
 	return next(action);
 };
 
-export const { login, logout } = user.actions;
+export const { login, logout, getUserData } = user.actions;
 
 export default user.reducer;

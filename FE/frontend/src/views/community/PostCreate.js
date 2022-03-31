@@ -45,7 +45,7 @@ function PostCreate() {
 				icon: 'success',
 				text: '게시글이 성공적으로 작성되었습니다.',
 			});
-			navigate(`${routes.community}/${communityId}/${routes.posts}/${postId}`);
+			navigate(routes.postDetail(communityId, postId));
 		} catch (e) {
 			// error
 			await Swal.fire({
@@ -60,13 +60,7 @@ function PostCreate() {
 			<Background>
 				<Header>
 					<BoardTitle>게시글 작성</BoardTitle>
-					<RightBtn
-						onClick={() =>
-							navigate(`${routes.community}/${communityId}/${routes.posts}`)
-						}
-					>
-						◀
-					</RightBtn>
+					<RightBtn onClick={() => navigate(routes.posts(communityId))}>◀</RightBtn>
 				</Header>
 				<NForm onSubmit={handleSubmit(onValidSubmit)}>
 					<Label htmlFor='title'>

@@ -72,3 +72,39 @@ export const apiGetCommunityMembers = ({ communityId }) =>
 			...setToken(),
 		},
 	});
+
+export const apiSearchUser = ({ keyword }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/invite/search/${keyword}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiInviteUser = ({ communityId, id }) =>
+	axios({
+		method: 'post',
+		url: `${BASE_URL}/community/invite/${communityId}/${id}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiDeleteMember = ({ communityId, memberId }) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiDeleteCommunity = ({ communityId }) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/community/${communityId}/`,
+		headers: {
+			...setToken(),
+		},
+	});

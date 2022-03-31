@@ -1,0 +1,242 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
+import Swal from 'sweetalert2';
+import { FaUserCircle, FaSearch, FaUserSlash } from 'react-icons/fa';
+import {
+	apiDeleteCommunity,
+	apiDeleteMember,
+	apiGetCommunityMembers,
+	apiInviteUser,
+	apiSearchUser,
+} from '../../api/community';
+import Table from '../../components/common/Table';
+import Form from '../../components/auth/Form';
+import Label from '../../components/auth/Label';
+import IconBtn from '../../components/auth/IconBtn';
+import EmptyBtn from '../../components/auth/EmptyBtn';
+import routes from '../../routes';
+
+const Main = styled.div`
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+`;
+
+const TableContainer = styled.div`
+	height: 100%;
+`;
+
+const ResultContainer = styled.div`
+	margin: 20px 0;
+`;
+
+const ResultWrapper = styled.div`
+	height: 200px;
+	overflow-y: scroll;
+	margin-top: 20px;
+	border: 1px solid black;
+	border-radius: 5px;
+`;
+
+const ResultList = styled.div`
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	align-items: start;
+	padding: 5px;
+
+	button {
+		width: 100%;
+		height: 30px;
+
+		&:hover {
+			background-color: ${props => props.theme.confirmColor}33;
+		}
+	}
+`;
+
+function Admin() {
+	const { communityId } = useParams();
+	const navigate = useNavigate();
+	const [members, setMembers] = useState([]);
+	const [result, setResult] = useState([]);
+	const {
+		register,
+		getValues,
+		handleSubmit,
+		formState: { isValid },
+	} = useForm({
+		mode: 'all',
+	});
+
+	const onValidSubmit = async () => {
+		const { keyword } = getValues();
+		try {
+			const response = await apiSearchUser({ keyword });
+			setResult(response.data);
+		} catch (e) {
+			// error
+		}
+	};
+
+	const handleInvite = async e => {
+		const { id, name } = e;
+
+		try {
+			await apiInviteUser({ communityId, id });
+			Swal.fire({
+				icon: 'success',
+				text: `${name}님을 초대하였습니다.`,
+			});
+			getMembers();
+		} catch (error) {
+			// error
+			Swal.fire({
+				icon: 'info',
+				text: `${error.response.data}`,
+			});
+		}
+	};
+
+	const handleDeleteMember = async e => {
+		const { id, nickname } = e;
+
+		try {
+			const res = await Swal.fire({
+				icon: 'warning',
+				text: `${nickname}님을 추방하시겠습니까?`,
+				showCancelButton: true,
+				confirmButtonText: '추방',
+				cancelButtonText: '취소',
+			});
+			if (res.isConfirmed) {
+				await apiDeleteMember({ communityId, memberId: id });
+				Swal.fire({
+					icon: 'info',
+					text: `${nickname}님이 추방되었습니다.`,
+				});
+			}
+			getMembers();
+		} catch (error) {
+			// error
+		}
+	};
+
+	const handleDeleteCommunity = async () => {
+		try {
+			const res = await Swal.fire({
+				icon: 'warning',
+				text: '커뮤니티를 삭제하시겠습니까? "삭제하겠습니다"를 입력하세요.',
+				input: 'text',
+				showCancelButton: true,
+				confirmButtonText: '삭제',
+				cancelButtonText: '취소',
+			});
+			if (res.isConfirmed) {
+				if (res.value === '삭제하겠습니다') {
+					await apiDeleteCommunity({ communityId });
+					await Swal.fire({
+						icon: 'info',
+						text: '삭제되었습니다.',
+					});
+					navigate(routes.main);
+				}
+			}
+		} catch (e) {
+			// error
+			if (e.response.status === 500) {
+				Swal.fire({
+					icon: 'info',
+					text: '멤버가 남아있으면 삭제가 불가능 합니다.',
+				});
+			}
+		}
+	};
+
+	const getMembers = async () => {
+		try {
+			const response = await apiGetCommunityMembers({ communityId });
+			setMembers(response.data);
+		} catch (e) {
+			// error
+		}
+	};
+
+	useEffect(() => getMembers(), [communityId]);
+
+	const searchResults = (
+		<ResultContainer>
+			검색된 유저
+			<ResultWrapper>
+				<ResultList>
+					{result?.map(e => (
+						<EmptyBtn key={e.id} onClick={() => handleInvite(e)}>
+							{e?.name} - {e?.username} - {e?.email}
+						</EmptyBtn>
+					))}
+				</ResultList>
+			</ResultWrapper>
+		</ResultContainer>
+	);
+
+	return (
+		<Main>
+			<div>
+				<Form onSubmit={handleSubmit(onValidSubmit)}>
+					<Label htmlFor='keyword'>
+						<input
+							{...register('keyword', {
+								required: true,
+							})}
+							type='text'
+							placeholder='아이디로 초대하기'
+						/>
+						<IconBtn type='submit' disabled={!isValid}>
+							<FaSearch />
+						</IconBtn>
+					</Label>
+					{result.length > 0 && searchResults}
+				</Form>
+				<div>
+					<button type='button' onClick={handleDeleteCommunity}>
+						커뮤니티 삭제
+					</button>
+				</div>
+			</div>
+			<TableContainer>
+				<Table>
+					<thead>
+						<tr>
+							<th width='20%'>닉네임</th>
+							<th width='50%'>소개</th>
+							<th width='30%'>가입일</th>
+						</tr>
+					</thead>
+					<tbody>
+						{members.map(e => (
+							<tr key={e.id}>
+								<td>
+									<FaUserCircle />
+									{e.nickname}
+									{e.is_admin && '[관리자]'}
+									{!e.is_active && '[미승인]'}
+									{!e.is_admin && (
+										<IconBtn type='button' onClick={() => handleDeleteMember(e)}>
+											<FaUserSlash />
+										</IconBtn>
+									)}
+								</td>
+								<td>{e.bio}</td>
+								<td>{e.created_at.split('T')[0].split('-').join('. ')}.</td>
+							</tr>
+						))}
+					</tbody>
+				</Table>
+			</TableContainer>
+		</Main>
+	);
+}
+
+export default Admin;

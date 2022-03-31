@@ -55,8 +55,6 @@ function Login() {
 			dispatch(
 				login({
 					isLoggedIn: true,
-					// username: '',
-					// profile: '',
 					access,
 					refresh,
 				})
@@ -122,11 +120,11 @@ function Login() {
 								required: '아이디를 입력하세요.',
 								minLength: {
 									value: 5,
-									message: '아이디는 5자 이상입니다.',
+									message: '5자 이상 입력하세요.',
 								},
 								pattern: {
 									value: /^[a-zA-Z0-9]{5,}$/,
-									message: '아이디는 영문자 + 숫자입니다.',
+									message: '영문 대문자, 소문자, 숫자를 사용하세요.',
 								},
 							})}
 							type='id'
@@ -143,11 +141,11 @@ function Login() {
 								required: '비밀번호를 입력하세요.',
 								minLength: {
 									value: 8,
-									message: '비밀번호는 8자 이상입니다.',
+									message: '8자 이상 입력하세요.',
 								},
 								pattern: {
 									value: /^(?=.+[a-z])(?=.+[A-Z])((?=.+[0-9])(?=.+[!@#$%^&*])).{8,}$/,
-									message: '비밀번호는 영대문자 + 소문자 + 숫자 + !@#$%^&* 입니다.',
+									message: '영문 대문자, 소문자, 숫자, 특수문자를 사용하세요.',
 								},
 							})}
 							type='password'
