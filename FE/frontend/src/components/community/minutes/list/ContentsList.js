@@ -40,6 +40,7 @@ function ContentsList() {
 					date={minutes.created_at}
 					deadline={minutes.deadline}
 					author={minutes.assignee.member.nickname}
+					isClosed={minutes.is_closed}
 				/>
 			))}
 		</ListBox>

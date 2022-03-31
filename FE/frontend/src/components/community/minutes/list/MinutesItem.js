@@ -5,6 +5,8 @@ import TitleBox from './textBox/TitleBox';
 import DateBox from './textBox/DateBox';
 import AuthorBox from './textBox/AuthorBox';
 import DeadlineBox from './textBox/DeadlineBox';
+import CloseIcon from '../create/CloseIcon';
+import OpenIcon from '../create/OpenIcon';
 
 const Minutes = styled.li`
 	list-style: none;
@@ -15,8 +17,18 @@ const Minutes = styled.li`
 	height: 50px;
 	cursor: pointer;
 `;
+const Title = styled(TitleBox)`
+	justify-content: start;
+	padding-left: 10px;
+`;
+const SmCloseIcon = styled(CloseIcon)`
+	font-size: 30px;
+`;
+const SmOpneIcon = styled(OpenIcon)`
+	font-size: 20px;
+`;
 
-function MinutesItem({ minId, title, date, deadline, author }) {
+function MinutesItem({ minId, title, date, deadline, author, isClosed }) {
 	// 디데이 구하는 공식
 	const today = new Date();
 	const deadLine = new Date(deadline);
@@ -33,7 +45,9 @@ function MinutesItem({ minId, title, date, deadline, author }) {
 			}}
 		>
 			<NumBox>0</NumBox>
-			<TitleBox>{title}</TitleBox>
+			<Title>
+				{title} {isClosed ? <SmCloseIcon /> : <SmOpneIcon />}
+			</Title>
 			<DateBox>
 				{date.substr(2, 2)}/{date.substr(5, 2)}/{date.substr(8, 2)}{' '}
 				{date.substr(11, 5)}

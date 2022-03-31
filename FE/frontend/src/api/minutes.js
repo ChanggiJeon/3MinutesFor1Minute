@@ -16,22 +16,25 @@ export async function getAllMinutes(communityId) {
 	}
 }
 
-export async function createMinutes(communityId, data) {
+export async function createMinutes(communityId, formData) {
 	try {
-		const { title, content, deadline, memberIds, referenceFile } = data;
+		console.log('formData', formData);
+		// const { title, content, deadline, memberIds, referenceFile } = data;
 
 		const response = await axios({
 			method: 'post',
 			url: `${BASE_URL}/${communityId}/minutes/create/`,
-			data: {
-				title,
-				content,
-				deadline,
-				member_ids: memberIds,
-				reference_file: referenceFile,
-			},
+			data: formData,
+			// {
+			// 	title,
+			// 	content,
+			// 	deadline,
+			// 	reference_file: referenceFile[0],
+			// 	member_ids: memberIds,
+			// },
 			headers: {
 				...setToken(),
+				'Content-Type': 'multipart/form-data',
 			},
 		});
 		return response.data;
@@ -60,6 +63,30 @@ export async function deleteMinutes(communityId, minutesId) {
 		const response = await axios({
 			method: 'delete',
 			url: `${BASE_URL}/${communityId}/minutes/${minutesId}/delete/`,
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.data;
+	} catch (err) {
+		return err.response.data;
+	}
+}
+
+export async function updateMinutes(comId, minId, data) {
+	try {
+		const { title, content, deadline, memberIds, referenceFile } = data;
+
+		const response = await axios({
+			method: 'post',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/update`,
+			data: {
+				title,
+				content,
+				deadline,
+				member_ids: memberIds,
+				reference_file: referenceFile,
+			},
 			headers: {
 				...setToken(),
 			},
