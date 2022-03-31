@@ -9,6 +9,7 @@ const routes = {
 	minutesList: 'minutes',
 	minutesDetail: 'minutes/:minutesId',
 	minutesCreate: 'minutes/minutesCreate',
+	minutesUpdate: 'minutes/:minutesId/Update',
 	speechCreate: 'minutes/speechCreate',
 	posts: 'posts',
 	postCreate: 'posts/postcreate',
