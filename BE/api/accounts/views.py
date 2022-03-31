@@ -101,3 +101,19 @@ def find_username(request, email, name):
     email = EmailMessage(mail_title, message, to=[mail_to])
     email.send()
     return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def find_password(request, username, email, name):
+    User = get_user_model()
+    user = get_object_or_404(User, username=username, email=email, name=name)
+    password = make_random_code()
+    user.set_password(password)
+    user.save()
+    message = f"아래의 임시 비밀번호를 사용하여 로그인하시어 비밀번호를 변경해주시길 바랍니다.\n\n임시 비밀번호 : {password}\n\n감사합니다."
+    mail_title = "3Minutes for 1Minute 회원님의 임시 비밀번호입니다."
+    mail_to = email
+    email = EmailMessage(mail_title, message, to=[mail_to])
+    email.send()
+    return Response(status=status.HTTP_200_OK)
