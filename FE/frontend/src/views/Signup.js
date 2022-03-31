@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { FaLock, FaUser, FaUserTag } from 'react-icons/fa';
+import { BsShieldLock } from 'react-icons/bs';
 import { FiMail } from 'react-icons/fi';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +39,9 @@ function Signup() {
 	const passwordMatch = watch('password');
 	const [idCheck, setIdCheck] = useState(false);
 	const [emailCheck, setEmailCheck] = useState(false);
+	const [emailCertCode, setEmailCertCode] = useState('');
+	const [emailConfirm, setEmailConfirm] = useState(false);
+	const [emailConfirmLoading, setEmailConfirmLoading] = useState(false);
 	const { isLoggedIn } = useSelector(state => state.user);
 
 	useEffect(() => {
@@ -47,7 +51,6 @@ function Signup() {
 	}, [isLoggedIn]);
 
 	const handleIdCheck = async () => {
-		// check process
 		const { id } = getValues();
 
 		try {
@@ -66,20 +69,43 @@ function Signup() {
 	};
 
 	const handleEmailCheck = async () => {
-		// check process
 		const { email } = getValues();
+
 		try {
-			await apiUniqueCheckEmail({ email }).then(res => {
-				if (res.status === 200) {
-					setEmailCheck(true);
-				}
-			});
+			setEmailConfirmLoading(true);
+
+			const response = await apiUniqueCheckEmail({ email });
+
+			if (response.status === 200) {
+				setEmailCheck(true);
+				setEmailCertCode(response.data.code);
+				Swal.fire({
+					icon: 'success',
+					text: '이메일로 인증코드가 발송되었습니다.',
+				});
+			}
 		} catch (e) {
 			if (e.response.status === 400) {
 				setError('email', {
 					message: '이미 사용 중인 이메일 입니다.',
 				});
 			}
+		} finally {
+			setEmailConfirmLoading(false);
+		}
+	};
+
+	const handleEmailConfirm = async () => {
+		const { emailConfirmCode } = getValues();
+
+		if (emailConfirmCode === emailCertCode) {
+			setEmailConfirm(true);
+		} else {
+			setEmailConfirm(false);
+			Swal.fire({
+				icon: 'error',
+				text: '인증코드가 일치하지 않습니다.',
+			});
 		}
 	};
 
@@ -87,7 +113,7 @@ function Signup() {
 		const { id, password, passwordConfirmation, name, email } = getValues();
 
 		try {
-			if (!idCheck && !emailCheck) throw Error();
+			if (!idCheck && !emailCheck && !emailConfirm) throw Error();
 
 			await apiSignup({
 				id,
@@ -243,12 +269,36 @@ function Signup() {
 							onInput={() => clearErrors('result')}
 							onChange={() => setEmailCheck(false)}
 						/>
-						<SubmitButton type='button' onClick={handleEmailCheck}>
-							중복확인
+						<SubmitButton
+							type='button'
+							onClick={handleEmailCheck}
+							disabled={emailConfirmLoading}
+						>
+							{emailConfirmLoading ? '로딩중' : '인증하기'}
 						</SubmitButton>
 					</Label>
 					{ErrorAndCheck(errors?.email?.message, emailCheck)}
-					<SubmitButton type='submit' disabled={!isValid || !idCheck || !emailCheck}>
+					{emailCheck && (
+						<Label htmlFor='emailConfirmCode'>
+							<BsShieldLock />
+							<input
+								{...register('emailConfirmCode')}
+								type='text'
+								placeholder='인증코드'
+								maxLength='10'
+								onInput={() => clearErrors('result')}
+								onChange={() => setEmailConfirm(false)}
+							/>
+							<SubmitButton type='button' onClick={handleEmailConfirm}>
+								코드확인
+							</SubmitButton>
+						</Label>
+					)}
+					{ErrorAndCheck(errors?.emailConfirmCode?.message, emailConfirm)}
+					<SubmitButton
+						type='submit'
+						disabled={!isValid || !idCheck || !emailCheck || !emailConfirm}
+					>
 						회 원 가 입
 					</SubmitButton>
 				</Form>
