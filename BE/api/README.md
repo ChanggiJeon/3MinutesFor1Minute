@@ -150,7 +150,7 @@ pip install -r requirements.txt
     - is_closed (기본 False)
     - deadline
     - reference_file (필수 X, 테스트 X)
-    - participants = [nickname, ..., ] (회의에 참석할 멤버 닉네임들 리스트로)
+    - member_ids = [ids, ..., ] (회의에 참석할 멤버들 id를리스트로 전송)
   - 회의록 상세 정보 (스피치까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/
   - 회의록 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/delete/
   - 회의록 수정 (수정할 부분만, 회의에 참석한 멤버 수정 불가) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/update/

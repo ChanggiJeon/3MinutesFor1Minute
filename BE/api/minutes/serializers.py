@@ -85,7 +85,7 @@ class MinuteSerializer(serializers.ModelSerializer):
 
 
 class CustomMinuteSerializer(MinuteSerializer):
-    participants = serializers.ListField()
+    member_ids = serializers.ListField()
 
     class Meta:
         model = Minute
