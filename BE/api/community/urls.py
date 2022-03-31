@@ -11,6 +11,9 @@ urlpatterns = [
     path('search/code/<code>/', views.search_for_code),
     path('search/name/<keyword>/', views.search_for_name),
     path('uniquecheck/<int:community_pk>/nickname/<nickname>/', views.uniquecheck_member_nickname),
+    # 가입 승인
+    path('<int:community_pk>/waitinglist/', views.members_get_waiting),
+    path('<int:community_pk>/waitinglist/<int:member_pk>/approval/', views.approve_waiting_member),
     # 커뮤니티 조회, 수정, 삭제
     path('<int:community_pk>/', views.community_detail_update_or_delete),
     # 멤버 조회
