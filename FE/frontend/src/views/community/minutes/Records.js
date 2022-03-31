@@ -27,6 +27,8 @@ const StopBtn = styled(GrayLgButton)`
 `;
 const RecContainer = styled(Container)`
 	align-content: space-between;
+	width: 900px;
+	height: 500px;
 `;
 
 function Records() {

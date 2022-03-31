@@ -8,7 +8,6 @@ const SideItem = styled.div`
 	font-size: 20px;
 	align-items: center;
 	justify-content: start;
-	width: 75%;
 	height: 150px;
 	margin-top: 1rem;
 `;
