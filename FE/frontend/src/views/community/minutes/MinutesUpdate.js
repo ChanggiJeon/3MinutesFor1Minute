@@ -93,9 +93,10 @@ function MinutesUpdate() {
 			title: data.title,
 			content: data.content,
 			deadline: data.Dday,
-			participants: [],
-			reference_file: data.upload,
+			memberIds: [],
+			referenceFile: data.upload,
 		};
+		console.log('request', request);
 		dispatch(createMinutesByData(request)).then(res => {
 			const { community, id } = res.payload;
 			navigate(`/community/${community}/minutes/${id}`);

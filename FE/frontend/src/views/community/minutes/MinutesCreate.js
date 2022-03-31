@@ -89,8 +89,8 @@ function MinutesCreate() {
 			title: data.title,
 			content: data.content,
 			deadline: data.Dday,
-			participants: [],
-			reference_file: data.upload,
+			memberIds: [],
+			referenceFile: data.upload,
 		};
 		dispatch(createMinutesByData(request)).then(res => {
 			const { community, id } = res.payload;
@@ -100,6 +100,7 @@ function MinutesCreate() {
 	// 업로드 된 파일 표시하기 위한 변수
 	const uploadedFiles = watch('upload');
 	const fileList = uploadedFiles ? Object.values(uploadedFiles) : [];
+	console.log(uploadedFiles);
 
 	return (
 		<CreateContainer>
@@ -171,7 +172,7 @@ function MinutesCreate() {
 					/>
 					<Br style={{ margin: '0' }} />
 					{fileList.map(file => (
-						<TextUpload>{file.name}</TextUpload>
+						<TextUpload key={file.name}>{file.name}</TextUpload>
 					))}
 				</CreateForm>
 			</ContentBox>

@@ -18,7 +18,7 @@ export async function getAllMinutes(communityId) {
 
 export async function createMinutes(communityId, data) {
 	try {
-		const { title, content, deadline, participants } = data;
+		const { title, content, deadline, memberIds, referenceFile } = data;
 
 		const response = await axios({
 			method: 'post',
@@ -27,7 +27,8 @@ export async function createMinutes(communityId, data) {
 				title,
 				content,
 				deadline,
-				participants,
+				member_ids: memberIds,
+				reference_file: referenceFile,
 			},
 			headers: {
 				...setToken(),
