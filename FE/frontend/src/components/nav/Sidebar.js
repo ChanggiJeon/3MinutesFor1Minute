@@ -12,7 +12,7 @@ const SubText = styled.h3`
 
 const SideSubItemLinks = styled(SideItemLinks)`
 	padding: 0 0.5rem;
-	width: 100%;
+	width: 90%;
 	height: 25%;
 	font-size: 20px;
 `;
