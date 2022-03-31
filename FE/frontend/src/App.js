@@ -16,6 +16,7 @@ import MinutesList from './views/community/minutes/MinutesList';
 import MinutesDetail from './views/community/minutes/MinutesDetail';
 import SpeechCreate from './views/community/minutes/SpeechCreate';
 import MinutesCreate from './views/community/minutes/MinutesCreate';
+import MinutesUpdate from './views/community/minutes/MinutesUpdate';
 
 function App() {
 	return (
@@ -36,6 +37,7 @@ function App() {
 							<Route path={routes.minutesList} element={<MinutesList />} />
 							<Route path={routes.minutesDetail} element={<MinutesDetail />} />
 							<Route path={routes.minutesCreate} element={<MinutesCreate />} />
+							<Route path={routes.minutesUpdate} element={<MinutesUpdate />} />
 							<Route path={routes.speechCreate} element={<SpeechCreate />} />
 						</Route>
 					</Route>

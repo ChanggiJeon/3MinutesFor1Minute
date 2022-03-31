@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import routes from '../../../routes';
 import { createMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
@@ -67,7 +68,13 @@ const TextUpload = styled(TextContent)`
 	font-size: 16px;
 `;
 
-function MinutesCreate() {
+function MinutesUpdate() {
+	// 필요한 함수 설정
+	const { communityId } = useParams();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	// 기본 데이터 입력
+	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
 	// useform 설정
 	const {
 		register,
@@ -77,11 +84,8 @@ function MinutesCreate() {
 		formState: { errors },
 	} = useForm({
 		mode: 'onChange',
+		defaultValues: singleMinutes,
 	});
-	// 필요한 함수 설정
-	const { communityId } = useParams();
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	// form 제출 로직
 	function onValidSubmit(data) {
 		const request = {
@@ -103,6 +107,7 @@ function MinutesCreate() {
 
 	return (
 		<CreateContainer>
+			{/* 헤더 */}
 			<TextSubTitle>회의록 작성</TextSubTitle>
 			<CompleteBtn type='submit' form='createForm'>
 				작성 완료
@@ -115,8 +120,10 @@ function MinutesCreate() {
 				작성 취소
 			</CancelBtn>
 			<DivLine />
+			{/* 폼바디 */}
 			<ContentBox>
 				<CreateForm id='createForm' onSubmit={handleSubmit(onValidSubmit)}>
+					{/* 제목 */}
 					<TextContent>제목 :</TextContent>
 					<InputLabel htmlFor='title'>
 						<input
@@ -130,12 +137,14 @@ function MinutesCreate() {
 					</InputLabel>
 					<ErrorMsg>{errors?.title?.message}</ErrorMsg>
 					<Br />
-					<TextContent>회의 대상자 : Member랑 연계필요</TextContent>
+					{/* 참여자 */}
+					<TextContent>참여자 : Member랑 연계필요</TextContent>
 					<Br />
+					{/* 종료일 */}
 					<TextContent>
-						회의 종료일 :{' '}
+						종료일 :{' '}
 						<DateTime
-							{...register('Dday', {
+							{...register('deadline', {
 								required: '회의 종료일을 입력해주세요',
 							})}
 							type='datetime-local'
@@ -179,4 +188,4 @@ function MinutesCreate() {
 	);
 }
 
-export default MinutesCreate;
+export default MinutesUpdate;
