@@ -59,3 +59,15 @@ export const apiGetMyProfile = () =>
 			...setToken(),
 		},
 	});
+
+export const apiFindId = ({ email, name }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/find/username/${email}/${name}/`,
+	});
+
+export const apiFindPw = ({ username, email, name }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/find/password/${username}/${email}/${name}/`,
+	});
