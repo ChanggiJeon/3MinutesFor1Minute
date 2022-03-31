@@ -19,7 +19,7 @@ urlpatterns = [
     path('invite/<int:community_pk>/<int:user_pk>/', views.invite_user),
     path('invite/search/<keyword>/', views.find_user),
     # 멤버 조회 / 수정 / 삭제
-    path('<int:community_pk>/member/<int:member_pk>/detail', views.member_detail),
+    path('<int:community_pk>/member/<int:member_pk>/detail/', views.member_detail),
     path('<int:community_pk>/member/<int:member_pk>/update/', views.member_update),
     path('<int:community_pk>/member/<int:member_pk>/withdraw/', views.member_delete),
 ]
