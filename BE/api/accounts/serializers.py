@@ -18,3 +18,20 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ('id', 'username', 'password', 'password_confirm', 'email', 'name', )
         read_only_fields = ('id', )
+
+
+class AuthenticateSerializer(UserSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'password', )
+
+
+class UserUpdateSerializer(UserSerializer):
+    password = serializers.CharField(min_length=8, max_length=20, write_only=True)
+    new_password = password
+    new_password_confirm = password
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'password', 'new_password', 'new_password_confirm', 'profile_image', )
