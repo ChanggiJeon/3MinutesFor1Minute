@@ -244,6 +244,14 @@ function Signup() {
 						<input
 							{...register('name', {
 								required: '이름을 입력하세요.',
+								minLength: {
+									value: 2,
+									message: '2자 이상 입력하세요.',
+								},
+								pattern: {
+									value: /^[ㄱ-ㅎㅏ-ㅢ가-힣]*$/,
+									message: '한글만 입력하세요.',
+								},
 							})}
 							type='name'
 							placeholder='이름'
