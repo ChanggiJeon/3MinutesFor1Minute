@@ -65,20 +65,13 @@ export async function deleteMinutes(communityId, minutesId) {
 
 export async function updateMinutes(comId, minId, data) {
 	try {
-		const { title, content, deadline, memberIds, referenceFile } = data;
-
 		const response = await axios({
-			method: 'post',
-			url: `${BASE_URL}/${comId}/minutes/${minId}/update`,
-			data: {
-				title,
-				content,
-				deadline,
-				member_ids: memberIds,
-				reference_file: referenceFile,
-			},
+			method: 'put',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/update/`,
+			data,
 			headers: {
 				...setToken(),
+				'Content-Type': 'multipart/form-data',
 			},
 		});
 		return response.data;
