@@ -4,6 +4,7 @@ import {
 	createMinutes,
 	detailMinutes,
 	deleteMinutes,
+	updateMinutes,
 } from '../api/minutes';
 
 const name = 'minutes';
@@ -26,7 +27,7 @@ export const createMinutesByData = createAsyncThunk(
 	}
 );
 
-export const DetailMinutesById = createAsyncThunk(
+export const detailMinutesById = createAsyncThunk(
 	`${name}/DETAIL_MINUTES`,
 	async data => {
 		const { communityId, minutesId } = data;
@@ -35,11 +36,21 @@ export const DetailMinutesById = createAsyncThunk(
 	}
 );
 
-export const DeleteMinutesById = createAsyncThunk(
+export const deleteMinutesById = createAsyncThunk(
 	`${name}/DELETE_MINUTES`,
 	async data => {
 		const { communityId, minutesId } = data;
 		const response = await deleteMinutes(communityId, minutesId);
+		return response;
+	}
+);
+
+export const updateMinutesByData = createAsyncThunk(
+	`${name}/UPDATE_MINUTES`,
+	async data => {
+		const comId = data.get('comId');
+		const minId = data.get('minId');
+		const response = await updateMinutes(comId, minId, data);
 		return response;
 	}
 );
@@ -66,7 +77,7 @@ const minutes = createSlice({
 		[fetchMinutesByComId.fulfilled]: (state, action) => {
 			state.allMinutes = action.payload;
 		},
-		[DetailMinutesById.fulfilled]: (state, action) => {
+		[detailMinutesById.fulfilled]: (state, action) => {
 			const response = action.payload;
 			// 기본 데이터 생성
 			const writtenDate = response?.created_at;
@@ -98,7 +109,7 @@ const minutes = createSlice({
 				referenceFile,
 			};
 		},
-		[DeleteMinutesById.fulfilled]: state => {
+		[deleteMinutesById.fulfilled]: state => {
 			state.singleMinutes = {
 				createdAt: '',
 				author: '',
