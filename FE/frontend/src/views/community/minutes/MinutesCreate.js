@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -71,7 +70,6 @@ const Br = styled.div`
 const TextUpload = styled(TextContent)`
 	font-size: 16px;
 `;
-const Span = styled.span``;
 
 function MinutesCreate() {
 	// useform 설정
@@ -90,21 +88,17 @@ function MinutesCreate() {
 	const dispatch = useDispatch();
 	// form 제출 로직
 	function onValidSubmit(data) {
-		const request = {
-			comId: communityId,
-			title: data.title,
-			content: data.content,
-			deadline: data.Dday,
-			memberIds: [],
-			referenceFile: data.upload,
-		};
+		console.log(data);
 		const formData = new FormData();
-		formData.append(`reference_file`, data.upload);
+		if (data.upload[0]) {
+			formData.append(`reference_file`, data.upload[0]);
+		}
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('title', data.title);
 		formData.append('content', data.content);
 		formData.append('member_ids', []);
 		formData.append('deadline', data.Dday);
+		// navigate를 위한 값
 		formData.append('comId', communityId);
 		try {
 			dispatch(createMinutesByData(formData)).then(res => {
@@ -114,11 +108,6 @@ function MinutesCreate() {
 		} catch (error) {
 			console.log(error);
 		}
-		// dispatch(createMinutesByData(request)).then(res => {
-		// 	console.log(res.payload);
-		// 	const { community, id } = res.payload;
-		// 	navigate(`/community/${community}/minutes/${id}`);
-		// });
 	}
 	// 업로드 된 파일 표시하기 위한 변수
 	const uploadedFiles = watch('upload');
