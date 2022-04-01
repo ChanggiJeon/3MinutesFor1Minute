@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
   `is_active` tinyint(1) NOT NULL,
   `date_joined` datetime(6) NOT NULL,
   `profile_image` varchar(100) NOT NULL,
-  `creatd_at` datetime(6) NOT NULL,
   `name` varchar(15) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
@@ -39,9 +38,9 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
 
 -- 테이블 데이터 myproject.accounts_user:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `accounts_user` DISABLE KEYS */;
-INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `profile_image`, `creatd_at`, `name`) VALUES
-	(1, 'pbkdf2_sha256$320000$OYYkIk4xkOtfabY78Yn7NC$qxK6ZsBldRg5im72PSkOCpkhPKtHvJmpTjZWjPw5ZiM=', NULL, 0, 'testuser', '', '', 'wotjd4725@naver.com', 0, 1, '2022-03-26 09:48:59.950333', '', '2022-03-26 09:48:59.952873', 'testuser'),
-	(2, 'pbkdf2_sha256$320000$BKm9lSA4LztohWN9YKYZyB$/FrDXFDpoSyY8NLJYj8EY/xta0G9zeBbtX7u3UWmpu0=', NULL, 0, 'ssafy', '', '', 'wotjd4725@naver.com', 0, 1, '2022-03-26 09:49:02.828424', '', '2022-03-26 09:49:02.830425', 'ssafy');
+INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `profile_image`, `name`) VALUES
+	(1, 'pbkdf2_sha256$320000$OYYkIk4xkOtfabY78Yn7NC$qxK6ZsBldRg5im72PSkOCpkhPKtHvJmpTjZWjPw5ZiM=', NULL, 0, 'testuser', '', '', 'wotjd4725@naver.com', 0, 1, '2022-03-26 09:48:59.950333', '', 'testuser'),
+	(2, 'pbkdf2_sha256$320000$BKm9lSA4LztohWN9YKYZyB$/FrDXFDpoSyY8NLJYj8EY/xta0G9zeBbtX7u3UWmpu0=', NULL, 0, 'ssafy', '', '', 'wotjd4725@naver.com', 0, 1, '2022-03-26 09:49:02.828424', '', 'ssafy');
 /*!40000 ALTER TABLE `accounts_user` ENABLE KEYS */;
 
 -- 테이블 myproject.accounts_user_groups 구조 내보내기
