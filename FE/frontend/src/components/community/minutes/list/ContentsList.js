@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import MinutesItem from './MinutesItem';
 import NumBox from './textBox/NumBox';
@@ -22,6 +23,7 @@ const Divider = styled(DivLine)`
 function ContentsList() {
 	const minutesList = useSelector(state => state.minutes.allMinutes);
 
+
 	return (
 		<ListBox>
 			<NumBox>번호</NumBox>
@@ -33,9 +35,12 @@ function ContentsList() {
 			{minutesList.map(minutes => (
 				<MinutesItem
 					key={minutes.id}
+					minId={minutes.id}
 					title={minutes.title}
 					date={minutes.created_at}
 					deadline={minutes.deadline}
+					author={minutes.assignee.member.nickname}
+					isClosed={minutes.is_closed}
 				/>
 			))}
 		</ListBox>
