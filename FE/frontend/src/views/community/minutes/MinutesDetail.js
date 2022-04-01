@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { DetailMinutesById, DeleteMinutesById } from '../../../store/minutes';
+import { detailMinutesById, deleteMinutesById } from '../../../store/minutes';
 import routes from '../../../routes';
 import Container from '../../../components/community/Container';
 import Main from '../../../components/community/MainStart';
@@ -55,7 +55,7 @@ function MinutesDetail() {
 	const navigate = useNavigate();
 	// 리덕스에서 데이터 받아오기
 	useEffect(() => {
-		dispatch(DetailMinutesById(params));
+		dispatch(detailMinutesById(params));
 	}, []);
 	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
 	const deleteMinutes = () => {
@@ -63,7 +63,7 @@ function MinutesDetail() {
 	};
 	useEffect(() => {
 		if (isDeleted) {
-			dispatch(DeleteMinutesById(params)).then(
+			dispatch(deleteMinutesById(params)).then(
 				navigate(`/community/${params.communityId}/minutes/`)
 			);
 		}

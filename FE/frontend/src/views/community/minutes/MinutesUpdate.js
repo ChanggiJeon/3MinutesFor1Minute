@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import routes from '../../../routes';
-import { createMinutesByData } from '../../../store/minutes';
+import { updateMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
@@ -83,24 +83,32 @@ function MinutesUpdate() {
 		formState: { errors },
 	} = useForm({
 		mode: 'onChange',
+		// create랑 다른 부분
 		defaultValues: singleMinutes,
 	});
 	// form 제출 로직
 	function onValidSubmit(data) {
-		const request = {
-			comId: communityId,
-			minId: minutesId,
-			title: data.title,
-			content: data.content,
-			deadline: data.Dday,
-			memberIds: [],
-			referenceFile: data.upload,
-		};
-		console.log('request', request);
-		dispatch(createMinutesByData(request)).then(res => {
-			const { community, id } = res.payload;
-			navigate(`/community/${community}/minutes/${id}`);
-		});
+		console.log('data', data);
+		const formData = new FormData();
+		if (data.upload[0]) {
+			formData.append(`reference_file`, data.upload[0]);
+		}
+		formData.append('enctype', 'multipart/form-data');
+		formData.append('title', data.title);
+		formData.append('content', data.content);
+		formData.append('member_ids', []);
+		formData.append('deadline', data.deadline);
+		// navigate를 위한 값
+		formData.append('comId', communityId);
+		formData.append('minId', minutesId);
+		try {
+			dispatch(updateMinutesByData(formData)).then(res => {
+				const { community, id } = res.payload;
+				navigate(`/community/${community}/minutes/${id}`);
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	}
 	// 업로드 된 파일 표시하기 위한 변수
 	const uploadedFiles = watch('upload');
@@ -109,16 +117,16 @@ function MinutesUpdate() {
 	return (
 		<CreateContainer>
 			{/* 헤더 */}
-			<TextSubTitle>회의록 작성</TextSubTitle>
+			<TextSubTitle>회의록 수정</TextSubTitle>
 			<CompleteBtn type='submit' form='createForm'>
-				작성 완료
+				수정 완료
 			</CompleteBtn>
 			<CancelBtn
 				onClick={() =>
 					navigate(`${routes.community}/${communityId}/${routes.minutesList}`)
 				}
 			>
-				작성 취소
+				수정 취소
 			</CancelBtn>
 			<DivLine />
 			{/* 폼바디 */}
@@ -181,7 +189,7 @@ function MinutesUpdate() {
 					/>
 					<Br style={{ margin: '0' }} />
 					{fileList.map(file => (
-						<TextUpload>{file.name}</TextUpload>
+						<TextUpload key={file.name}>{file.name}</TextUpload>
 					))}
 				</CreateForm>
 			</ContentBox>
