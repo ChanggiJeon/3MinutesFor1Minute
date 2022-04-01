@@ -21,7 +21,7 @@ class Member(models.Model):
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    profile_image = models.ImageField(upload_to='images/', null=True)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
 
     def __str__(self):
         return self.nickname
