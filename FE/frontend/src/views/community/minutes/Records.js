@@ -27,6 +27,8 @@ const StopBtn = styled(GrayLgButton)`
 `;
 const RecContainer = styled(Container)`
 	align-content: space-between;
+	width: 900px;
+	height: 500px;
 `;
 
 function Records() {
@@ -47,7 +49,7 @@ function Records() {
 	return (
 		<Main>
 			<RecContainer>
-				<TextSubTitle>스피치 생성</TextSubTitle>
+				<TextSubTitle>스피치 생성(녹음)</TextSubTitle>
 				<DivLine />
 				<MainBox>
 					<SubBox>
