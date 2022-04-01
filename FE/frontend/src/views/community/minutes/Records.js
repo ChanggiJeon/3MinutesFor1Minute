@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useReactMediaRecorder } from 'react-media-recorder';
+import { Recorder } from 'react-voice-recorder';
 import Main from '../../../components/community/MainCenter';
 import GrayLgButton from '../../../components/common/GrayLgButton';
 import RecorderImg from '../../../components/community/minutes/speech/RecorderImg';
@@ -37,26 +38,6 @@ const RecContainer = styled(Container)`
 function Records() {
 	const navigate = useNavigate();
 	const { communityId, minutesId } = useParams();
-	// media recorder 세팅
-	const {
-		// status : idle-정지 / acquiring_media-마이크권한 요청 / recording-녹음중 / stopped-정지 / paused-일시정지 /
-		status,
-		startRecording,
-		pauseRecording,
-		resumeRecording,
-		stopRecording,
-		clearBlobUrl,
-		audio,
-		// mediaBlobUrl : 녹음된 파일이 저장된 URL 반환
-		mediaBlobUrl,
-	} = useReactMediaRecorder({
-		video: false,
-		audio: true,
-		blobPropertyBag: {
-			type: 'audio/wav',
-		},
-	});
-	console.log('mediaBlobUrl', mediaBlobUrl);
 
 	const speechFinished = formData => {
 		console.log('formData', formData);
@@ -66,9 +47,38 @@ function Records() {
 		// 	{ media }
 		// );
 	};
-	if (mediaBlobUrl) {
+	// if (mediaBlobUrl) {
+	// 	const fileName = `${new Date().toString()}.wav`;
+	// 	const recordFile = new File([mediaBlobUrl], fileName);
+	// 	console.log('recordFile', recordFile);
+	// 	const formData = new FormData();
+	// 	formData.append('record_file', recordFile);
+	// 	formData.append('enctype', 'multipart/form-data');
+	// 	formData.append('title', 'title');
+	// 	const res = speechFinished(formData);
+	// 	console.log('res', res);
+	// }
+	const [speech, setSpeech] = useState({
+		audioDetails: {
+			url: null,
+			blob: null,
+			chunks: null,
+			duration: {
+				h: 0,
+				m: 0,
+				s: 0,
+			},
+		},
+	});
+	function handleAudioStop(data) {
+		console.log('stopped', data);
+		setSpeech({ audioDetails: data });
+	}
+
+	function handleAudioUpload(file) {
+		console.log('upload', file);
 		const fileName = `${new Date().toString()}.wav`;
-		const recordFile = new File([mediaBlobUrl], fileName);
+		const recordFile = new File([file], fileName);
 		console.log('recordFile', recordFile);
 		const formData = new FormData();
 		formData.append('record_file', recordFile);
@@ -78,21 +88,48 @@ function Records() {
 		console.log('res', res);
 	}
 
+	function handleCountDown(data) {
+		console.log('countdown', data);
+	}
+
+	function handleReset() {
+		const reset = {
+			url: null,
+			blob: null,
+			chunks: null,
+			duration: {
+				h: 0,
+				m: 0,
+				s: 0,
+			},
+		};
+		setSpeech({ audioDetails: reset });
+	}
+
 	return (
 		<Main>
 			<RecContainer>
 				<TextSubTitle>스피치 생성(녹음)</TextSubTitle>
 				<DivLine />
-				<MainBox>
+				{/* <MainBox>
 					<SubBox>
 						<RecordsWave status={status} />
 						<RecorderImg src={recorder} />
 					</SubBox>
 					<SubBox>
-						<Timer status={status} />
+						<Timer status={} />
 					</SubBox>
-				</MainBox>
-				<BtnBox>
+				</MainBox> */}
+				<Recorder
+					style={{ width: '500px' }}
+					record={false}
+					hideHeader
+					handleAudioStop={data => handleAudioStop(data)}
+					handleAudioUpload={data => handleAudioUpload(data)}
+					handleReset={() => handleReset()}
+					mimeTypeToUseWhenRecording='audio/webm' // For specific mimetype.
+				/>
+				{/* <BtnBox>
 					<audio controls src={mediaBlobUrl}>
 						<track kind='captions' />
 					</audio>
@@ -108,7 +145,7 @@ function Records() {
 					<StopBtn status={status} onClick={stopRecording}>
 						스피치 종료
 					</StopBtn>
-				</BtnBox>
+				</BtnBox> */}
 			</RecContainer>
 		</Main>
 	);
