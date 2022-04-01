@@ -10,7 +10,7 @@ class Board(models.Model):
     is_notice = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    upload = models.FileField(upload_to='board/', max_length=30, null=True)
+    upload = models.FileField(upload_to='board/', null=True, blank=True)
 
     def __str__(self):
         return self.title
