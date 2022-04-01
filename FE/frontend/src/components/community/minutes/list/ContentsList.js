@@ -8,6 +8,7 @@ import DateBox from './textBox/DateBox';
 import AuthorBox from './textBox/AuthorBox';
 import DivLine from '../../main/DivLine';
 import DeadlineBox from './textBox/DeadlineBox';
+import TextSubTitle from '../../../common/TextSubTitle';
 
 const ListBox = styled.ul`
 	width: 100%;
@@ -23,7 +24,6 @@ const Divider = styled(DivLine)`
 function ContentsList() {
 	const minutesList = useSelector(state => state.minutes.allMinutes);
 
-
 	return (
 		<ListBox>
 			<NumBox>번호</NumBox>
@@ -32,17 +32,21 @@ function ContentsList() {
 			<AuthorBox>작성자</AuthorBox>
 			<DeadlineBox>D-day</DeadlineBox>
 			<Divider />
-			{minutesList.map(minutes => (
-				<MinutesItem
-					key={minutes.id}
-					minId={minutes.id}
-					title={minutes.title}
-					date={minutes.created_at}
-					deadline={minutes.deadline}
-					author={minutes.assignee.member.nickname}
-					isClosed={minutes.is_closed}
-				/>
-			))}
+			{minutesList ? (
+				minutesList.map(minutes => (
+					<MinutesItem
+						key={minutes.id}
+						minId={minutes.id}
+						title={minutes.title}
+						date={minutes.created_at}
+						deadline={minutes.deadline}
+						author={minutes.assignee.member.nickname}
+						isClosed={minutes.is_closed}
+					/>
+				))
+			) : (
+				<TextSubTitle>회의록을 작성해주세요.</TextSubTitle>
+			)}
 		</ListBox>
 	);
 }

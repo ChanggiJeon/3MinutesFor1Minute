@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useReactMediaRecorder } from 'react-media-recorder';
 import Main from '../../../components/community/MainCenter';
 import GrayLgButton from '../../../components/common/GrayLgButton';
@@ -12,6 +13,8 @@ import SubBox from '../../../components/community/minutes/speech/SubBox';
 import Timer from '../../../components/community/minutes/speech/Timer';
 import TextSubTitle from '../../../components/common/TextSubTitle';
 import DivLine from '../../../components/community/main/DivLine';
+import routes from '../../../routes';
+import createSpeech from '../../../api/speech';
 
 const StartBtn = styled(GrayLgButton)`
 	${props => props.status === 'idle' && `display: inline-block;`}
@@ -32,6 +35,9 @@ const RecContainer = styled(Container)`
 `;
 
 function Records() {
+	const navigate = useNavigate();
+	const { communityId, minutesId } = useParams();
+	// media recorder 세팅
 	const {
 		// status : idle-정지 / acquiring_media-마이크권한 요청 / recording-녹음중 / stopped-정지 / paused-일시정지 /
 		status,
@@ -40,11 +46,37 @@ function Records() {
 		resumeRecording,
 		stopRecording,
 		clearBlobUrl,
+		audio,
 		// mediaBlobUrl : 녹음된 파일이 저장된 URL 반환
 		mediaBlobUrl,
 	} = useReactMediaRecorder({
+		video: false,
 		audio: true,
+		blobPropertyBag: {
+			type: 'audio/wav',
+		},
 	});
+	console.log('mediaBlobUrl', mediaBlobUrl);
+
+	const speechFinished = formData => {
+		console.log('formData', formData);
+		createSpeech(communityId, minutesId, formData);
+		// navigate(
+		// 	`${routes.community}/${communityId}/minutes/${minutesId}/speechCreate`,
+		// 	{ media }
+		// );
+	};
+	if (mediaBlobUrl) {
+		const fileName = `${new Date().toString()}.wav`;
+		const recordFile = new File([mediaBlobUrl], fileName);
+		console.log('recordFile', recordFile);
+		const formData = new FormData();
+		formData.append('record_file', recordFile);
+		formData.append('enctype', 'multipart/form-data');
+		formData.append('title', 'title');
+		const res = speechFinished(formData);
+		console.log('res', res);
+	}
 
 	return (
 		<Main>
@@ -61,6 +93,9 @@ function Records() {
 					</SubBox>
 				</MainBox>
 				<BtnBox>
+					<audio controls src={mediaBlobUrl}>
+						<track kind='captions' />
+					</audio>
 					<StartBtn status={status} onClick={startRecording}>
 						스피치 시작
 					</StartBtn>
