@@ -30,6 +30,16 @@ const routes = {
 		`${communityId ? `${routes.community(communityId)}/` : ''}posts/postcreate`,
 	postDetail: (communityId = '', postId = ':postId') =>
 		`${communityId ? `${routes.community(communityId)}/` : ''}posts/${postId}`,
+	// community: '/community',
+	// minutesList: 'minutes',
+	// minutesDetail: 'minutes/:minutesId',
+	// minutesCreate: 'minutes/minutesCreate',
+	// minutesUpdate: 'minutes/:minutesId/update',
+	// recordCreate: 'minutes/:minutesId/recordCreate',
+	// speechCreate: 'minutes/:minutesId/speechCreate',
+	// posts: 'posts',
+	// postCreate: 'posts/postcreate',
+	// postDetail: 'posts/:postId',
 };
 
 export default routes;
