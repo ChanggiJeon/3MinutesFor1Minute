@@ -3,7 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Minute, Participant, Speech, SpeechComment
+from .models import Minute, Participant, Speech, SpeechComment, MinuteFile, SpeechFile
 from community.models import Community, Member
 from .serializers import (
     MinuteListSerializer,
@@ -56,13 +56,23 @@ def minute_create(request, community_pk):
             serializer.save(community=community)
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
             me = get_object_or_404(Member, user=request.user, community=community)
-            participant = Participant(member=me, minute=minute, is_assignee=True)
+            member_ids = set(request.data['member_ids'])
+            member_ids.add(me.id)
 
-            for participant_nickname in request.data['participants']:
-                member = get_object_or_404(Member, nickname=participant_nickname, community=community)
-                participant = Participant(member=member, minute=minute)
+            for member_id in member_ids:
+                if member_id == me.id:
+                    assignee = Participant(member=me, minute=minute, is_assignee=True)
+                    assignee.save()
 
-            participant.save()
+                else:
+                    member = get_object_or_404(Member, pk=member_id, community=community)
+                    participant = Participant(member=member, minute=minute)
+                    participant.save()
+            for key, value in request.data.items():
+                if 'reference_file' in key:
+                    new_file = MinuteFile(minute=minute, reference_file=value)
+                    new_file.save()
+
             serializer = MinuteSerializer(minute)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -122,6 +132,10 @@ def speech_create(request, community_pk, minute_pk):
 
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
+        reference_files = request.data['files']
+        for file in reference_files:
+            new_file = MinuteFile(minute=minute, reference_file=file)
+            new_file.save()
         # speech = get_object_or_404(Speech, pk=serializer.data['id'])
         # file = speech.record_file
         # file_path = str(MEDIA_ROOT) + '/record/'
