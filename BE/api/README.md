@@ -70,7 +70,7 @@ pip install -r requirements.txt
     - new_password
     - new_password_confirm
     - profile_image (필수 X)
-  - 프로필 [GET] : accounts/profile/<str : username>/
+  - 프로필 [GET] : accounts/profile/
   - 아이디 찾기 [GET] : accounts/find/username/<str : email>/<str : name>/
   - 비밀번호 찾기 [GET] : accounts/find/password/<str : username>/<str : email>/<str : name>/
 
@@ -78,43 +78,46 @@ pip install -r requirements.txt
 
 - 커뮤니티 (Community)
 
-1. 커뮤니티 생성
-   - 커뮤니티 생성 [POST] : community/create/
-     - 커뮤니티 이름 : name
-     - 공개 여부 : is_private (boolean / default=공개 (False))
-     - 커뮤니티 소개 : intro (빈칸 허용)
-   - 커뮤니티 이름 중복 체크 [GET] : community/uniquecheck/community_name/<str : community_name>/
-2. 커뮤니티 가입
-   - 커뮤니티 가입 신청 [POST] : community/apply/<int : community_pk>/
-     - 닉네임 : nickname (default=기존 유저의 이름)
-     - 자기 소개 : bio (빈칸 허용)
-     - 프로필 사진 : profile_image ⇒ 추후 추가
-   - 커뮤니티 검색 (커뮤니티 코드) [GET] : community/search/code/<str : code>/
-   - 커뮤니티 검색 (커뮤니티 이름) [GET] : community/search/name/<str : keyword>/
-   - 닉네임 중복 체크 [GET] : community/uniquecheck/<int : community_pk>/nickname/<str : nickname>/
-3. 가입 승인
-   - 가입 허용 대기자 조회 [GET]:  community/<int : community_pk>/waitinglist/
-   - 가입 승인 [PUT]: conmmunity/<int : community_pk>/waitinglist/<int : member_pk>/approval/
-4. 커뮤니티 상세관리
-   - 커뮤니티 상세 조회, 수정 및 삭제 [GET, PUT, DELETE] : community/<int : community_pk>/member/<int : member_pk>/withdraw/
-     1. GET
-     2. PUT
-        - 커뮤니티 이름 : name
-        - 공개 여부 : is_private (boolean)
-        - 커뮤니티 소개 : intro (빈칸 허용)
-     3. DELETE
-5. 커뮤니티 멤버 관리
-   - 커뮤니티 멤버 조회 [GET] : community/<int : community_pk>/member/
-   - 커뮤니티 멤버 삭제 [DELETE] : community/<int : community_pk>/member/<int : member_pk>/
-6. 커뮤니티 멤버 초대
-   - 커뮤니티 멤버 초대 [GET] : community/invite/<int : community_pk>/<int : user_pk>/
-   - 유저 검색 [GET] : community/invite/search/<str : keyword>/
-7. 커뮤니티 멤버 개인 정보 조회, 수정 및 탈퇴
-   - 멤버 상세조회 [GET] : community/<int : community_pk>/member/<int : member_pk>/detail/
-   - 커뮤니티 멤버 개인 수정 [PUT] : community/<int : community_pk>/member/<int : member_pk>/update/
-     - 닉네임 : nickname
-     - 소개 : bio
-   - 커뮤니티 탈퇴 [DELETE] : community/<int : community_pk>/member/<int : member_pk>/withdraw/
+  - 본인이 가입한 커뮤니티 목록 [GET] : community/
+  - 커뮤니티 본인 프로필 [GET] : community/<int : community_pk>/profile/
+
+  1. 커뮤니티 생성
+     - 커뮤니티 생성 [POST] : community/create/
+       - 커뮤니티 이름 : name
+       - 공개 여부 : is_private (boolean / default=공개 (False))
+       - 커뮤니티 소개 : intro (빈칸 허용)
+     - 커뮤니티 이름 중복 체크 [GET] : community/uniquecheck/community_name/<str : community_name>/
+  2. 커뮤니티 가입
+     - 커뮤니티 가입 신청 [POST] : community/apply/<int : community_pk>/
+       - 닉네임 : nickname (default=기존 유저의 이름)
+       - 자기 소개 : bio (빈칸 허용)
+       - 프로필 사진 : profile_image ⇒ 추후 추가
+     - 커뮤니티 검색 (커뮤니티 코드) [GET] : community/search/code/<str : code>/
+     - 커뮤니티 검색 (커뮤니티 이름) [GET] : community/search/name/<str : keyword>/
+     - 닉네임 중복 체크 [GET] : community/uniquecheck/<int : community_pk>/nickname/<str : nickname>/
+  3. 가입 승인
+     - 가입 허용 대기자 조회 [GET]:  community/<int : community_pk>/waitinglist/
+     - 가입 승인 [PUT]: conmmunity/<int : community_pk>/waitinglist/<int : member_pk>/approval/
+  4. 커뮤니티 상세관리
+     - 커뮤니티 상세 조회, 수정 및 삭제 [GET, PUT, DELETE] : community/<int : community_pk>/member/<int : member_pk>/withdraw/
+       1. GET
+       2. PUT
+          - 커뮤니티 이름 : name
+          - 공개 여부 : is_private (boolean)
+          - 커뮤니티 소개 : intro (빈칸 허용)
+       3. DELETE
+  5. 커뮤니티 멤버 관리
+     - 커뮤니티 멤버 조회 [GET] : community/<int : community_pk>/member/
+     - 커뮤니티 멤버 삭제 [DELETE] : community/<int : community_pk>/member/<int : member_pk>/
+  6. 커뮤니티 멤버 초대
+     - 커뮤니티 멤버 초대 [GET] : community/invite/<int : community_pk>/<int : user_pk>/
+     - 유저 검색 [GET] : community/invite/search/<str : keyword>/
+  7. 커뮤니티 멤버 개인 정보 조회, 수정 및 탈퇴
+     - 멤버 상세조회 [GET] : community/<int : community_pk>/member/<int : member_pk>/detail/
+     - 커뮤니티 멤버 개인 수정 [PUT] : community/<int : community_pk>/member/<int : member_pk>/update/
+       - 닉네임 : nickname
+       - 소개 : bio
+     - 커뮤니티 탈퇴 [DELETE] : community/<int : community_pk>/member/<int : member_pk>/withdraw/
 
 
 
