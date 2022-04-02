@@ -11,7 +11,7 @@ import { fetchMinutesByComId } from '../../store/minutes';
 function Community() {
 	const comId = useParams().communityId;
 	const dispatch = useDispatch();
-	
+
 	useEffect(() => {
 		dispatch(fetchMinutesByComId(comId));
 	}, []);
