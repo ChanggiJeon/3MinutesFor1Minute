@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { FaLock, FaUser, FaUserTag } from 'react-icons/fa';
-import { BsShieldLock } from 'react-icons/bs';
-import { FiMail } from 'react-icons/fi';
+import { BsShieldLockFill } from 'react-icons/bs';
+import { MdEmail } from 'react-icons/md';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -261,7 +261,7 @@ function Signup() {
 					</Label>
 					{NameError}
 					<Label htmlFor='email'>
-						<FiMail />
+						<MdEmail />
 						<input
 							{...register('email', {
 								required: '이메일를 입력하세요.',
@@ -288,7 +288,7 @@ function Signup() {
 					{ErrorAndCheck(errors?.email?.message, emailCheck)}
 					{emailCheck && (
 						<Label htmlFor='emailConfirmCode'>
-							<BsShieldLock />
+							<BsShieldLockFill />
 							<input
 								{...register('emailConfirmCode')}
 								type='text'

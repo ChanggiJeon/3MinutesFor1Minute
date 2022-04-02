@@ -3,6 +3,7 @@ const routes = {
 	main: '/',
 	login: '/login',
 	signup: '/signup',
+	userProfile: (id = ':id') => `/profile/${id}`,
 	// community
 	community: (communityId = ':communityId') => `/community/${communityId}`,
 	admin: (communityId = '') =>
