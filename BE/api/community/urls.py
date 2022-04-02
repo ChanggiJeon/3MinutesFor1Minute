@@ -3,6 +3,8 @@ from . import views
 
 
 urlpatterns = [
+    path('', views.community_list),
+    path('<int:community_pk>/profile/', views.profile),
     # 커뮤니티 생성
     path('create/', views.community_create),
     path('uniquecheck/community_name/<community_name>/', views.uniquecheck_community_name),
