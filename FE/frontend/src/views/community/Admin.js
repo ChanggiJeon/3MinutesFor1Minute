@@ -3,8 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { FaUserCircle, FaSearch, FaUserSlash } from 'react-icons/fa';
 import {
+	FaUserCircle,
+	FaSearch,
+	FaUserSlash,
+	FaUserCheck,
+} from 'react-icons/fa';
+import {
+	apiApproveMember,
 	apiDeleteCommunity,
 	apiDeleteMember,
 	apiGetCommunityMembers,
@@ -17,6 +23,33 @@ import Label from '../../components/auth/Label';
 import IconBtn from '../../components/auth/IconBtn';
 import EmptyBtn from '../../components/auth/EmptyBtn';
 import routes from '../../routes';
+import TextSubTitle from '../../components/common/TextSubTitle';
+import TextTitle from '../../components/common/TextTitle';
+
+const Divider = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+
+	label {
+		max-width: 300px;
+	}
+`;
+
+const AdminContainer = styled.div`
+	padding: 20px;
+`;
+
+const AdminContents = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	button {
+		height: 30px;
+		background-color: ${props => props.theme.accentColor};
+		color: ${props => props.theme.subFontColor};
+	}
+`;
 
 const Main = styled.div`
 	display: flex;
@@ -124,6 +157,22 @@ function Admin() {
 		}
 	};
 
+	const handleApproveMember = async e => {
+		const { id, nickname } = e;
+
+		try {
+			// api
+			await apiApproveMember({ communityId, memberId: id });
+			Swal.fire({
+				icon: 'success',
+				text: `${nickname} 님의 가입이 승인되었습니다.`,
+			});
+			getMembers();
+		} catch (error) {
+			// error
+		}
+	};
+
 	const handleDeleteCommunity = async () => {
 		try {
 			const res = await Swal.fire({
@@ -183,15 +232,16 @@ function Admin() {
 
 	return (
 		<Main>
-			<div>
+			<Divider>
 				<Form onSubmit={handleSubmit(onValidSubmit)}>
+					<TextTitle>멤버 초대</TextTitle>
 					<Label htmlFor='keyword'>
 						<input
 							{...register('keyword', {
 								required: true,
 							})}
 							type='text'
-							placeholder='아이디로 초대하기'
+							placeholder='이름, 아이디로 초대하기'
 						/>
 						<IconBtn type='submit' disabled={!isValid}>
 							<FaSearch />
@@ -199,19 +249,25 @@ function Admin() {
 					</Label>
 					{result.length > 0 && searchResults}
 				</Form>
-				<div>
-					<button type='button' onClick={handleDeleteCommunity}>
-						커뮤니티 삭제
-					</button>
-				</div>
-			</div>
+				<AdminContainer>
+					<TextTitle>커뮤니티 관리</TextTitle>
+					<AdminContents>
+						<TextSubTitle>커뮤니티 삭제</TextSubTitle>
+						<button type='button' onClick={handleDeleteCommunity}>
+							삭제
+						</button>
+					</AdminContents>
+				</AdminContainer>
+			</Divider>
 			<TableContainer>
+				<TextTitle>멤버 관리</TextTitle>
 				<Table>
 					<thead>
 						<tr>
-							<th width='20%'>닉네임</th>
-							<th width='50%'>소개</th>
-							<th width='30%'>가입일</th>
+							<th width='25%'>닉네임</th>
+							<th width='45%'>소개</th>
+							<th width='10%'>관리</th>
+							<th width='20%'>가입일</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -222,13 +278,30 @@ function Admin() {
 									{e.nickname}
 									{e.is_admin && '[관리자]'}
 									{!e.is_active && '[미승인]'}
+								</td>
+								<td>{e.bio}</td>
+								<td>
+									{!e.is_active && (
+										<IconBtn
+											title='가입 승인'
+											type='button'
+											style={{ color: 'blue' }}
+											onClick={() => handleApproveMember(e)}
+										>
+											<FaUserCheck />
+										</IconBtn>
+									)}
 									{!e.is_admin && (
-										<IconBtn type='button' onClick={() => handleDeleteMember(e)}>
+										<IconBtn
+											title='추방'
+											type='button'
+											style={{ color: 'red' }}
+											onClick={() => handleDeleteMember(e)}
+										>
 											<FaUserSlash />
 										</IconBtn>
 									)}
 								</td>
-								<td>{e.bio}</td>
 								<td>{e.created_at.split('T')[0].split('-').join('. ')}.</td>
 							</tr>
 						))}

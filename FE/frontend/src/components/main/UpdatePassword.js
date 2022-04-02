@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { FaLock, FaUnlock } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { apiUpdateUser } from '../../api/accounts';
 import routes from '../../routes';
 import { logout } from '../../store/user';
 import EmptyMsg from '../auth/EmptyMsg';
@@ -29,12 +30,18 @@ function UpdatePassword() {
 	const passwordMatch = watch('newPassword');
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { username } = useSelector(state => state.user);
 
 	const onValidSubmit = async () => {
 		const { password, newPassword, newPasswordConfirmation } = getValues();
 
 		try {
-			// api
+			await apiUpdateUser({
+				username,
+				password,
+				newPassword,
+				newPasswordConfirmation,
+			});
 			await Swal.fire({
 				icon: 'success',
 				text: '비밀번호가 변경되었습니다. 다시 로그인 하세요.',
