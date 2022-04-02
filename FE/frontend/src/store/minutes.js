@@ -75,7 +75,9 @@ const minutes = createSlice({
 	},
 	extraReducers: {
 		[fetchMinutesByComId.fulfilled]: (state, action) => {
-			state.allMinutes = action.payload;
+			if (action.payload[0]) {
+				state.allMinutes = action.payload;
+			}
 		},
 		[detailMinutesById.fulfilled]: (state, action) => {
 			const response = action.payload;

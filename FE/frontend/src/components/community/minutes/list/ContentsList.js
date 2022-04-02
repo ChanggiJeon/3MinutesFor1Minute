@@ -23,7 +23,6 @@ const Divider = styled(DivLine)`
 
 function ContentsList() {
 	const minutesList = useSelector(state => state.minutes.allMinutes);
-
 	return (
 		<ListBox>
 			<NumBox>번호</NumBox>
@@ -32,7 +31,7 @@ function ContentsList() {
 			<AuthorBox>작성자</AuthorBox>
 			<DeadlineBox>D-day</DeadlineBox>
 			<Divider />
-			{minutesList ? (
+			{minutesList[0] ? (
 				minutesList.map(minutes => (
 					<MinutesItem
 						key={minutes.id}
