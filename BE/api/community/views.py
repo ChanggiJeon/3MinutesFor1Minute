@@ -22,6 +22,26 @@ def make_random_code():
     return code
 
 
+@api_view(['GET'])
+def community_list(request):
+    User = get_user_model()
+    user = get_object_or_404(User, pk=request.user.pk)
+    members = get_list_or_404(Member, user=user)
+    communities = [member.community for member in members]
+    serializer = CommunitySearchSerializer(communities, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def profile(request, community_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    User = get_user_model()
+    user = get_object_or_404(User, pk=request.user.pk)
+    member = get_object_or_404(Member, user=user, community=community)
+    serializer = MemberSerializer(member)
+    return Response(serializer.data)
+
+
 @swagger_auto_schema(method='POST', request_body=CommunitySerializer)
 @api_view(['POST'])
 def community_create(request):
