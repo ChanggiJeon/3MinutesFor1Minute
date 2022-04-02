@@ -3,7 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Minute, Participant, Speech, SpeechComment
+from .models import Minute, Participant, Speech, SpeechComment, MinuteFile, SpeechFile
 from community.models import Community, Member
 from .serializers import (
     MinuteListSerializer,
@@ -68,6 +68,10 @@ def minute_create(request, community_pk):
                     member = get_object_or_404(Member, pk=member_id, community=community)
                     participant = Participant(member=member, minute=minute)
                     participant.save()
+            for key, value in request.data.items():
+                if 'reference_file' in key:
+                    new_file = MinuteFile(minute=minute, reference_file=value)
+                    new_file.save()
 
             serializer = MinuteSerializer(minute)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -128,6 +132,10 @@ def speech_create(request, community_pk, minute_pk):
 
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
+        reference_files = request.data['files']
+        for file in reference_files:
+            new_file = MinuteFile(minute=minute, reference_file=file)
+            new_file.save()
         # speech = get_object_or_404(Speech, pk=serializer.data['id'])
         # file = speech.record_file
         # file_path = str(MEDIA_ROOT) + '/record/'
