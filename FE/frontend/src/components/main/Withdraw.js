@@ -3,6 +3,7 @@ import { FaLock, FaUser } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { apiDeleteUser } from '../../api/accounts';
 import routes from '../../routes';
 import { logout } from '../../store/user';
 import Form from '../auth/Form';
@@ -30,7 +31,6 @@ function Withdraw() {
 		const { id, password } = getValues();
 
 		try {
-			// api
 			const res = await Swal.fire({
 				icon: 'warning',
 				text: '정말 탈퇴하시겠습니까?',
@@ -39,7 +39,8 @@ function Withdraw() {
 				cancelButtonText: '취소',
 			});
 			if (res.isConfirmed) {
-				// api
+				if (id !== username) throw Error();
+				await apiDeleteUser({ username, password });
 				await Swal.fire({
 					icon: 'success',
 					text: '탈퇴되었습니다. 서비스를 이용해주셔서 감사합니다.',

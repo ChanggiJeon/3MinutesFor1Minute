@@ -71,3 +71,36 @@ export const apiFindPw = ({ username, email, name }) =>
 		method: 'get',
 		url: `${BASE_URL}/accounts/find/password/${username}/${email}/${name}/`,
 	});
+
+export const apiDeleteUser = ({ username, password }) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/accounts/delete/`,
+		data: {
+			username,
+			password,
+		},
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiUpdateUser = ({
+	username,
+	password,
+	newPassword,
+	newPasswordConfirmation,
+}) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/accounts/update/`,
+		data: {
+			username,
+			password,
+			new_password: newPassword,
+			new_password_confirm: newPasswordConfirmation,
+		},
+		headers: {
+			...setToken(),
+		},
+	});
