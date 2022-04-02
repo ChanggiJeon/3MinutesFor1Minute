@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import Container from '../../../components/community/Container';
 import Main from '../../../components/community/MainCenter';
 import TextSubTitle from '../../../components/common/TextSubTitle';
@@ -38,6 +39,9 @@ const SpeechInfoContainer = styled(Container)`
 `;
 
 function SpeechCreate() {
+	const { media } = useParams();
+	console.log('media', media);
+
 	return (
 		<SpeechMain>
 			<LeftContainer>
@@ -53,6 +57,9 @@ function SpeechCreate() {
 			<SpeechInfoContainer>
 				<TextSubTitle>스피치 정보</TextSubTitle>
 				<DivLine />
+				<audio controls>
+					<track kind='captions' src={media} />
+				</audio>
 			</SpeechInfoContainer>
 		</SpeechMain>
 	);

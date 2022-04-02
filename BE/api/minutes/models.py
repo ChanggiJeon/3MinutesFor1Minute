@@ -11,6 +11,13 @@ class Minute(models.Model):
     deadline = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class MinuteFile(models.Model):
+    minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
     reference_file = models.FileField(upload_to='minute/', null=True, blank=True)
 
     def __str__(self):
@@ -33,11 +40,17 @@ class Speech(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     record_file = models.FileField(upload_to='record/', null=True, blank=True)
-    reference_file = models.FileField(upload_to='speech/', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
+
+class SpeechFile(models.Model):
+    speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
+    reference_file = models.FileField(upload_to='speech/', null=True, blank=True)
+
+    def __str__(self):
+        return self.title
 
 class SpeechComment(models.Model):
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
