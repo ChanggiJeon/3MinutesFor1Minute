@@ -108,3 +108,12 @@ export const apiDeleteCommunity = ({ communityId }) =>
 			...setToken(),
 		},
 	});
+
+export const apiApproveMember = ({ communityId, memberId }) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/community/${communityId}/waitinglist/${memberId}/approval/`,
+		headers: {
+			...setToken(),
+		},
+	});
