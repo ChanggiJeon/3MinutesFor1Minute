@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
   `is_active` tinyint(1) NOT NULL,
   `date_joined` datetime(6) NOT NULL,
   `name` varchar(16) NOT NULL,
-  `profile_image` varchar(100) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `community_member` (
   `is_admin` tinyint(1) NOT NULL,
   `is_active` tinyint(1) NOT NULL,
   `created_at` datetime(6) NOT NULL,
-  `profile_image` varchar(100) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
   `community_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
