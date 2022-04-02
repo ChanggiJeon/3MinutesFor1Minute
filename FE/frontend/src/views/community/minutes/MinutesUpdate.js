@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import routes from '../../../routes';
-import { createMinutesByData } from '../../../store/minutes';
+import { updateMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
@@ -17,10 +17,6 @@ import ContentBox from '../../../components/community/minutes/create/ContentBox'
 import DateTime from '../../../components/community/minutes/create/DateTime';
 import InputFile from '../../../components/community/minutes/create/InputFile';
 import LabelFile from '../../../components/community/minutes/create/LabelFile';
-import OpenIcon from '../../../components/community/minutes/create/OpenIcon';
-import CloseIcon from '../../../components/community/minutes/create/CloseIcon';
-import HeaderBox from '../../../components/community/HeaderBox';
-import BtnBox from '../../../components/community/BtnBox';
 
 const CreateForm = styled(Form)`
 	flex-direction: row;
@@ -51,10 +47,10 @@ const TextLabel = styled(AreaLabel)`
 	}
 `;
 const CompleteBtn = styled(BlueMdBtn)`
-	margin-right: 10px;
+	margin-left: 350px;
 `;
 const CancelBtn = styled(RedMdBtn)`
-	margin-right: 15px;
+	margin-left: 10px;
 `;
 const ErrorMsg = styled.div`
 	padding-top: 5px;
@@ -71,7 +67,13 @@ const TextUpload = styled(TextContent)`
 	font-size: 16px;
 `;
 
-function MinutesCreate() {
+function MinutesUpdate() {
+	// 필요한 함수 설정
+	const { communityId, minutesId } = useParams();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	// 기본 데이터 입력
+	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
 	// useform 설정
 	const {
 		register,
@@ -81,30 +83,26 @@ function MinutesCreate() {
 		formState: { errors },
 	} = useForm({
 		mode: 'onChange',
+		// create랑 다른 부분
+		defaultValues: singleMinutes,
 	});
-	// 필요한 함수 설정
-	const { communityId } = useParams();
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	// form 제출 로직
 	function onValidSubmit(data) {
+		console.log('data', data);
 		const formData = new FormData();
-		const dataLenth = data.upload.length
-		const referenceFile = []
 		if (data.upload[0]) {
-			for (let i = 0; i < dataLenth; i+=1) {
-				formData.append(`reference_file${i}`, data.upload[i]);
-			};
+			formData.append(`reference_file`, data.upload[0]);
 		}
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('title', data.title);
 		formData.append('content', data.content);
 		formData.append('member_ids', []);
-		formData.append('deadline', data.Dday);
+		formData.append('deadline', data.deadline);
 		// navigate를 위한 값
 		formData.append('comId', communityId);
+		formData.append('minId', minutesId);
 		try {
-			dispatch(createMinutesByData(formData)).then(res => {
+			dispatch(updateMinutesByData(formData)).then(res => {
 				const { community, id } = res.payload;
 				navigate(`/community/${community}/minutes/${id}`);
 			});
@@ -118,29 +116,23 @@ function MinutesCreate() {
 
 	return (
 		<CreateContainer>
-			<HeaderBox>
-				<TextSubTitle>
-					회의록 작성
-					{/* <Span onClick={toggleIsClosed}>
-						{isClosed ? <CloseIcon /> : <OpenIcon />}
-					</Span> */}
-				</TextSubTitle>
-				<BtnBox>
-					<CompleteBtn type='submit' form='createForm'>
-						작성 완료
-					</CompleteBtn>
-					<CancelBtn
-						onClick={() =>
-							navigate(`${routes.community}/${communityId}/${routes.minutesList}`)
-						}
-					>
-						작성 취소
-					</CancelBtn>
-				</BtnBox>
-			</HeaderBox>
+			{/* 헤더 */}
+			<TextSubTitle>회의록 수정</TextSubTitle>
+			<CompleteBtn type='submit' form='createForm'>
+				수정 완료
+			</CompleteBtn>
+			<CancelBtn
+				onClick={() =>
+					navigate(`${routes.community}/${communityId}/${routes.minutesList}`)
+				}
+			>
+				수정 취소
+			</CancelBtn>
 			<DivLine />
+			{/* 폼바디 */}
 			<ContentBox>
 				<CreateForm id='createForm' onSubmit={handleSubmit(onValidSubmit)}>
+					{/* 제목 */}
 					<TextContent>제목 :</TextContent>
 					<InputLabel htmlFor='title'>
 						<input
@@ -154,12 +146,14 @@ function MinutesCreate() {
 					</InputLabel>
 					<ErrorMsg>{errors?.title?.message}</ErrorMsg>
 					<Br />
-					<TextContent>회의 대상자 : Member랑 연계필요</TextContent>
+					{/* 참여자 */}
+					<TextContent>참여자 : Member랑 연계필요</TextContent>
 					<Br />
+					{/* 종료일 */}
 					<TextContent>
-						회의 종료일 :{' '}
+						종료일 :{' '}
 						<DateTime
-							{...register('Dday', {
+							{...register('deadline', {
 								required: '회의 종료일을 입력해주세요',
 							})}
 							type='datetime-local'
@@ -203,4 +197,4 @@ function MinutesCreate() {
 	);
 }
 
-export default MinutesCreate;
+export default MinutesUpdate;

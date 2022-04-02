@@ -5,7 +5,7 @@ const Form = styled.form`
 	flex-direction: column;
 	border-radius: 5px;
 	padding: 20px;
-	background-color: ${props => `${props.theme.backgroundColor}`};
+	background-color: ${props => `${props.theme.backgroundColor}77`};
 `;
 
 export default Form;
