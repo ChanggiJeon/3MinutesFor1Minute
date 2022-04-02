@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaUserTag } from 'react-icons/fa';
-import { FiMail } from 'react-icons/fi';
+import { MdEmail } from 'react-icons/md';
 import { IoWarningOutline } from 'react-icons/io5';
 import Swal from 'sweetalert2';
 import { apiFindId } from '../../api/accounts';
@@ -95,7 +95,7 @@ function FindId() {
 			</Label>
 			{NameError}
 			<Label htmlFor='email'>
-				<FiMail />
+				<MdEmail />
 				<input
 					{...register('email', {
 						required: '이메일를 입력하세요.',

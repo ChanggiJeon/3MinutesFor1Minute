@@ -19,6 +19,7 @@ import MinutesDetail from './views/community/minutes/MinutesDetail';
 import SpeechCreate from './views/community/minutes/SpeechCreate';
 import Admin from './views/community/Admin';
 import MinutesCreate from './views/community/minutes/MinutesCreate';
+import Profile from './views/community/Profile';
 
 function App() {
 	return (
@@ -30,6 +31,7 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
+						<Route path={routes.userProfile()} element={<Profile />} />
 						<Route path={routes.community()} element={<ComIndex />}>
 							<Route index element={<Community />} />
 							<Route path={routes.admin()} element={<Admin />} />

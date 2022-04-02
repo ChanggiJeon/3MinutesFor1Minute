@@ -57,7 +57,6 @@ function Index() {
 
 	return (
 		<Container>
-			{/* 네비게이션 바 */}
 			<Navbar />
 			<Outlet />
 		</Container>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaUser, FaUserTag } from 'react-icons/fa';
-import { FiMail } from 'react-icons/fi';
+import { MdEmail } from 'react-icons/md';
 import { IoWarningOutline } from 'react-icons/io5';
 import Swal from 'sweetalert2';
 import { apiFindPw } from '../../api/accounts';
@@ -125,7 +125,7 @@ function FindPw() {
 			</Label>
 			{NameError}
 			<Label htmlFor='email'>
-				<FiMail />
+				<MdEmail />
 				<input
 					{...register('email', {
 						required: '이메일를 입력하세요.',
