@@ -1,52 +1,23 @@
 import { useState, useEffect } from 'react';
-import { startRecording, saveRecording } from '../handlers/recorder-controls';
+import {
+	startRecording,
+	saveRecording,
+	pauseRecording,
+	resumeRecording,
+	uploadRecording,
+} from '../handlers/recorder-controls';
 
 const initialState = {
-	recordingMinutes: 0,
-	recordingSeconds: 0,
 	initRecording: false,
+	status: 'idle',
 	mediaStream: null,
 	mediaRecorder: null,
+	recordFile: null,
 	audio: null,
 };
 
 export default function useRecorder() {
 	const [recorderState, setRecorderState] = useState(initialState);
-
-	useEffect(() => {
-		const MAX_RECORDER_TIME = 3;
-		let recordingInterval = null;
-
-		if (recorderState.initRecording)
-			recordingInterval = setInterval(() => {
-				setRecorderState(prevState => {
-					if (
-						prevState.recordingMinutes === MAX_RECORDER_TIME &&
-						prevState.recordingSeconds === 0
-					) {
-						clearInterval(recordingInterval);
-						return prevState;
-					}
-
-					if (prevState.recordingSeconds >= 0 && prevState.recordingSeconds < 59)
-						return {
-							...prevState,
-							recordingSeconds: prevState.recordingSeconds + 1,
-						};
-
-					if (prevState.recordingSeconds === 59)
-						return {
-							...prevState,
-							recordingMinutes: prevState.recordingMinutes + 1,
-							recordingSeconds: 0,
-						};
-					return prevState;
-				});
-			}, 1000);
-		else clearInterval(recordingInterval);
-
-		return () => clearInterval(recordingInterval);
-	});
 
 	useEffect(() => {
 		if (recorderState.mediaStream)
@@ -71,14 +42,30 @@ export default function useRecorder() {
 				const blob = new Blob(chunks, { type: 'audio/wav' });
 				chunks = [];
 
+				// 파일명 만들기
+				const date = new Date().getTime();
 				setRecorderState(prevState => {
 					if (prevState.mediaRecorder)
 						return {
 							...initialState,
+							status: 'stopped',
+							recordFile: new File([blob], `${date}.wav`),
 							audio: window.URL.createObjectURL(blob),
 						};
 					return initialState;
 				});
+			};
+			recorder.onpause = () => {
+				setRecorderState(prevState => ({
+					...prevState,
+					status: 'paused',
+				}));
+			};
+			recorder.onresume = () => {
+				setRecorderState(prevState => ({
+					...prevState,
+					status: 'recording',
+				}));
 			};
 		}
 
@@ -93,5 +80,14 @@ export default function useRecorder() {
 		startRecording: () => startRecording(setRecorderState),
 		cancelRecording: () => setRecorderState(initialState),
 		saveRecording: () => saveRecording(recorderState.mediaRecorder),
+		pauseRecording: () => pauseRecording(recorderState.mediaRecorder),
+		resumeRecording: () => resumeRecording(recorderState.mediaRecorder),
+		uploadRecording: (comId, minId) => {
+			const FD = new FormData();
+			FD.append('enctype', 'multipart/form-data');
+			FD.append('title', 'title');
+			FD.append('record_file', recorderState.recordFile);
+			uploadRecording(comId, minId, FD);
+		},
 	};
 }
