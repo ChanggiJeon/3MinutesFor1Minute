@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { FaUserCircle } from 'react-icons/fa';
 import { apiGetCommunityMembers } from '../../api/community';
 import Table from '../../components/common/Table';
+import TextTitle from '../../components/common/TextTitle';
 
 const Main = styled.div`
 	display: flex;
@@ -13,6 +14,12 @@ const Main = styled.div`
 
 const TableContainer = styled.div`
 	height: 80%;
+
+	img {
+		width: 18px;
+		height: 18px;
+		object-fit: cover;
+	}
 `;
 
 function Members() {
@@ -32,6 +39,7 @@ function Members() {
 
 	return (
 		<Main>
+			<TextTitle>멤버 목록</TextTitle>
 			<TableContainer>
 				<Table>
 					<thead>

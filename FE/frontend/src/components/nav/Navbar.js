@@ -20,12 +20,26 @@ const Navigation = styled.nav`
 	box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
 `;
 
+const ProfileContainer = styled.div`
+	font-size: 30px;
+
+	img {
+		width: 30px;
+		height: 30px;
+		object-fit: cover;
+	}
+`;
+
 const Logout = styled.div`
 	cursor: pointer;
 `;
 
 function Navbar() {
-	const { isLoggedIn, id, profile } = useSelector(state => state.user);
+	const {
+		isLoggedIn,
+		id,
+		profile_image: profileImage,
+	} = useSelector(state => state.user);
 	const dispatch = useDispatch();
 	const showNavList = isLoggedIn ? (
 		<NavList>
@@ -34,7 +48,9 @@ function Navbar() {
 			</NavItem>
 			<NavItem>
 				<Link to={`/profile/${id}`}>
-					<FaUserCircle />
+					<ProfileContainer>
+						{profileImage ? <img src={profileImage} alt='' /> : <FaUserCircle />}
+					</ProfileContainer>
 				</Link>
 			</NavItem>
 		</NavList>

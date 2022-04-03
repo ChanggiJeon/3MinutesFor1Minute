@@ -166,7 +166,7 @@ export const apiInviteUser = ({ communityId, id }) =>
 export const apiDeleteMember = ({ communityId, memberId }) =>
 	axios({
 		method: 'delete',
-		url: `${BASE_URL}/community/${communityId}/member/${memberId}/`,
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/withdraw/`,
 		headers: {
 			...setToken(),
 		},
