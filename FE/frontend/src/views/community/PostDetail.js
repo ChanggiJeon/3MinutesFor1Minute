@@ -70,7 +70,7 @@ function PostDetail() {
 				icon: 'success',
 				text: '게시글이 삭제되었습니다.',
 			});
-			navigate(routes.posts(communityId));
+			navigate(`/community/${communityId}/posts`);
 		} catch (e) {
 			// error
 			await Swal.fire({
@@ -167,7 +167,9 @@ function PostDetail() {
 		<Background>
 			<Header>
 				<TextTitle>글 상세보기</TextTitle>
-				<BackBtn onClick={() => navigate(routes.posts(communityId))}>◀</BackBtn>
+				<BackBtn onClick={() => navigate(`/community/${communityId}/posts`)}>
+					◀
+				</BackBtn>
 			</Header>
 			<Detail>
 				<p>제목 : {post?.title}</p>

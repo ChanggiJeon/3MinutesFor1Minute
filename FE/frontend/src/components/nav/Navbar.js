@@ -33,7 +33,7 @@ function Navbar() {
 				<Logout onClick={() => dispatch(logout())}>Logout</Logout>
 			</NavItem>
 			<NavItem>
-				<Link to={routes.userProfile(id)}>
+				<Link to={`/profile/${id}`}>
 					<FaUserCircle />
 				</Link>
 			</NavItem>
