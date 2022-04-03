@@ -45,7 +45,11 @@ function Members() {
 						{members.map(e => (
 							<tr key={e.id}>
 								<td>
-									<FaUserCircle />
+									{e.profile_image ? (
+										<img src={e.profile_image} alt='' />
+									) : (
+										<FaUserCircle />
+									)}
 									{e.nickname}
 									{e.is_admin && '[관리자]'}
 									{!e.is_active && '[미승인]'}

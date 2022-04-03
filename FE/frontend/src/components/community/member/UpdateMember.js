@@ -15,7 +15,7 @@ import Label from '../../auth/Label';
 import SubmitButton from '../../auth/SubmitButton';
 import Title from '../../auth/Title';
 
-function UpdateMember({ toggleMode }) {
+function UpdateMember({ toggleMode, getMember }) {
 	const { nickname, bio } = useSelector(state => state.member);
 	const { communityId, memberId } = useParams();
 	const {
@@ -54,6 +54,8 @@ function UpdateMember({ toggleMode }) {
 					bio: newBio,
 				})
 			);
+			toggleMode('info');
+			getMember();
 		} catch (e) {
 			// error
 			Swal.fire({
