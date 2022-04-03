@@ -14,7 +14,7 @@ class CommunitySearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Community
-        fields = ('id', 'name', )
+        fields = ('id', 'name', 'intro', )
         read_only_fields = ('id', )
 
 

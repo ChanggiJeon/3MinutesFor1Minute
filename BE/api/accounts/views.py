@@ -70,17 +70,6 @@ def unique_check_email(request, email):
         return Response({'code': code}, status=status.HTTP_200_OK)
 
 
-@swagger_auto_schema(method='POST', request_body=AuthenticateSerializer)
-@api_view(['POST'])
-def authenticate(request):
-    User = get_user_model()
-    user = get_object_or_404(User, username=request.data['username'])
-
-    if request.user == user and user.check_password(request.data['password']):
-        return Response(status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-
 @swagger_auto_schema(method='DELETE', request_body=AuthenticateSerializer)
 @api_view(['DELETE'])
 def delete(request):
@@ -121,9 +110,9 @@ def update(request):
 
 
 @api_view(['GET'])
-def profile(request, username):
+def profile(request):
     User = get_user_model()
-    user = get_object_or_404(User, username=username)
+    user = get_object_or_404(User, pk=request.user.pk)
     serializer = UserSerializer(user)
     return Response(serializer.data)
 
