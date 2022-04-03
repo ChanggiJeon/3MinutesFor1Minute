@@ -39,8 +39,8 @@ const SpeechInfoContainer = styled(Container)`
 `;
 
 function SpeechCreate() {
-	const { media } = useParams();
-	console.log('media', media);
+	const AUDIO_SRC = process.env.REACT_APP_AUDIO_SRC;
+	const audioSrc = `../../../${AUDIO_SRC}/.wav`;
 
 	return (
 		<SpeechMain>
@@ -58,7 +58,7 @@ function SpeechCreate() {
 				<TextSubTitle>스피치 정보</TextSubTitle>
 				<DivLine />
 				<audio controls>
-					<track kind='captions' src={media} />
+					<track kind='captions' src={audioSrc} />
 				</audio>
 			</SpeechInfoContainer>
 		</SpeechMain>
