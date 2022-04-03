@@ -5,7 +5,7 @@ from hanspell import spell_checker
 import re
 import os
 from config.settings import BASE_DIR
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR) + '\AI\STT\API\\festive-vim-345604-8faec2e2d112.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR) + "\AI\STT\API\\festive-vim-345604-8faec2e2d112.json"
 
 
 def upload_file(file_path, file_name):
@@ -54,13 +54,11 @@ def transcribe_gcs(file_name):
             input_list.append(i)  
     
     result = spell_checker.check(input_list)
-
     fixed_text = ''
+
     for i in result:
         fixed_text += i.checked
-
     return fixed_text
-
 
 # if __name__ == "__main__":
 

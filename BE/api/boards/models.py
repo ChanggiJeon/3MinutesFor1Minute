@@ -15,6 +15,7 @@ class Board(models.Model):
     def __str__(self):
         return self.title
 
+
 class BoardFile(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     reference_file = models.FileField(upload_to='board/', null=True, blank=True)
