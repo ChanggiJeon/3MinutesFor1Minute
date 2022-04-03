@@ -25,7 +25,7 @@ const Logout = styled.div`
 `;
 
 function Navbar() {
-	const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+	const { isLoggedIn, id, profile } = useSelector(state => state.user);
 	const dispatch = useDispatch();
 	const showNavList = isLoggedIn ? (
 		<NavList>
@@ -33,7 +33,9 @@ function Navbar() {
 				<Logout onClick={() => dispatch(logout())}>Logout</Logout>
 			</NavItem>
 			<NavItem>
-				<FaUserCircle />
+				<Link to={`/profile/${id}`}>
+					<FaUserCircle />
+				</Link>
 			</NavItem>
 		</NavList>
 	) : (

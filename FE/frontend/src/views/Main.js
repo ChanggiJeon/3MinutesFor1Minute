@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import MainPoster from '../components/mainpage/MainPoster';
@@ -11,9 +12,36 @@ import TextSubTitle from '../components/common/TextSubTitle';
 import Container from '../components/common/Container';
 import MainBtn from '../components/mainpage/MainBtn';
 import ApplyCommunity from '../components/main/ApplyCommunity';
+import { apiGetMyCommunityList } from '../api/community';
 
 const MainSubTitle = styled(TextSubTitle)`
 	color: #585858;
+`;
+
+const CommunityContainer = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+`;
+
+const Contents = styled.div`
+	margin: 20px;
+	padding: 10px;
+	width: 300px;
+	min-height: 200px;
+	border: 1px solid black;
+	border-radius: 5px;
+`;
+
+const CommunityName = styled.div`
+	font-size: 24px;
+	margin-bottom: 5px;
 `;
 
 const Msg1 = '회의 시간, 3분';
@@ -23,7 +51,23 @@ const Msg3 = 'Work Less, Better Work';
 function Main() {
 	const [isApplyMode, setApplymode] = useState(false);
 	const [isCreateMode, setCreateMode] = useState(false);
+	const [communityList, setCommunityList] = useState([]);
 	const { isLoggedIn } = useSelector(state => state.user);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			getCommunityList();
+		}
+	}, [isLoggedIn]);
+
+	const getCommunityList = async () => {
+		try {
+			const response = await apiGetMyCommunityList();
+			setCommunityList(response.data);
+		} catch (e) {
+			// error
+		}
+	};
 
 	const handleApplyCommunity = () => {
 		if (isLoggedIn) {
@@ -74,6 +118,17 @@ function Main() {
 				<MainBtn onClick={handleApplyCommunity}>커뮤니티 가입</MainBtn>
 				<MainBtn onClick={handleCreateCommunity}>커뮤니티 생성</MainBtn>
 			</Container>
+			<CommunityContainer>
+				{isLoggedIn &&
+					communityList.map(e => (
+						<Link to={`/community/${e.id}`} key={e.id}>
+							<Contents>
+								<CommunityName>{e.name}</CommunityName>
+								<div>{e.intro}</div>
+							</Contents>
+						</Link>
+					))}
+			</CommunityContainer>
 			{ApplyCommunityModal}
 			{CreateCommunityModal}
 		</>

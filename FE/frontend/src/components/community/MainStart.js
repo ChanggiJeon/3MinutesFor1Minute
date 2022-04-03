@@ -6,7 +6,6 @@ const Main = styled.div`
 	align-content: flex-start;
 	justify-content: space-around;
 	height: 100%;
-	overflow-y: scroll;
 `;
 
 export default Main;

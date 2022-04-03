@@ -26,24 +26,20 @@ import Btns from '../../components/community/board/list/Btns';
 import NForm from '../../components/community/board/list/NForm';
 
 const Detail = styled.div`
-	 {
-		display: flex;
-		flex-direction: column;
-		padding: 15px;
-		border: 1px solid black;
-		margin-top: 15px;
-		flex-wrap: wrap;
+	display: flex;
+	flex-direction: column;
+	padding: 15px;
+	border: 1px solid black;
+	margin-top: 15px;
+	flex-wrap: wrap;
 
-		p {
-			margin: 5px;
-		}
+	p {
+		margin: 5px;
 	}
 `;
 
 const CommentList = styled.div`
-	 {
-		width: 100%;
-	}
+	width: 100%;
 `;
 
 const CLabel = styled(Label)`
