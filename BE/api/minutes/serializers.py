@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Minute, Participant, Speech, SpeechComment
+from .models import Minute, MinuteFile, Participant, Speech, SpeechComment
 from community.serializers import CustomMemberSerializer
 
 
@@ -77,6 +77,13 @@ class MinuteSerializer(serializers.ModelSerializer):
         speeches = Speech.objects.filter(minute=minute)
         serializer = SpeechListSerializer(speeches, many=True)
         return serializer.data
+
+    class MinuteFileSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = MinuteFile
+            fields = '__all__'
+
+    minutefile_set = MinuteFileSerializer(many=True)
 
     class Meta:
         model = Minute
