@@ -30,7 +30,6 @@ class SpeechListSerializer(serializers.ModelSerializer):
 
 class SpeechSerializer(serializers.ModelSerializer):
     speech_comments = serializers.SerializerMethodField('sc_filter')
-
     def sc_filter(self, speech):
         comments = SpeechComment.objects.filter(speech=speech)
         serializer = SpeechCommentSerializer(comments, many=True)
@@ -83,12 +82,12 @@ class MinuteSerializer(serializers.ModelSerializer):
             model = MinuteFile
             fields = '__all__'
 
-    minutefile_set = MinuteFileSerializer(many=True)
+    minutefile_set = MinuteFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = Minute
         fields = '__all__'
-        read_only_fields = ('community', )
+        read_only_fields = ('community', 'minutefile_set')
 
 
 class CustomMinuteSerializer(MinuteSerializer):
