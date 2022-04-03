@@ -2,10 +2,10 @@ from rest_framework import serializers
 from .models import Notification
 
 
-class NotificationSerializer(serializers.ModelSerializer):
+class NotificationListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = '__all__'
-        read_only_fields = ('user', 'speech', 'content', 'is_active')
+        fields = ('is_read','content','speech')
+
 
