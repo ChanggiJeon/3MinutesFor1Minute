@@ -8,6 +8,7 @@ const routes = {
 	community: '/community',
 	admin: 'admin',
 	members: 'members',
+	memberProfile: 'member/:memberId',
 	recordCreate: 'minutes/:minutesId/recordCreate',
 	// minutes
 	minutesList: 'minutes',

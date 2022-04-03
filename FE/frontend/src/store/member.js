@@ -17,9 +17,10 @@ const member = createSlice({
 	initialState: memberInitialState,
 	reducers: {
 		getMemberData: (_, action) => action.payload,
+		updateMemberData: (state, action) => ({ ...state, ...action.payload }),
 	},
 });
 
-export const { getMemberData } = member.actions;
+export const { getMemberData, updateMemberData } = member.actions;
 
 export default member.reducer;
