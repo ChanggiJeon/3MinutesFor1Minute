@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { AiFillNotification } from "react-icons/ai";
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -15,8 +16,8 @@ import BoardTitle from '../../components/community/board/list/BoardTitle';
 import PostPagination from './PostPagination';
 
 const TableContainer = styled.div`
-  height: 80%;
-`
+	height: 80%;
+`;
 
 function Posts() {
 	// const posts = useSelector((state) => state.posts)
@@ -26,9 +27,9 @@ function Posts() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const offset = (currentPage - 1) * limit;
 	const location = useLocation();
-  
-  const navigate = useNavigate();
-  
+
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		getPosts(currentPage);
 	}, [currentPage, location]);
@@ -49,36 +50,49 @@ function Posts() {
 			<Background>
 				<Header>
 					<BoardTitle>글 목록</BoardTitle>
-					<WriteBtn onClick={() => navigate(`${routes.community}/${communityId}/${routes.postCreate}`)}>
-							작성하기
+					<WriteBtn
+						onClick={() =>
+							navigate(`${routes.community}/${communityId}/${routes.postCreate}`)
+						}
+					>
+						작성하기
 					</WriteBtn>
 				</Header>
-        <TableContainer>
-				<Table>
-					<thead>
-						<tr>
-							<th width='20%'>ID</th>
-							<th width='40%'>Title</th>
-							<th width='20%'>Date</th>
-							<th width='20%'>Author</th>
-						</tr>
-					</thead>
-					<tbody>
-						{posts.slice(offset, offset + limit).map(post => (
-							<tr key={post.id}>
-								<td>{post.id}</td>
-								<td>
-                  <SLink to={`${routes.community}/${communityId}/${routes.posts}/${post.id}`}>
-										{post.title}
-									</SLink>
-								</td>
-								<td>{post.date}</td>
-								<td>{post.author}</td>
+				<TableContainer>
+					<Table>
+						<thead>
+							<tr>
+								<th width='20%'>No.</th>
+								<th width='40%'>Title</th>
+								<th width='20%'>Date</th>
+								<th width='20%'>Author</th>
 							</tr>
-						))}
-					</tbody>
-				</Table>
-        </TableContainer>
+						</thead>
+						<tbody>
+							{posts
+								.reverse()
+								.slice(offset, offset + limit)
+								.map(post => (
+									<tr key={post.id}>
+                    {
+                      post.is_notice
+                      ? <td><AiFillNotification/></td>
+                      : <td>{post.id}</td>
+                    }
+										<td>
+											<SLink
+												to={`${routes.community}/${communityId}/${routes.posts}/${post.id}`}
+											>
+												{post.title}
+											</SLink>
+										</td>
+										<td>{post.created_at}</td>
+										<td>{post.member}</td>
+									</tr>
+								))}
+						</tbody>
+					</Table>
+				</TableContainer>
 				<PostPagination
 					total={posts.length}
 					limit={limit}

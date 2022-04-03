@@ -36,7 +36,7 @@ function sidebarData() {
 		{
 			name: 'Board',
 			title: '게시판',
-			path: '/',
+			path: `/community/${comId}/posts`,
 			icon: <FaBullhorn />,
 		},
 		{
