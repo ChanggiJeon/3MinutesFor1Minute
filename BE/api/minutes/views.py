@@ -140,9 +140,10 @@ def speech_create(request, community_pk, minute_pk):
                 new_file.save()
         file = speech.record_file
         file_path = str(MEDIA_ROOT) + '\\record\\'
-        file_name = str(file)[7:]
+        file_name = '1648986351112.wav'
+        # str(file)[7:]
         text, title, cloud_keyword, summary = AI(file_path, file_name)
-        # print('file: {}\n file_path: {}\n file_name:{}\n, text: {}\n title: {}\n cloud_keyword: {}\n summary: {}'.format(file, file_path, file_name, text, title, cloud_keyword, summary))
+        print('file: {}\n file_path: {}\n file_name:{}\n, text: {}\n title: {}\n cloud_keyword: {}\n summary: {}'.format(file, file_path, file_name, text, title, cloud_keyword, summary))
         serializer = SpeechSerializer(speech, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(content=text, title=title, cloud_keyword=cloud_keyword, summary=summary)

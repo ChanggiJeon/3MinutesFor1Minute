@@ -71,6 +71,7 @@ function Recorder() {
 		}
 	}, [status]);
 	const upload = () => {
+		navigate(`/community/${communityId}/minutes/${minutesId}/loading`);
 		uploadRecording(communityId, minutesId);
 	};
 
