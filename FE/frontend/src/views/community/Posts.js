@@ -89,7 +89,7 @@ function Posts() {
 											</SLink>
 										</td>
 										<td>{post.created_at}</td>
-										<td>{post.member}</td>
+										<td>{post.member.nickname}</td>
 									</tr>
 								))}
 						</tbody>
