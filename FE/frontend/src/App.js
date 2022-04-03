@@ -12,11 +12,16 @@ import Posts from './views/community/Posts';
 import PostCreate from './views/community/PostCreate';
 import PostDetail from './views/community/PostDetail';
 import Records from './views/community/minutes/Records';
+import Error404 from './views/Error404';
+import Members from './views/community/Members';
 import MinutesList from './views/community/minutes/MinutesList';
 import MinutesDetail from './views/community/minutes/MinutesDetail';
 import SpeechCreate from './views/community/minutes/SpeechCreate';
+import Admin from './views/community/Admin';
 import MinutesCreate from './views/community/minutes/MinutesCreate';
+import Profile from './views/Profile';
 import MinutesUpdate from './views/community/minutes/MinutesUpdate';
+import MemberProfile from './views/community/MemberProfile';
 
 function App() {
 	return (
@@ -28,8 +33,12 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
+						<Route path={routes.userProfile} element={<Profile />} />
 						<Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
 							<Route index element={<Community />} />
+							<Route path={routes.admin} element={<Admin />} />
+							<Route path={routes.members} element={<Members />} />
+							<Route path={routes.memberProfile} element={<MemberProfile />} />
 							<Route path={routes.posts} element={<Posts />} />
 							<Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
 							<Route path={routes.postCreate} element={<PostCreate />} />
@@ -41,6 +50,7 @@ function App() {
 							<Route path={routes.speechCreate} element={<SpeechCreate />} />
 						</Route>
 					</Route>
+					<Route path='*' element={<Error404 />} />
 				</Routes>
 			</Router>
 		</Provider>
