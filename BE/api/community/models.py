@@ -5,6 +5,10 @@ from imagekit.processors import ResizeToFill
 
 
 def image_path(instance, filename):
+    return f'community_{instance.pk}/{filename}'
+
+
+def profile_image_path(instance, filename):
     return f'member_{instance.pk}/{filename}'
 
 
@@ -14,6 +18,14 @@ class Community(models.Model):
     private_code = models.CharField(max_length=10, blank=True)
     is_private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    image = ProcessedImageField(
+        upload_to=image_path,
+        processors=[ResizeToFill(125, 125)],
+        format='JPEG',
+        options={'quality': 80},
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
@@ -27,8 +39,8 @@ class Member(models.Model):
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = ProcessedImageField(
-        upload_to=image_path,
+    profile_image = ProcessedImageField(
+        upload_to=profile_image_path,
         processors=[ResizeToFill(125, 125)],
         format='JPEG',
         options={'quality': 80},
