@@ -32,6 +32,9 @@ function Timer({ status }) {
 						setSeconds(59);
 					}
 				}
+			} else if (status === 'stopped') {
+				setSeconds(parseInt(0, 10));
+				setMinutes(parseInt(3, 10));
 			}
 		}, 1000);
 		return () => clearInterval(countdown);
