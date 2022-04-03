@@ -30,7 +30,7 @@ class Participant(models.Model):
 class Speech(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
     participant = models.OneToOneField(Participant, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255, blank=True)
     content = models.TextField(max_length=2000, blank=True)
     summary = models.TextField(max_length=400, blank=True)
     cloud_keyword = models.TextField(blank=True)
