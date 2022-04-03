@@ -1,4 +1,6 @@
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { FaCog } from 'react-icons/fa';
 import sidebarData from './SidebarData';
 import SidebarMenu from './SidebarMenu';
 import SideItems from './SideItmes';
@@ -19,6 +21,7 @@ const SideSubItemLinks = styled(SideItemLinks)`
 
 function Sidebar() {
 	const dataSet = sidebarData();
+	const { is_admin: isAdmin } = useSelector(state => state.member);
 
 	return (
 		<SidebarMenu>
@@ -42,6 +45,14 @@ function Sidebar() {
 						</SideItemLinks>
 					</SideItems>
 				)
+			)}
+			{isAdmin && (
+				<SideItems>
+					<SideItemLinks to='admin'>
+						<FaCog />
+						<span style={{ marginLeft: '16px' }}>커뮤니티 관리</span>
+					</SideItemLinks>
+				</SideItems>
 			)}
 		</SidebarMenu>
 	);

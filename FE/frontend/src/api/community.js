@@ -1,6 +1,55 @@
 import axios from 'axios';
 import { BASE_URL, setToken } from './utils';
 
+export const apiGetMyCommunityList = () =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiGetMyMemberProfile = ({ communityId }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/${communityId}/profile/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiGetMemberProfile = ({ communityId, memberId }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/detail/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiPutMember = ({ communityId, memberId, nickname, bio }) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/update/`,
+		data: {
+			nickname,
+			bio,
+		},
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiWithdrawMember = ({ communityId, memberId }) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/withDraw/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
 export const apiCreateCommunity = ({ name, isPrivate, intro }) =>
 	axios({
 		method: 'post',
@@ -59,6 +108,60 @@ export const apiApplyCommunity = ({ communityId, nickname, bio }) =>
 			nickname,
 			bio,
 		},
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiGetCommunityMembers = ({ communityId }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/${communityId}/member/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiSearchUser = ({ keyword }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/invite/search/${keyword}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiInviteUser = ({ communityId, id }) =>
+	axios({
+		method: 'post',
+		url: `${BASE_URL}/community/invite/${communityId}/${id}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiDeleteMember = ({ communityId, memberId }) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiDeleteCommunity = ({ communityId }) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/community/${communityId}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiApproveMember = ({ communityId, memberId }) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/community/${communityId}/waitinglist/${memberId}/approval/`,
 		headers: {
 			...setToken(),
 		},

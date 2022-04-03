@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from './utils';
+import { BASE_URL, setToken } from './utils';
 
 export const apiLogin = ({ username, password }) =>
 	axios({
@@ -49,4 +49,58 @@ export const apiUniqueCheckEmail = ({ email }) =>
 	axios({
 		method: 'get',
 		url: `${BASE_URL}/accounts/uniquecheck/email/${email}/`,
+	});
+
+export const apiGetMyProfile = () =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/profile/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiFindId = ({ email, name }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/find/username/${email}/${name}/`,
+	});
+
+export const apiFindPw = ({ username, email, name }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/accounts/find/password/${username}/${email}/${name}/`,
+	});
+
+export const apiDeleteUser = ({ username, password }) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/accounts/delete/`,
+		data: {
+			username,
+			password,
+		},
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiUpdateUser = ({
+	username,
+	password,
+	newPassword,
+	newPasswordConfirmation,
+}) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/accounts/update/`,
+		data: {
+			username,
+			password,
+			new_password: newPassword,
+			new_password_confirm: newPasswordConfirmation,
+		},
+		headers: {
+			...setToken(),
+		},
 	});

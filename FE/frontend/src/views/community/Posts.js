@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AiFillNotification } from "react-icons/ai";
+import { AiFillNotification } from 'react-icons/ai';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -74,11 +74,13 @@ function Posts() {
 								.slice(offset, offset + limit)
 								.map(post => (
 									<tr key={post.id}>
-                    {
-                      post.is_notice
-                      ? <td><AiFillNotification/></td>
-                      : <td>{post.id}</td>
-                    }
+										{post.is_notice ? (
+											<td>
+												<AiFillNotification />
+											</td>
+										) : (
+											<td>{post.id}</td>
+										)}
 										<td>
 											<SLink
 												to={`${routes.community}/${communityId}/${routes.posts}/${post.id}`}

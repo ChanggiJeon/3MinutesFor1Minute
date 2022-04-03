@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import { apiRefreshToken } from '../api/accounts';
+import { apiGetMyProfile, apiRefreshToken } from '../api/accounts';
 import Navbar from '../components/nav/Navbar';
-import { login, logout } from '../store/user';
+import { getUserData, login, logout } from '../store/user';
 
 const Container = styled.div`
 	height: 100vh;
@@ -14,6 +14,7 @@ const Container = styled.div`
 
 function Index() {
 	const dispatch = useDispatch();
+	const { isLoggedIn } = useSelector(state => state.user);
 
 	useEffect(async () => {
 		const refresh = localStorage.getItem('refresh') || '';
@@ -27,8 +28,6 @@ function Index() {
 					dispatch(
 						login({
 							isLoggedIn: true,
-							// username: '',
-							// profile: '',
 							access,
 							refresh,
 						})
@@ -41,9 +40,23 @@ function Index() {
 		}
 	}, []);
 
+	useEffect(async () => {
+		if (isLoggedIn) {
+			try {
+				const response = await apiGetMyProfile();
+				dispatch(
+					getUserData({
+						...response.data,
+					})
+				);
+			} catch (e) {
+				dispatch(logout());
+			}
+		}
+	}, [isLoggedIn]);
+
 	return (
 		<Container>
-			{/* 네비게이션 바 */}
 			<Navbar />
 			<Outlet />
 		</Container>
