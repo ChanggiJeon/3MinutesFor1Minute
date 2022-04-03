@@ -21,7 +21,7 @@ function sidebarData() {
 		{
 			name: 'Home',
 			title: '홈으로',
-			path: '/',
+			path: `/community/${comId}`,
 			icon: <FaHome />,
 		},
 		{
