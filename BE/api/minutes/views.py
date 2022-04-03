@@ -132,10 +132,11 @@ def speech_create(request, community_pk, minute_pk):
 
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
-        reference_files = request.data['files']
-        for file in reference_files:
-            new_file = MinuteFile(minute=minute, reference_file=file)
-            new_file.save()
+        speech = get_object_or_404(Speech, pk=serializer.data['id'])
+        for key, value in request.data.items():
+            if 'reference_file' in key:
+                new_file = SpeechFile(speech=speech, reference_file=value)
+                new_file.save()
         # speech = get_object_or_404(Speech, pk=serializer.data['id'])
         # file = speech.record_file
         # file_path = str(MEDIA_ROOT) + '/record/'

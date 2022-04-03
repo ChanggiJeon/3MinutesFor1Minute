@@ -9,12 +9,12 @@ const routes = {
 	admin: 'admin',
 	members: 'members',
 	memberProfile: 'member/:memberId',
-	recordCreate: 'minutes/:minutesId/recordCreate',
 	// minutes
 	minutesList: 'minutes',
 	minutesDetail: 'minutes/:minutesId',
 	minutesCreate: 'minutes/minutesCreate',
 	minutesUpdate: 'minutes/:minutesId/update',
+	recordCreate: 'minutes/:minutesId/recordCreate',
 	// speech
 	speechCreate: 'minutes/:minutesId/speechCreate',
 	// posts
