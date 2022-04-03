@@ -99,7 +99,7 @@ def update(request):
             or not re.findall('[0-9]+', new_password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', new_password):
             return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
 
-        serializer = UserSerializer(user, data=request.data)
+        serializer = UserUpdateSerializer(user, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             me = serializer.save()
