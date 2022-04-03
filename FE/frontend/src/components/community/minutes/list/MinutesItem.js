@@ -1,18 +1,61 @@
-import styled from 'styled-components'
+import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import NumBox from './textBox/NumBox';
+import TitleBox from './textBox/TitleBox';
+import DateBox from './textBox/DateBox';
+import AuthorBox from './textBox/AuthorBox';
+import DeadlineBox from './textBox/DeadlineBox';
+import CloseIcon from '../create/CloseIcon';
+import OpenIcon from '../create/OpenIcon';
 
 const Minutes = styled.li`
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  width: 100%;
-  height: 50px;
-`
+	list-style: none;
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	width: 100%;
+	height: 50px;
+	cursor: pointer;
+`;
+const Title = styled(TitleBox)`
+	justify-content: start;
+	padding-left: 10px;
+`;
+const SmCloseIcon = styled(CloseIcon)`
+	font-size: 30px;
+`;
+const SmOpneIcon = styled(OpenIcon)`
+	font-size: 20px;
+`;
 
-function MinutesItem({ id, title }) {
-  return (
-    <Minutes>{id} | {title}</Minutes>
-  )
+function MinutesItem({ minId, title, date, deadline, author, isClosed }) {
+	// 디데이 구하는 공식
+	const today = new Date();
+	const deadLine = new Date(deadline);
+	const gap = deadLine.getTime() - today.getTime();
+	const result = Math.ceil(gap / (1000 * 60 * 60 * 24));
+	const Dday = gap > 0 ? `D-${result}` : '종료';
+	// 클릭 시 디테일 페이지 이동에 필요한 함수값
+	const { communityId } = useParams();
+	const navigate = useNavigate();
+	return (
+		<Minutes
+			onClick={() => {
+				navigate(`/community/${communityId}/minutes/${minId}`);
+			}}
+		>
+			<NumBox>0</NumBox>
+			<Title>
+				{title} {isClosed ? <SmCloseIcon /> : <SmOpneIcon />}
+			</Title>
+			<DateBox>
+				{date.substr(2, 2)}/{date.substr(5, 2)}/{date.substr(8, 2)}{' '}
+				{date.substr(11, 5)}
+			</DateBox>
+			<AuthorBox>{author}</AuthorBox>
+			<DeadlineBox>{Dday}</DeadlineBox>
+		</Minutes>
+	);
 }
 
-export default MinutesItem
+export default MinutesItem;

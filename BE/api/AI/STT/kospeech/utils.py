@@ -16,7 +16,6 @@ import torch
 import torch.nn as nn
 import logging
 import platform
-from omegaconf import DictConfig
 
 from kospeech.vocabs import Vocabulary
 from torch import optim

@@ -7,12 +7,12 @@ import SideItem from './SideItem';
 
 const SubText = styled.h3`
 	font-size: 20px;
-	margin-left: 30px;
+	margin-left: 25px;
 `;
 
 const SideSubItemLinks = styled(SideItemLinks)`
 	padding: 0 0.5rem;
-	width: 70%;
+	width: 90%;
 	height: 25%;
 	font-size: 20px;
 `;
