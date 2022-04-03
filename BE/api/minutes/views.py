@@ -14,21 +14,22 @@ from .serializers import (
     SpeechCommentSerializer
 )
 from community.serializers import MemberSerializer
-# import sys
-# sys.path.append('.')
-# from AI.STT.API.google import upload_file, transcribe_gcs
-# from AI.Summarization.summarize import summery, summarize
-# from AI.Wordslist.wordslist import wordslist
-# from config.settings import MEDIA_ROOT
+import sys
+sys.path.append('.')
+from AI.STT.API.google import upload_file, transcribe_gcs
+from AI.Summarization.summarize import summarize
+from AI.Summarization.summarize import summary as summary_def
+from AI.Wordslist.wordslist import wordslist
+from config.settings import MEDIA_ROOT
 
 
-# def AI(file_path, file_name):
-#     upload_file(file_path, file_name)
-#     text = transcribe_gcs(file_name)
-#     summary = summery(text)
-#     summarization = summarize(text, ratio=0.4)
-#     cload_keyword = wordslist(text)
-#     return text, summary, cload_keyword, summarization
+def AI(file_path, file_name):
+    upload_file(file_path, file_name)
+    text = transcribe_gcs(file_name)
+    title = summary_def(text)
+    summary = summarize(text, ratio=0.4)
+    cload_keyword = wordslist(text)
+    return text, title, cload_keyword, summary
 
 
 @api_view(['GET'])
@@ -137,12 +138,14 @@ def speech_create(request, community_pk, minute_pk):
             if 'reference_file' in key:
                 new_file = SpeechFile(speech=speech, reference_file=value)
                 new_file.save()
-        # speech = get_object_or_404(Speech, pk=serializer.data['id'])
-        # file = speech.record_file
-        # file_path = str(MEDIA_ROOT) + '/record/'
-        # file_name = str(file)[7:]
-        # text, summary, cload_keyword = AI(file_path, file_name)
-        # serializer = SpeechSerializer(speech, content=text, summary=summary, cload_keyword=cload_keyword)
+        file = speech.record_file
+        file_path = str(MEDIA_ROOT) + '\\record\\'
+        file_name = str(file)[7:]
+        text, title, cloud_keyword, summary = AI(file_path, file_name)
+        # print('file: {}\n file_path: {}\n file_name:{}\n, text: {}\n title: {}\n cloud_keyword: {}\n summary: {}'.format(file, file_path, file_name, text, title, cloud_keyword, summary))
+        serializer = SpeechSerializer(speech, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(content=text, title=title, cloud_keyword=cloud_keyword, summary=summary)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
