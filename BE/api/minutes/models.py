@@ -20,9 +20,6 @@ class MinuteFile(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
     reference_file = models.FileField(upload_to='minute/', null=True, blank=True)
 
-    def __str__(self):
-        return self.title
-
 
 class Participant(models.Model):
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
@@ -49,8 +46,6 @@ class SpeechFile(models.Model):
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
     reference_file = models.FileField(upload_to='speech/', null=True, blank=True)
 
-    def __str__(self):
-        return self.title
 
 class SpeechComment(models.Model):
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)

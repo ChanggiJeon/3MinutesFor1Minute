@@ -43,6 +43,7 @@ class SpeechSerializer(serializers.ModelSerializer):
 
 class CustomSpeechSerializer(SpeechSerializer):
     reference_files = serializers.ListField()
+
     class Meta:
         model = Speech
         fields = '__all__'
