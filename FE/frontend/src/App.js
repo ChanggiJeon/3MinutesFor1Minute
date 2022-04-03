@@ -19,7 +19,7 @@ import MinutesDetail from './views/community/minutes/MinutesDetail';
 import SpeechCreate from './views/community/minutes/SpeechCreate';
 import Admin from './views/community/Admin';
 import MinutesCreate from './views/community/minutes/MinutesCreate';
-import Profile from './views/community/Profile';
+import Profile from './views/Profile';
 import MinutesUpdate from './views/community/minutes/MinutesUpdate';
 
 function App() {
@@ -32,19 +32,12 @@ function App() {
 						<Route path={routes.main} element={<Main />} />
 						<Route path={routes.login} element={<Login />} />
 						<Route path={routes.signup} element={<Signup />} />
-						<Route path={routes.userProfile()} element={<Profile />} />
-						<Route path={routes.community()} element={<ComIndex />}>
+						<Route path={routes.userProfile} element={<Profile />} />
+						<Route path={`${routes.community}/:communityId`} element={<ComIndex />}>
 							<Route index element={<Community />} />
-							<Route path={routes.admin()} element={<Admin />} />
-							<Route path={routes.records()} element={<Records />} />
-							<Route path={routes.members()} element={<Members />} />
-							<Route path={routes.posts()} element={<Posts />} />
-							<Route path={routes.postDetail()} element={<PostDetail />} />
-							<Route path={routes.postCreate()} element={<PostCreate />} />
-							<Route path={routes.minutesList()} element={<MinutesList />} />
-							<Route path={routes.minutesDetail()} element={<MinutesDetail />} />
-							<Route path={routes.minutesCreate()} element={<MinutesCreate />} />
-							{/* <Route path={routes.posts} element={<Posts />} />
+							<Route path={routes.admin} element={<Admin />} />
+							<Route path={routes.members} element={<Members />} />
+							<Route path={routes.posts} element={<Posts />} />
 							<Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
 							<Route path={routes.postCreate} element={<PostCreate />} />
 							<Route path={routes.minutesList} element={<MinutesList />} />
@@ -52,7 +45,7 @@ function App() {
 							<Route path={routes.minutesCreate} element={<MinutesCreate />} />
 							<Route path={routes.minutesUpdate} element={<MinutesUpdate />} />
 							<Route path={routes.recordCreate} element={<Records />} />
-							<Route path={routes.speechCreate} element={<SpeechCreate />} /> */}
+							<Route path={routes.speechCreate} element={<SpeechCreate />} />
 						</Route>
 					</Route>
 					<Route path='*' element={<Error404 />} />

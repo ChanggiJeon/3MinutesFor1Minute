@@ -1,6 +1,24 @@
 import axios from 'axios';
 import { BASE_URL, setToken } from './utils';
 
+export const apiGetMyCommunityList = () =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiGetMyMemberProfile = ({ communityId }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/${communityId}/profile/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
 export const apiCreateCommunity = ({ name, isPrivate, intro }) =>
 	axios({
 		method: 'post',

@@ -7,28 +7,30 @@ import {
 	FaCalendarCheck,
 	FaAddressBook,
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 function sidebarData() {
-	const comId = useParams().communityId;
+	const { communityId } = useParams();
+	const { id, nickname } = useSelector(state => state.member);
 
 	return [
 		{
 			name: 'Profile',
-			title: '닉네임',
-			path: '/',
+			title: nickname,
+			path: `/community/${communityId}/member/${id}`,
 			icon: <FaAddressCard />,
 		},
 		{
 			name: 'Home',
 			title: '홈으로',
-			path: `/community/${comId}`,
+			path: `/community/${communityId}`,
 			icon: <FaHome />,
 		},
 		{
 			name: 'Minutes',
 			title: '회의록',
 			path: {
-				List: `/community/${comId}/minutes`,
+				List: `/community/${communityId}/minutes`,
 				Calander: '/',
 			},
 			icon: <FaBook />,
@@ -36,7 +38,7 @@ function sidebarData() {
 		{
 			name: 'Board',
 			title: '게시판',
-			path: '/',
+			path: `/community/${communityId}/posts`,
 			icon: <FaBullhorn />,
 		},
 		{
@@ -48,7 +50,7 @@ function sidebarData() {
 		{
 			name: 'Members',
 			title: '참여자 목록',
-			path: '/',
+			path: `/community/${communityId}/members`,
 			icon: <FaAddressBook />,
 		},
 	];
