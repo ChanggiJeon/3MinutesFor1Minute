@@ -10,6 +10,29 @@ export const apiGetMyCommunityList = () =>
 		},
 	});
 
+export const apiGetCommunityInfo = ({ communityId }) =>
+	axios({
+		method: 'get',
+		url: `${BASE_URL}/community/${communityId}/`,
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiPutCommunityInfo = ({ communityId, name, intro, isPrivate }) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/community/${communityId}/`,
+		data: {
+			name,
+			intro,
+			is_private: isPrivate,
+		},
+		headers: {
+			...setToken(),
+		},
+	});
+
 export const apiGetMyMemberProfile = ({ communityId }) =>
 	axios({
 		method: 'get',

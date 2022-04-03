@@ -32,8 +32,13 @@ const Container = styled.div`
 	flex-direction: column;
 `;
 
+const BioContainer = styled.div`
+	width: 250px;
+	line-height: 25px;
+`;
+
 function MemberProfile() {
-	const { id, nickname, bio, image } = useSelector(state => state.member);
+	const { id } = useSelector(state => state.member);
 	const { communityId, memberId } = useParams();
 	const navigate = useNavigate();
 	const [updateMode, setUpdateMode] = useState('');
@@ -96,7 +101,7 @@ function MemberProfile() {
 
 	const updateForm = () => {
 		if (updateMode === 'info') {
-			return <UpdateMember toggleMode={toggleMode} />;
+			return <UpdateMember toggleMode={toggleMode} getMember={getMember} />;
 		}
 		return null;
 	};
@@ -109,10 +114,10 @@ function MemberProfile() {
 						<FaUserCircle />
 					</ProfileImgContainer>
 					<TextTitle>{member.nickname}</TextTitle>
-					<TextSubTitle>
+					<BioContainer>
 						<IoMdText />
 						{member.bio}
-					</TextSubTitle>
+					</BioContainer>
 					{updateBtns}
 				</Form>
 			</FormContainer>
