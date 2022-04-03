@@ -121,7 +121,7 @@ function Main() {
 			<CommunityContainer>
 				{isLoggedIn &&
 					communityList.map(e => (
-						<Link to={`/community/${e.id}`}>
+						<Link to={`/community/${e.id}`} key={e.id}>
 							<Contents>
 								<CommunityName>{e.name}</CommunityName>
 								<div>{e.intro}</div>
