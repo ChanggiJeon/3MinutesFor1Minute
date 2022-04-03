@@ -30,6 +30,7 @@ class SpeechListSerializer(serializers.ModelSerializer):
 
 class SpeechSerializer(serializers.ModelSerializer):
     speech_comments = serializers.SerializerMethodField('sc_filter')
+
     def sc_filter(self, speech):
         comments = SpeechComment.objects.filter(speech=speech)
         serializer = SpeechCommentSerializer(comments, many=True)
