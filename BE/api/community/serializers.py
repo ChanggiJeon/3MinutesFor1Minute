@@ -14,7 +14,7 @@ class CommunitySearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Community
-        fields = ('id', 'name', 'intro', )
+        fields = ('id', 'name', 'intro', 'image', )
         read_only_fields = ('id', )
 
 
@@ -23,6 +23,7 @@ class MemberListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = '__all__'
+        read_only_fields = ('user', 'community', )
 
 
 class MemberSerializer(serializers.ModelSerializer):
