@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 import routes from '../../routes';
 import { apiCreateBoard } from '../../api/board';
 import Label from '../../components/auth/Label';
@@ -27,7 +28,7 @@ function PostCreate() {
 	});
 	const { communityId } = useParams();
 	const navigate = useNavigate();
-
+	const { is_active: isActive, is_admin: isAdmin } = useSelector(state => state.member);
 	const onValidSubmit = async () => {
 		const { title, content, isNotice, upload } = getValues();
 
@@ -40,7 +41,7 @@ function PostCreate() {
 				upload,
 			});
 			const { id: postId } = response.data;
-      // console.log(response.data)
+			// console.log(response.data)
 
 			await Swal.fire({
 				icon: 'success',
@@ -77,7 +78,7 @@ function PostCreate() {
 					</Label>
 
 					{/* 관리자이면 공지인지 아닌지 설정 가능한 체크박스 나온다 */}
-					{true ? (
+					{ isActive && isAdmin ? (
 						<Label htmlFor='isNotice'>
 							공지여부
 							<input {...register('isNotice')} type='checkbox' />

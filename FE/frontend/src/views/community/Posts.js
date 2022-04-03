@@ -46,7 +46,7 @@ function Posts() {
 
 	return (
 		<ComMain>
-			Community Title
+      {/* 커뮤니티 이름 */}
 			<Background>
 				<Header>
 					<BoardTitle>글 목록</BoardTitle>
