@@ -31,12 +31,17 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
   `is_active` tinyint(1) NOT NULL,
   `date_joined` datetime(6) NOT NULL,
   `name` varchar(16) NOT NULL,
-  `image` varchar(100) DEFAULT NULL,
+  `profile_image` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.accounts_user:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `accounts_user` DISABLE KEYS */;
+INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `name`, `profile_image`) VALUES
+	(1, 'pbkdf2_sha256$320000$cLZk1Cp7HUcicYnKgZjfSN$NCdGyapgmlhhhixIKFLrT0uazP9mBN2Zlfrcx6bQ+bg=', NULL, 1, 'admin', '', '', 'admin@admin.com', 1, 1, '2022-04-03 13:52:02.585059', 'admin', ''),
+	(2, 'pbkdf2_sha256$320000$sDzayj0EfZgnYuWoXiUXlW$ssgx07iEWA1IXXGOpAZeQsMOroEfRJ3E9ntuGY5//FU=', NULL, 0, 'ssafy', '', '', 'ssafy@ssafy.com', 0, 1, '2022-04-03 13:52:26.160130', 'ssafy', '');
+/*!40000 ALTER TABLE `accounts_user` ENABLE KEYS */;
 
 -- 테이블 myproject.accounts_user_groups 구조 내보내기
 CREATE TABLE IF NOT EXISTS `accounts_user_groups` (
@@ -50,7 +55,9 @@ CREATE TABLE IF NOT EXISTS `accounts_user_groups` (
   CONSTRAINT `accounts_user_groups_user_id_52b62117_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.accounts_user_groups:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `accounts_user_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `accounts_user_groups` ENABLE KEYS */;
 
 -- 테이블 myproject.accounts_user_user_permissions 구조 내보내기
 CREATE TABLE IF NOT EXISTS `accounts_user_user_permissions` (
@@ -64,7 +71,9 @@ CREATE TABLE IF NOT EXISTS `accounts_user_user_permissions` (
   CONSTRAINT `accounts_user_user_p_user_id_e4f0a161_fk_accounts_` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.accounts_user_user_permissions:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `accounts_user_user_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `accounts_user_user_permissions` ENABLE KEYS */;
 
 -- 테이블 myproject.auth_group 구조 내보내기
 CREATE TABLE IF NOT EXISTS `auth_group` (
@@ -74,7 +83,9 @@ CREATE TABLE IF NOT EXISTS `auth_group` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.auth_group:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `auth_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group` ENABLE KEYS */;
 
 -- 테이블 myproject.auth_group_permissions 구조 내보내기
 CREATE TABLE IF NOT EXISTS `auth_group_permissions` (
@@ -88,7 +99,9 @@ CREATE TABLE IF NOT EXISTS `auth_group_permissions` (
   CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.auth_group_permissions:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `auth_group_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group_permissions` ENABLE KEYS */;
 
 -- 테이블 myproject.auth_permission 구조 내보내기
 CREATE TABLE IF NOT EXISTS `auth_permission` (
@@ -101,7 +114,78 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.auth_permission:~68 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
+INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
+	(1, 'Can add user', 1, 'add_user'),
+	(2, 'Can change user', 1, 'change_user'),
+	(3, 'Can delete user', 1, 'delete_user'),
+	(4, 'Can view user', 1, 'view_user'),
+	(5, 'Can add board', 2, 'add_board'),
+	(6, 'Can change board', 2, 'change_board'),
+	(7, 'Can delete board', 2, 'delete_board'),
+	(8, 'Can view board', 2, 'view_board'),
+	(9, 'Can add board file', 3, 'add_boardfile'),
+	(10, 'Can change board file', 3, 'change_boardfile'),
+	(11, 'Can delete board file', 3, 'delete_boardfile'),
+	(12, 'Can view board file', 3, 'view_boardfile'),
+	(13, 'Can add board comment', 4, 'add_boardcomment'),
+	(14, 'Can change board comment', 4, 'change_boardcomment'),
+	(15, 'Can delete board comment', 4, 'delete_boardcomment'),
+	(16, 'Can view board comment', 4, 'view_boardcomment'),
+	(17, 'Can add community', 5, 'add_community'),
+	(18, 'Can change community', 5, 'change_community'),
+	(19, 'Can delete community', 5, 'delete_community'),
+	(20, 'Can view community', 5, 'view_community'),
+	(21, 'Can add member', 6, 'add_member'),
+	(22, 'Can change member', 6, 'change_member'),
+	(23, 'Can delete member', 6, 'delete_member'),
+	(24, 'Can view member', 6, 'view_member'),
+	(25, 'Can add minute', 7, 'add_minute'),
+	(26, 'Can change minute', 7, 'change_minute'),
+	(27, 'Can delete minute', 7, 'delete_minute'),
+	(28, 'Can view minute', 7, 'view_minute'),
+	(29, 'Can add participant', 8, 'add_participant'),
+	(30, 'Can change participant', 8, 'change_participant'),
+	(31, 'Can delete participant', 8, 'delete_participant'),
+	(32, 'Can view participant', 8, 'view_participant'),
+	(33, 'Can add speech', 9, 'add_speech'),
+	(34, 'Can change speech', 9, 'change_speech'),
+	(35, 'Can delete speech', 9, 'delete_speech'),
+	(36, 'Can view speech', 9, 'view_speech'),
+	(37, 'Can add speech file', 10, 'add_speechfile'),
+	(38, 'Can change speech file', 10, 'change_speechfile'),
+	(39, 'Can delete speech file', 10, 'delete_speechfile'),
+	(40, 'Can view speech file', 10, 'view_speechfile'),
+	(41, 'Can add speech comment', 11, 'add_speechcomment'),
+	(42, 'Can change speech comment', 11, 'change_speechcomment'),
+	(43, 'Can delete speech comment', 11, 'delete_speechcomment'),
+	(44, 'Can view speech comment', 11, 'view_speechcomment'),
+	(45, 'Can add minute file', 12, 'add_minutefile'),
+	(46, 'Can change minute file', 12, 'change_minutefile'),
+	(47, 'Can delete minute file', 12, 'delete_minutefile'),
+	(48, 'Can view minute file', 12, 'view_minutefile'),
+	(49, 'Can add log entry', 13, 'add_logentry'),
+	(50, 'Can change log entry', 13, 'change_logentry'),
+	(51, 'Can delete log entry', 13, 'delete_logentry'),
+	(52, 'Can view log entry', 13, 'view_logentry'),
+	(53, 'Can add permission', 14, 'add_permission'),
+	(54, 'Can change permission', 14, 'change_permission'),
+	(55, 'Can delete permission', 14, 'delete_permission'),
+	(56, 'Can view permission', 14, 'view_permission'),
+	(57, 'Can add group', 15, 'add_group'),
+	(58, 'Can change group', 15, 'change_group'),
+	(59, 'Can delete group', 15, 'delete_group'),
+	(60, 'Can view group', 15, 'view_group'),
+	(61, 'Can add content type', 16, 'add_contenttype'),
+	(62, 'Can change content type', 16, 'change_contenttype'),
+	(63, 'Can delete content type', 16, 'delete_contenttype'),
+	(64, 'Can view content type', 16, 'view_contenttype'),
+	(65, 'Can add session', 17, 'add_session'),
+	(66, 'Can change session', 17, 'change_session'),
+	(67, 'Can delete session', 17, 'delete_session'),
+	(68, 'Can view session', 17, 'view_session');
+/*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 
 -- 테이블 myproject.boards_board 구조 내보내기
 CREATE TABLE IF NOT EXISTS `boards_board` (
@@ -120,7 +204,9 @@ CREATE TABLE IF NOT EXISTS `boards_board` (
   CONSTRAINT `boards_board_member_id_cc86ba0f_fk_community_member_id` FOREIGN KEY (`member_id`) REFERENCES `community_member` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.boards_board:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `boards_board` DISABLE KEYS */;
+/*!40000 ALTER TABLE `boards_board` ENABLE KEYS */;
 
 -- 테이블 myproject.boards_boardcomment 구조 내보내기
 CREATE TABLE IF NOT EXISTS `boards_boardcomment` (
@@ -137,7 +223,9 @@ CREATE TABLE IF NOT EXISTS `boards_boardcomment` (
   CONSTRAINT `boards_boardcomment_member_id_1f3bfc12_fk_community_member_id` FOREIGN KEY (`member_id`) REFERENCES `community_member` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.boards_boardcomment:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `boards_boardcomment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `boards_boardcomment` ENABLE KEYS */;
 
 -- 테이블 myproject.boards_boardfile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `boards_boardfile` (
@@ -149,7 +237,9 @@ CREATE TABLE IF NOT EXISTS `boards_boardfile` (
   CONSTRAINT `boards_boardfile_board_id_f39e67c5_fk_boards_board_id` FOREIGN KEY (`board_id`) REFERENCES `boards_board` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.boards_boardfile:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `boards_boardfile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `boards_boardfile` ENABLE KEYS */;
 
 -- 테이블 myproject.community_community 구조 내보내기
 CREATE TABLE IF NOT EXISTS `community_community` (
@@ -159,10 +249,13 @@ CREATE TABLE IF NOT EXISTS `community_community` (
   `private_code` varchar(10) NOT NULL,
   `is_private` tinyint(1) NOT NULL,
   `created_at` datetime(6) NOT NULL,
+  `image` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.community_community:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `community_community` DISABLE KEYS */;
+/*!40000 ALTER TABLE `community_community` ENABLE KEYS */;
 
 -- 테이블 myproject.community_member 구조 내보내기
 CREATE TABLE IF NOT EXISTS `community_member` (
@@ -172,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `community_member` (
   `is_admin` tinyint(1) NOT NULL,
   `is_active` tinyint(1) NOT NULL,
   `created_at` datetime(6) NOT NULL,
-  `image` varchar(100) DEFAULT NULL,
+  `profile_image` varchar(100) DEFAULT NULL,
   `community_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -182,7 +275,9 @@ CREATE TABLE IF NOT EXISTS `community_member` (
   CONSTRAINT `community_member_user_id_17ca1363_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.community_member:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `community_member` DISABLE KEYS */;
+/*!40000 ALTER TABLE `community_member` ENABLE KEYS */;
 
 -- 테이블 myproject.django_admin_log 구조 내보내기
 CREATE TABLE IF NOT EXISTS `django_admin_log` (
@@ -201,7 +296,9 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.django_admin_log:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 
 -- 테이블 myproject.django_content_type 구조 내보내기
 CREATE TABLE IF NOT EXISTS `django_content_type` (
@@ -212,7 +309,27 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.django_content_type:~17 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
+INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
+	(1, 'accounts', 'user'),
+	(13, 'admin', 'logentry'),
+	(15, 'auth', 'group'),
+	(14, 'auth', 'permission'),
+	(2, 'boards', 'board'),
+	(4, 'boards', 'boardcomment'),
+	(3, 'boards', 'boardfile'),
+	(5, 'community', 'community'),
+	(6, 'community', 'member'),
+	(16, 'contenttypes', 'contenttype'),
+	(7, 'minutes', 'minute'),
+	(12, 'minutes', 'minutefile'),
+	(8, 'minutes', 'participant'),
+	(9, 'minutes', 'speech'),
+	(11, 'minutes', 'speechcomment'),
+	(10, 'minutes', 'speechfile'),
+	(17, 'sessions', 'session');
+/*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
 
 -- 테이블 myproject.django_migrations 구조 내보내기
 CREATE TABLE IF NOT EXISTS `django_migrations` (
@@ -223,7 +340,32 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.django_migrations:~22 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
+	(1, 'contenttypes', '0001_initial', '2022-04-03 13:44:49.988321'),
+	(2, 'contenttypes', '0002_remove_content_type_name', '2022-04-03 13:44:50.037190'),
+	(3, 'auth', '0001_initial', '2022-04-03 13:44:50.306104'),
+	(4, 'auth', '0002_alter_permission_name_max_length', '2022-04-03 13:44:50.383866'),
+	(5, 'auth', '0003_alter_user_email_max_length', '2022-04-03 13:44:50.399820'),
+	(6, 'auth', '0004_alter_user_username_opts', '2022-04-03 13:44:50.405829'),
+	(7, 'auth', '0005_alter_user_last_login_null', '2022-04-03 13:44:50.410816'),
+	(8, 'auth', '0006_require_contenttypes_0002', '2022-04-03 13:44:50.413788'),
+	(9, 'auth', '0007_alter_validators_add_error_messages', '2022-04-03 13:44:50.421760'),
+	(10, 'auth', '0008_alter_user_username_max_length', '2022-04-03 13:44:50.427766'),
+	(11, 'auth', '0009_alter_user_last_name_max_length', '2022-04-03 13:44:50.434725'),
+	(12, 'auth', '0010_alter_group_name_max_length', '2022-04-03 13:44:50.453675'),
+	(13, 'auth', '0011_update_proxy_permissions', '2022-04-03 13:44:50.459659'),
+	(14, 'auth', '0012_alter_user_first_name_max_length', '2022-04-03 13:44:50.465643'),
+	(15, 'accounts', '0001_initial', '2022-04-03 13:44:50.660264'),
+	(16, 'admin', '0001_initial', '2022-04-03 13:44:50.752081'),
+	(17, 'admin', '0002_logentry_remove_auto_add', '2022-04-03 13:44:50.761073'),
+	(18, 'admin', '0003_logentry_add_action_flag_choices', '2022-04-03 13:44:50.770033'),
+	(19, 'community', '0001_initial', '2022-04-03 13:44:50.864951'),
+	(20, 'boards', '0001_initial', '2022-04-03 13:44:51.090359'),
+	(21, 'minutes', '0001_initial', '2022-04-03 13:44:51.546561'),
+	(22, 'sessions', '0001_initial', '2022-04-03 13:44:51.584459');
+/*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- 테이블 myproject.django_session 구조 내보내기
 CREATE TABLE IF NOT EXISTS `django_session` (
@@ -234,7 +376,9 @@ CREATE TABLE IF NOT EXISTS `django_session` (
   KEY `django_session_expire_date_a5c62663` (`expire_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.django_session:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
+/*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_minute 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_minute` (
@@ -252,7 +396,9 @@ CREATE TABLE IF NOT EXISTS `minutes_minute` (
   CONSTRAINT `minutes_minute_community_id_d27aecc6_fk_community_community_id` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.minutes_minute:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `minutes_minute` DISABLE KEYS */;
+/*!40000 ALTER TABLE `minutes_minute` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_minutefile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_minutefile` (
@@ -264,7 +410,9 @@ CREATE TABLE IF NOT EXISTS `minutes_minutefile` (
   CONSTRAINT `minutes_minutefile_minute_id_0f5835ce_fk_minutes_minute_id` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.minutes_minutefile:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `minutes_minutefile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `minutes_minutefile` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_participant 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_participant` (
@@ -279,7 +427,9 @@ CREATE TABLE IF NOT EXISTS `minutes_participant` (
   CONSTRAINT `minutes_participant_minute_id_f070c492_fk_minutes_minute_id` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.minutes_participant:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `minutes_participant` DISABLE KEYS */;
+/*!40000 ALTER TABLE `minutes_participant` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_speech 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_speech` (
@@ -300,7 +450,9 @@ CREATE TABLE IF NOT EXISTS `minutes_speech` (
   CONSTRAINT `minutes_speech_participant_id_18380e4f_fk_minutes_participant_id` FOREIGN KEY (`participant_id`) REFERENCES `minutes_participant` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.minutes_speech:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `minutes_speech` DISABLE KEYS */;
+/*!40000 ALTER TABLE `minutes_speech` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_speechcomment 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_speechcomment` (
@@ -317,7 +469,9 @@ CREATE TABLE IF NOT EXISTS `minutes_speechcomment` (
   CONSTRAINT `minutes_speechcomment_speech_id_399b4aee_fk_minutes_speech_id` FOREIGN KEY (`speech_id`) REFERENCES `minutes_speech` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.minutes_speechcomment:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `minutes_speechcomment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `minutes_speechcomment` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_speechfile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_speechfile` (
@@ -329,7 +483,9 @@ CREATE TABLE IF NOT EXISTS `minutes_speechfile` (
   CONSTRAINT `minutes_speechfile_speech_id_35702050_fk_minutes_speech_id` FOREIGN KEY (`speech_id`) REFERENCES `minutes_speech` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 myproject.minutes_speechfile:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `minutes_speechfile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `minutes_speechfile` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
