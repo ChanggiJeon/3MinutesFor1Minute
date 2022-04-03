@@ -25,7 +25,6 @@ import EmptyBtn from '../../components/auth/EmptyBtn';
 import routes from '../../routes';
 import TextSubTitle from '../../components/common/TextSubTitle';
 import TextTitle from '../../components/common/TextTitle';
-import Modal from '../../components/modal/Modal';
 import UpdateCommunity from '../../components/community/admin/UpdateCommunity';
 
 const Divider = styled.div`
@@ -61,6 +60,12 @@ const Main = styled.div`
 
 const TableContainer = styled.div`
 	height: 100%;
+
+	img {
+		width: 18px;
+		height: 18px;
+		object-fit: cover;
+	}
 `;
 
 const ResultContainer = styled.div`

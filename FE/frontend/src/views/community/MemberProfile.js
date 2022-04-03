@@ -111,7 +111,11 @@ function MemberProfile() {
 			<FormContainer>
 				<Form>
 					<ProfileImgContainer>
-						<FaUserCircle />
+						{member.profile_image ? (
+							<img src={member.profile_image} alt='' />
+						) : (
+							<FaUserCircle />
+						)}
 					</ProfileImgContainer>
 					<TextTitle>{member.nickname}</TextTitle>
 					<BioContainer>
