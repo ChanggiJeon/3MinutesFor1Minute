@@ -9,11 +9,11 @@ import SubBox from '../../components/community/main/SubBox';
 import { fetchMinutesByComId } from '../../store/minutes';
 
 function Community() {
-	const comId = useParams().communityId;
+	const { communityId } = useParams();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(fetchMinutesByComId(comId));
+		dispatch(fetchMinutesByComId(communityId));
 	}, []);
 
 	return (
