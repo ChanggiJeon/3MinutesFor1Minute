@@ -49,9 +49,7 @@ function Posts() {
 			<Background>
 				<Header>
 					<BoardTitle>글 목록</BoardTitle>
-					<WriteBtn onClick={() => navigate(routes.postCreate(communityId))}>
-						작성하기
-					</WriteBtn>
+					<WriteBtn onClick={() => navigate('postcreate')}>작성하기</WriteBtn>
 				</Header>
 				<TableContainer>
 					<Table>
@@ -68,9 +66,7 @@ function Posts() {
 								<tr key={post.id}>
 									<td>{post.id}</td>
 									<td>
-										<SLink to={routes.postDetail(communityId, post.id)}>
-											{post.title}
-										</SLink>
+										<SLink to={post.id}>{post.title}</SLink>
 									</td>
 									<td>{post.date}</td>
 									<td>{post.author}</td>

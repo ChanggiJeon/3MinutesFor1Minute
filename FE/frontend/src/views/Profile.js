@@ -4,18 +4,19 @@ import { MdEmail } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import Divider from '../../components/auth/Divider';
-import Form from '../../components/auth/Form';
-import FormContainer from '../../components/auth/FormContainer';
-import SubmitButton from '../../components/auth/SubmitButton';
-import TextSubTitle from '../../components/common/TextSubTitle';
-import TextTitle from '../../components/common/TextTitle';
-import UpdatePassword from '../../components/main/UpdatePassword';
-import Withdraw from '../../components/main/Withdraw';
-import routes from '../../routes';
+import Divider from '../components/auth/Divider';
+import Form from '../components/auth/Form';
+import FormContainer from '../components/auth/FormContainer';
+import SubmitButton from '../components/auth/SubmitButton';
+import TextSubTitle from '../components/common/TextSubTitle';
+import TextTitle from '../components/common/TextTitle';
+import UpdatePassword from '../components/main/UpdatePassword';
+import Withdraw from '../components/main/Withdraw';
+import routes from '../routes';
 
 const ProfileImgContainer = styled.div`
 	border-radius: 50%;
+	align-self: center;
 
 	svg,
 	img {
