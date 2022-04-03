@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Board, BoardComment
+from .models import Board, BoardComment, BoardFile
 from community.serializers import CustomMemberSerializer
 
 
@@ -22,11 +22,16 @@ class BoardListSerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
     board_comments = serializers.SerializerMethodField('bc_filter')
-
     def bc_filter(self, board):
         comments = BoardComment.objects.filter(board=board)
         serializer = BoardCommentSerializer(comments, many=True)
         return serializer.data
+
+    class BoardFileSerializer(serializers.ModelSerializer):
+        
+        class Meta:
+            model = BoardFile
+            fileds = '__all__'
 
     class Meta:
         model = Board
