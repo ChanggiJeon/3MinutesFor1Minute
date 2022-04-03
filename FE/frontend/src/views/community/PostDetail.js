@@ -7,8 +7,11 @@ import {
 	apiGetBoardDetail,
 	apiPutBoardDetail,
 	apiDeleteBoardDetail,
+	apiDeleteComment,
+	apiPutComment,
 } from '../../api/board';
 import routes from '../../routes';
+import CommentInput from './CommentInput';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
 import SubmitButton from '../../components/auth/SubmitButton';
@@ -23,26 +26,53 @@ import Btns from '../../components/community/board/list/Btns';
 import NForm from '../../components/community/board/list/NForm';
 
 const Detail = styled.div`
-	{
+	 {
 		display: flex;
 		flex-direction: column;
-    padding: 15px;
+		padding: 15px;
 		border: 1px solid black;
 		margin-top: 15px;
 		flex-wrap: wrap;
 
-    p {
-      margin: 5px;
-    }
+		p {
+			margin: 5px;
+		}
 	}
+`;
+
+const CommentList = styled.div`
+	 {
+		width: 100%;
+	}
+`;
+
+const CLabel = styled(Label)`
+	input {
+		width: 100%;
+		font-size: 15px;
+	}
+`;
+
+const CForm = styled(NForm)`
+	padding: 0px;
 `;
 
 function PostDetail() {
 	const { communityId, postId } = useParams();
 	const [post, setPost] = useState({});
-	const [isUpdating, setUpdating] = useState(false);
+	const [targetComment, setTargetComment] = useState({});
+	const [isPostUpdating, setPostUpdating] = useState(false);
+	const [isCommentUpdating, setCommentUpdating] = useState(false);
 	const navigate = useNavigate();
 	const { register, handleSubmit, getValues, setValue } = useForm({
+		mode: 'all',
+	});
+	const {
+		register: cRegister,
+		handleSubmit: cHandleSubmit,
+		getValues: cGetValues,
+		setValue: cSetValue,
+	} = useForm({
 		mode: 'all',
 	});
 
@@ -59,6 +89,7 @@ function PostDetail() {
 				setValue('content', res.data?.content);
 				setValue('isNotice', res.data?.isNotice);
 				setValue('upload', res.data?.upload);
+				// console.log(res.data);
 			});
 		} catch (e) {
 			// error
@@ -72,7 +103,7 @@ function PostDetail() {
 				icon: 'success',
 				text: '게시글이 삭제되었습니다.',
 			});
-			navigate('');
+			navigate(`${routes.community}/${communityId}/${routes.posts}`);
 		} catch (e) {
 			// error
 			await Swal.fire({
@@ -82,7 +113,24 @@ function PostDetail() {
 		}
 	};
 
-	const handleDelete = async () => {
+	const deleteComment = async commentId => {
+		try {
+			await apiDeleteComment({ communityId, postId, commentId });
+			await Swal.fire({
+				icon: 'success',
+				text: '댓글이 삭제되었습니다.',
+			});
+			window.location.reload(true);
+		} catch (e) {
+			// error
+			await Swal.fire({
+				icon: 'error',
+				text: '삭제 실패, 새로 고침 후, 다시 시도하세요.',
+			});
+		}
+	};
+
+	const handleDeletePost = async () => {
 		await Swal.fire({
 			title: '정말 삭제하시겠습니까?',
 			icon: 'warning',
@@ -97,9 +145,23 @@ function PostDetail() {
 		});
 	};
 
-	const onValidSubmit = async () => {
-		const { title, content, isNotice, upload } = getValues();
+	const handleDeleteComment = async commentId => {
+		await Swal.fire({
+			title: '정말 삭제하시겠습니까?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#dd3333',
+			cancelButtonText: '취소',
+			confirmButtonText: '삭제',
+		}).then(result => {
+			if (result.isConfirmed) {
+				deleteComment(commentId);
+			}
+		});
+	};
 
+	const onValidSubmitPost = async () => {
+		const { title, content, isNotice, upload } = getValues();
 		try {
 			await apiPutBoardDetail({
 				communityId,
@@ -113,29 +175,59 @@ function PostDetail() {
 			});
 			await Swal.fire({
 				icon: 'success',
-				text: '성공',
+				text: '수정을 완료하였습니다.',
 			});
-			setUpdating(false);
+			setPostUpdating(false);
 		} catch (e) {
 			// error
 			await Swal.fire({
 				icon: 'error',
-				text: '실패',
+				text: '수정을 실패하였습니다.',
 			});
 		}
 	};
 
-  // isUpdating True -> 수정 False -> 글 상세보기
-	const contents = isUpdating ? (
-    // True
+	const onValidSubmitComment = async () => {
+		const { content } = cGetValues();
+		try {
+			await apiPutComment({
+				communityId,
+				postId,
+				commentId: targetComment.id,
+				content,
+			});
+			await Swal.fire({
+				icon: 'success',
+				text: '수정을 완료하였습니다.',
+			});
+			getPost();
+			setCommentUpdating(false);
+		} catch (e) {
+			// error
+			await Swal.fire({
+				icon: 'error',
+				text: '수정을 실패하였습니다.',
+			});
+		}
+	};
+
+	// isPostUpdating True -> 수정 False -> 글 상세보기
+	const contents = isPostUpdating ? (
+		// True
 		<Background>
 			<Header>
 				<TextTitle>글 수정</TextTitle>
-				<BackBtn onClick={() => navigate(`${routes.community}/${communityId}${routes.postDetail}/${post.id}`)}>
+				<BackBtn
+					onClick={() =>
+						navigate(
+							`${routes.community}/${communityId}${routes.postDetail}/${post.id}`
+						)
+					}
+				>
 					◀
 				</BackBtn>
 			</Header>
-			<NForm onSubmit={handleSubmit(onValidSubmit)}>
+			<NForm onSubmit={handleSubmit(onValidSubmitPost)}>
 				<Label htmlFor='title'>
 					<input
 						{...register('title', {
@@ -167,34 +259,96 @@ function PostDetail() {
 			</NForm>
 		</Background>
 	) : (
-    // False
+		// False
 		<Background>
 			<Header>
 				<TextTitle>글 상세보기</TextTitle>
-				<BackBtn onClick={() => navigate(`${routes.community}/${communityId}/${routes.posts}`)}>
+				<BackBtn
+					onClick={() =>
+						navigate(`${routes.community}/${communityId}/${routes.posts}`)
+					}
+				>
 					◀
 				</BackBtn>
 			</Header>
-      <Detail>
-        <p>제목 : {post?.title}</p>
-        <p>작성자 : {post?.author}</p>
-        <p>작성시간 : {post?.date}</p>
-        <p>내용 : {post?.content}</p>
-        <p>첨부파일 {post?.upload}</p>
+			<Detail>
+				<p>제목 : {post?.title}</p>
+				<p>작성자 : {post?.member}</p>
+				<p>작성시간 : {post?.created_at}</p>
+				<p>내용 : {post?.content}</p>
+				<p>첨부파일 {post?.upload}</p>
 
-        {/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
-        <Btns>
-          <SmallBtn type='button' onClick={() => setUpdating(true)}>
-            수정
-          </SmallBtn>
-          <SmallBtn type='button' onClick={() => handleDelete()}>
-            삭제
-          </SmallBtn>
-        </Btns>
+				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
+				{true ? (
+					<Btns>
+						<SmallBtn type='button' onClick={() => setPostUpdating(true)}>
+							수정
+						</SmallBtn>
+						<SmallBtn type='button' onClick={() => handleDeletePost()}>
+							삭제
+						</SmallBtn>
+					</Btns>
+				) : null}
 
-        <p>댓글</p>
-
-      </Detail>
+				<p>댓글({post?.board_comments?.length})</p>
+				<CommentInput />
+				{post?.board_comments?.map(comment => (
+					<CommentList>
+						<p key={comment.id}>
+							{/* 댓글 update true */}
+							{isCommentUpdating && comment === targetComment ? (
+								<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
+									<CLabel htmlFor='content'>
+										<input
+											{...cRegister('content', {
+												required: true,
+											})}
+											type='content'
+											placeholder='내용 없음'
+										/>
+										<SmallBtn type='submit'>수정</SmallBtn>
+										<SmallBtn
+											type='button'
+											onClick={() => {
+												setCommentUpdating(false);
+												setTargetComment({});
+											}}
+										>
+											취소
+										</SmallBtn>
+									</CLabel>
+								</CForm>
+							) : (
+								// 댓글 update false
+								<>
+									{comment.member} - {comment.content}
+									{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
+									{true ? (
+										<>
+											<SmallBtn
+												type='button'
+												onClick={() => {
+													setCommentUpdating(true);
+													setTargetComment(comment);
+													cSetValue('content', comment.content);
+												}}
+											>
+												수정
+											</SmallBtn>
+											<SmallBtn
+												type='button'
+												onClick={() => handleDeleteComment(comment.id)}
+											>
+												삭제
+											</SmallBtn>
+										</>
+									) : null}
+								</>
+							)}
+						</p>
+					</CommentList>
+				))}
+			</Detail>
 		</Background>
 	);
 
