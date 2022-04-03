@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
-    
+    'imagekit',
+
     # 3rd party
     'django.contrib.admin',
     'django.contrib.auth',
