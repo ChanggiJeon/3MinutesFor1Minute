@@ -95,13 +95,10 @@ export const apiDeleteBoardDetail = ({ communityId, postId }) =>
 		},
 	});
 
-export const apiDeleteComment = ({ communityId, postId, commentId, content }) =>
+export const apiDeleteComment = ({ communityId, postId, commentId }) =>
 	axios({
 		method: 'delete',
 		url: `${BASE_URL}/${communityId}/boards/${postId}/comment/${commentId}/delete/`,
-		data: {
-			content,
-		},
 		headers: {
 			...setToken(),
 		},

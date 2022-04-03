@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { AiFillNotification } from 'react-icons/ai';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -49,29 +50,48 @@ function Posts() {
 			<Background>
 				<Header>
 					<BoardTitle>글 목록</BoardTitle>
-					<WriteBtn onClick={() => navigate('postcreate')}>작성하기</WriteBtn>
+					<WriteBtn
+						onClick={() =>
+							navigate(`${routes.community}/${communityId}/${routes.postCreate}`)
+						}
+					>
+						작성하기
+					</WriteBtn>
 				</Header>
 				<TableContainer>
 					<Table>
 						<thead>
 							<tr>
-								<th width='20%'>ID</th>
+								<th width='20%'>No.</th>
 								<th width='40%'>Title</th>
 								<th width='20%'>Date</th>
 								<th width='20%'>Author</th>
 							</tr>
 						</thead>
 						<tbody>
-							{posts.slice(offset, offset + limit).map(post => (
-								<tr key={post.id}>
-									<td>{post.id}</td>
-									<td>
-										<SLink to={post.id}>{post.title}</SLink>
-									</td>
-									<td>{post.date}</td>
-									<td>{post.author}</td>
-								</tr>
-							))}
+							{posts
+								.reverse()
+								.slice(offset, offset + limit)
+								.map(post => (
+									<tr key={post.id}>
+										{post.is_notice ? (
+											<td>
+												<AiFillNotification />
+											</td>
+										) : (
+											<td>{post.id}</td>
+										)}
+										<td>
+											<SLink
+												to={`${routes.community}/${communityId}/${routes.posts}/${post.id}`}
+											>
+												{post.title}
+											</SLink>
+										</td>
+										<td>{post.created_at}</td>
+										<td>{post.member}</td>
+									</tr>
+								))}
 						</tbody>
 					</Table>
 				</TableContainer>
