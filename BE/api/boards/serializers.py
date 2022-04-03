@@ -4,7 +4,7 @@ from community.serializers import CustomMemberSerializer
 
 
 class BoardCommentSerializer(serializers.ModelSerializer):
-    member = CustomMemberSerializer()
+    member = CustomMemberSerializer(required=False)
 
     class Meta:
         model = BoardComment
@@ -13,7 +13,7 @@ class BoardCommentSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
-    member = CustomMemberSerializer()
+    member = CustomMemberSerializer(required=False)
 
     class Meta:
         model = Board
@@ -22,7 +22,7 @@ class BoardListSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
-    member = CustomMemberSerializer()
+    member = CustomMemberSerializer(required=False)
     board_comments = serializers.SerializerMethodField('bc_filter')
 
     def bc_filter(self, board):
