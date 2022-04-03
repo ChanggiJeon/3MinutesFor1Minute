@@ -21,6 +21,7 @@ import Admin from './views/community/Admin';
 import MinutesCreate from './views/community/minutes/MinutesCreate';
 import Profile from './views/Profile';
 import MinutesUpdate from './views/community/minutes/MinutesUpdate';
+import MemberProfile from './views/community/MemberProfile';
 
 function App() {
 	return (
@@ -37,6 +38,7 @@ function App() {
 							<Route index element={<Community />} />
 							<Route path={routes.admin} element={<Admin />} />
 							<Route path={routes.members} element={<Members />} />
+							<Route path={routes.memberProfile} element={<MemberProfile />} />
 							<Route path={routes.posts} element={<Posts />} />
 							<Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
 							<Route path={routes.postCreate} element={<PostCreate />} />
