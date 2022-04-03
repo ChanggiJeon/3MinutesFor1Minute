@@ -3,7 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Board, BoardComment
+from .models import Board, BoardComment, BoardFile
 from community.models import Community, Member
 from .serializers import BoardListSerializer, BoardSerializer, BoardCommentSerializer
 
@@ -25,6 +25,11 @@ def board_create(request, community_pk):
 
     if serializer.is_valid(raise_exception=True):
         serializer.save(member=me, community=community)
+        board = get_object_or_404(Board, pk=request.data['id'])
+        for key, value in request.data.items():
+            if 'reference_file' in key:
+                new_file = BoardFile(board=board, reference_file=value)
+                new_file.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

@@ -34,4 +34,4 @@ class UserUpdateSerializer(UserSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'password', 'new_password', 'new_password_confirm', 'image', )
+        fields = ('username', 'password', 'new_password', 'new_password_confirm', 'profile_image', )
