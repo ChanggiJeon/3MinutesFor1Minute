@@ -248,12 +248,10 @@ def speech_create(request, community_pk, minute_pk):
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
         speech = get_object_or_404(Speech, pk=serializer.data['id'])
-
         for key, value in request.data.items():
             if 'reference_file' in key:
                 new_file = SpeechFile(speech=speech, reference_file=value)
                 new_file.save()
-    
         file = speech.record_file
         file_path = str(MEDIA_ROOT) + '\\record\\'
         file_name = str(file)[7:]
@@ -270,6 +268,7 @@ def speech_create(request, community_pk, minute_pk):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save(content=content, title=title, summary=summary, cloud_keyword=cloud_keyword)
+        serializer = SpeechSerializer(speech)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -307,7 +306,6 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
-
     if minute.is_closed:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -318,16 +316,16 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
             serializer.save()
             speech = get_object_or_404(Speech, pk=serializer.data['id'])
 
-            if speech.reference_file_set.all():
-                past_files = speech.reference_file_set.all()
-
+            if speech.speechfile_set.all():
+                past_files = speech.speechfile_set.all()
                 for past_file in past_files:
                     past_file.delete()
 
             for key, value in request.data.items():
                 if 'reference_file' in key:
-                    new_file = Speech(speech=speech, reference_file=value)
+                    new_file = SpeechFile(speech=speech, reference_file=value)
                     new_file.save()
+            serializer = SpeechSerializer(speech)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
