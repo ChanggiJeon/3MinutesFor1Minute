@@ -44,6 +44,7 @@ class SpeechSerializer(serializers.ModelSerializer):
 
 class CustomSpeechSerializer(SpeechSerializer):
     reference_files = serializers.ListField()
+
     class Meta:
         model = Speech
         fields = '__all__'
@@ -83,12 +84,12 @@ class MinuteSerializer(serializers.ModelSerializer):
             model = MinuteFile
             fields = '__all__'
 
-    minutefile_set = MinuteFileSerializer(many=True)
+    minutefile_set = MinuteFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = Minute
         fields = '__all__'
-        read_only_fields = ('community', )
+        read_only_fields = ('community', 'minutefile_set')
 
 
 class CustomMinuteSerializer(MinuteSerializer):
