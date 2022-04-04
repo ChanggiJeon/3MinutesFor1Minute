@@ -263,12 +263,7 @@ def speech_create(request, community_pk, minute_pk):
         serializer = SpeechSerializer(speech, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-<<<<<<< HEAD
-            serializer.save(content=content, title=title, summary=summary, cloud_keyword=cloud_keyword)
-        serializer = SpeechSerializer(speech)
-=======
             serializer.save(voice_text=voice_text, summary=summary, cloud_keyword=cloud_keyword)
->>>>>>> 9d895150de799319eea4bd984b193393e52d20c6
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
