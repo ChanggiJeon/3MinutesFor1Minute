@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import styled from 'styled-components';
+import { RiCommunityLine } from 'react-icons/ri';
 import MainPoster from '../components/mainpage/MainPoster';
 import CreateCommunity from '../components/main/CreateCommunity';
 import Modal from '../components/modal/Modal';
@@ -37,6 +38,21 @@ const Contents = styled.div`
 	min-height: 200px;
 	border: 1px solid black;
 	border-radius: 5px;
+`;
+
+const CommunityImgContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 200px;
+	font-size: 32px;
+
+	img {
+		width: 300px;
+		height: 200px;
+		object-fit: cover;
+	}
 `;
 
 const CommunityName = styled.div`
@@ -123,6 +139,9 @@ function Main() {
 					communityList.map(e => (
 						<Link to={`/community/${e.id}`} key={e.id}>
 							<Contents>
+								<CommunityImgContainer>
+									{e.image ? <img src={e.image} alt='' /> : <RiCommunityLine />}
+								</CommunityImgContainer>
 								<CommunityName>{e.name}</CommunityName>
 								<div>{e.intro}</div>
 							</Contents>
