@@ -3,32 +3,33 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Notification
-from .serializers import NotificationListSerializer
+from .serializers import NotificationSerializer
 
 
 # 해당 유저의 is_activate=True 인 notification 목록
 @api_view(['GET'])
 def notification_list(request):
-    notifications = get_list_or_404(Notification, user=request.user.pk, is_activate=True)
-    serializer = NotificationListSerializer(notifications, many=True)
-    return serializer.data
+    notifications = get_list_or_404(Notification, user=request.user, is_activate=True)
+    serializer = NotificationSerializer(notifications, many=True)
+    return Response(serializer.data)
 
 
 # 해당 유저, is_activate=True && is_read=false 인 notification 갯수 반납
 @api_view(['GET'])
 def notification_unread(request):
-    notifications = get_list_or_404(Notification, user=request.user.pk, is_activate=True, is_read=False)
+    notifications = get_list_or_404(Notification, user=request.user, is_activate=True, is_read=False)
     len_notifications = len(notifications)
-    return Response({f'complete: {len_notifications}'})
+    return Response({f'response: {len_notifications}'})
 
 
 @api_view(['GET'])
 def notification_detail(request, notification_pk):
     # 알람 조회 is_read => True로 변경
     notification = get_object_or_404(Notification, pk=notification_pk)
-    serializer = NotificationListSerializer(notification)
-    serializer.save(is_read=True)
-    return serializer.data
+    notification.is_read = True
+    notification.save()
+    serializer = NotificationSerializer(notification)
+    return Response(serializer.data)
 
 
 @api_view(['DELETE'])
