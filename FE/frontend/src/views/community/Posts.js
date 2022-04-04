@@ -3,6 +3,7 @@ import { AiFillNotification } from 'react-icons/ai';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
+import dayjs from 'dayjs';
 import { apiGetBoards } from '../../api/board';
 import routes from '../../routes';
 import Table from '../../components/common/Table';
@@ -88,7 +89,7 @@ function Posts() {
 												{post.title}
 											</SLink>
 										</td>
-										<td>{post.created_at}</td>
+										<td>{dayjs(post.created_at).format('YYYY-MM-DD')}</td>
 										<td>{post.member.nickname}</td>
 									</tr>
 								))}
