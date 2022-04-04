@@ -10,6 +10,7 @@ import NavItem from './NavItem';
 import NavList from './NavList';
 import Logo from './Logo';
 import { logout } from '../../store/user';
+import Notification from './Notification';
 
 const Navigation = styled.nav`
 	height: 80px;
@@ -45,6 +46,9 @@ function Navbar() {
 		<NavList>
 			<NavItem>
 				<Logout onClick={() => dispatch(logout())}>Logout</Logout>
+			</NavItem>
+			<NavItem>
+				<Notification />
 			</NavItem>
 			<NavItem>
 				<Link to={`/profile/${id}`}>
