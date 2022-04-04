@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUserCircle } from 'react-icons/fa';
 import { apiGetCommunityMembers } from '../../api/community';
 import Table from '../../components/common/Table';
+import TextTitle from '../../components/common/TextTitle';
 
 const Main = styled.div`
 	display: flex;
@@ -13,6 +14,17 @@ const Main = styled.div`
 
 const TableContainer = styled.div`
 	height: 80%;
+
+	img {
+		width: 18px;
+		height: 18px;
+		object-fit: cover;
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
 `;
 
 function Members() {
@@ -32,6 +44,7 @@ function Members() {
 
 	return (
 		<Main>
+			<TextTitle>멤버 목록</TextTitle>
 			<TableContainer>
 				<Table>
 					<thead>
@@ -45,10 +58,16 @@ function Members() {
 						{members.map(e => (
 							<tr key={e.id}>
 								<td>
-									<FaUserCircle />
-									{e.nickname}
-									{e.is_admin && '[관리자]'}
-									{!e.is_active && '[미승인]'}
+									<Link to={`/community/${communityId}/member/${e.id}`}>
+										{e.profile_image ? (
+											<img src={e.profile_image} alt='' />
+										) : (
+											<FaUserCircle />
+										)}
+										{e.nickname}
+										{e.is_admin && '[관리자]'}
+										{!e.is_active && '[미승인]'}
+									</Link>
 								</td>
 								<td>{e.bio}</td>
 								<td>{e.created_at.split('T')[0].split('-').join('. ')}.</td>
