@@ -187,3 +187,12 @@ pip install -r requirements.txt
   - 댓글 수정 [PUT] : <int : community_pk>/minutes/<int : minute_pk>/comment/speech/<int : speech_pk>/<int : comment_pk>/update/
     - content
   - 댓글 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/comment/speech/<int : speech_pk>/<int : comment_pk>/delete/
+
+
+
+- 알람 (Notification)
+  - 알람 목록 출력 [GET] : notification/
+  - 안 읽은 알람 개수 조회 [GET] : notification/new/
+  - 알람 상세 정보 [GET] : notification/<int : notification_pk>/
+  - 알람 삭제 [DELETE] : notification/<int : notification_pk>/delete/
+
