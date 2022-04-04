@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -25,6 +25,7 @@ import EmptyBtn from '../../components/auth/EmptyBtn';
 import routes from '../../routes';
 import TextSubTitle from '../../components/common/TextSubTitle';
 import TextTitle from '../../components/common/TextTitle';
+import UpdateCommunity from '../../components/community/admin/UpdateCommunity';
 
 const Divider = styled.div`
 	display: grid;
@@ -59,6 +60,17 @@ const Main = styled.div`
 
 const TableContainer = styled.div`
 	height: 100%;
+
+	img {
+		width: 18px;
+		height: 18px;
+		object-fit: cover;
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
 `;
 
 const ResultContainer = styled.div`
@@ -103,6 +115,7 @@ function Admin() {
 	} = useForm({
 		mode: 'all',
 	});
+	const [isUpdateMode, setUpdateMode] = useState(false);
 
 	const onValidSubmit = async () => {
 		const { keyword } = getValues();
@@ -252,6 +265,12 @@ function Admin() {
 				<AdminContainer>
 					<TextTitle>커뮤니티 관리</TextTitle>
 					<AdminContents>
+						<TextSubTitle>커뮤니티 정보 변경</TextSubTitle>
+						<button type='button' onClick={() => setUpdateMode(true)}>
+							변경
+						</button>
+					</AdminContents>
+					<AdminContents>
 						<TextSubTitle>커뮤니티 삭제</TextSubTitle>
 						<button type='button' onClick={handleDeleteCommunity}>
 							삭제
@@ -274,10 +293,16 @@ function Admin() {
 						{members.map(e => (
 							<tr key={e.id}>
 								<td>
-									<FaUserCircle />
-									{e.nickname}
-									{e.is_admin && '[관리자]'}
-									{!e.is_active && '[미승인]'}
+									<Link to={`/community/${communityId}/member/${e.id}`}>
+										{e.profile_image ? (
+											<img src={e.profile_image} alt='' />
+										) : (
+											<FaUserCircle />
+										)}
+										{e.nickname}
+										{e.is_admin && '[관리자]'}
+										{!e.is_active && '[미승인]'}
+									</Link>
 								</td>
 								<td>{e.bio}</td>
 								<td>
@@ -308,6 +333,7 @@ function Admin() {
 					</tbody>
 				</Table>
 			</TableContainer>
+			{isUpdateMode && <UpdateCommunity setMode={setUpdateMode} />}
 		</Main>
 	);
 }
