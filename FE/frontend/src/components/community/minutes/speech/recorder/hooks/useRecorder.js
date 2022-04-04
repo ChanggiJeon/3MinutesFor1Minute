@@ -82,12 +82,13 @@ export default function useRecorder() {
 		saveRecording: () => saveRecording(recorderState.mediaRecorder),
 		pauseRecording: () => pauseRecording(recorderState.mediaRecorder),
 		resumeRecording: () => resumeRecording(recorderState.mediaRecorder),
-		uploadRecording: (comId, minId) => {
+		uploadRecording: async (comId, minId) => {
 			const FD = new FormData();
 			FD.append('enctype', 'multipart/form-data');
 			FD.append('title', 'title');
 			FD.append('record_file', recorderState.recordFile);
-			uploadRecording(comId, minId, FD);
+			const res = await uploadRecording(comId, minId, FD);
+			return res;
 		},
 	};
 }

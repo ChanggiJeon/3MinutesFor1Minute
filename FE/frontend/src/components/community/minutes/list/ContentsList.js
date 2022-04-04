@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import MinutesItem from './MinutesItem';
 import NumBox from './textBox/NumBox';
