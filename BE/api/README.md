@@ -168,17 +168,13 @@ pip install -r requirements.txt
 
 - 스피치 (Speech)
   - 스피치 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/create/
-    - title
-    - content
-    - summary
-    - cloud_keyword
     - record_file (테스트 X)
     - reference_file (필수 X)
   - 스피치 상세 정보 (댓글까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/
   - 스피치 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/delete/
   - 스피치 수정 (수정할 부분만) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/update/
-    - title
     - content
+    - title
     - summary
     - cloud_keyword
     - reference_file (필수 X)
@@ -191,8 +187,8 @@ pip install -r requirements.txt
 
 
 - 알람 (Notification)
-  - 알람 목록 출력 [GET] : notification/
-  - 안 읽은 알람 개수 조회 [GET] : notification/new/
-  - 알람 상세 정보 [GET] : notification/<int : notification_pk>/
-  - 알람 삭제 [DELETE] : notification/<int : notification_pk>/delete/
+  - 알람 목록 출력 [GET] : notifications/
+  - 안 읽은 알람 개수 조회 [GET] : notifications/new/
+  - 알람 상세 정보 [GET] : notifications/<int : notification_pk>/
+  - 알람 삭제 [DELETE] : notifications/<int : notification_pk>/delete/
 

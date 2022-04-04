@@ -28,10 +28,10 @@ def AI(file_path, file_name):
     upload_file(file_path, file_name)
     text = transcribe_gcs(file_name)
 
-    if len(text)<5:
+    if len(text) <= 5:
         raise Exception
 
-    elif len(text) < 300:
+    elif len(text) <= 300:
         title = ""
         summary = "전문이 300자 이하일때는 title과 summary가 제공되지 않습니다."
 
@@ -40,7 +40,7 @@ def AI(file_path, file_name):
         summary = summarize(text, ratio=0.4)
 
     cload_keyword = wordslist(text)
-    return text, title, cload_keyword, summary
+    return text, title, summary, cload_keyword
 
 
 @api_view(['GET'])
@@ -76,16 +76,16 @@ def minute_create(request, community_pk):
                     assignee = Participant(member=me, minute=minute, is_assignee=True)
                     assignee.save()
                     notification = Notification(
-                        user=member.user,
+                        user=me.user,
                         minute=minute,
-                        content=f'{me.nickname}님께서 주최하신 {member.nickname}이(가) 정상적으로 등록되었습니다.',
+                        content=f'{me.nickname}님께서 주최하신 {minute.title}이(가) 정상적으로 등록되었습니다.',
                         is_activate=True
                     )
 
                     notification.save()
 
                     notification_deadline = Notification(
-                        user=member.user,
+                        user=me.user,
                         minute=minute,
                         content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
                         is_activate=False
@@ -255,18 +255,18 @@ def speech_create(request, community_pk, minute_pk):
         file_path = str(MEDIA_ROOT) + '\\record\\'
         file_name = str(file)[7:]
 
-        try : 
-            text, title, cloud_keyword, summary = AI(file_path, file_name)
+        try: 
+            content, title, summary, cloud_keyword = AI(file_path, file_name)
 
-        except :
-            serializer.delete()
+        except:
+            speech.delete()
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # print('file: {}\n file_path: {}\n file_name:{}\n, text: {}\n title: {}\n cloud_keyword: {}\n summary: {}'.format(file, file_path, file_name, text, title, cloud_keyword, summary))
+        # print('file: {}\n file_path: {}\n file_name:{}\n content: {}\n title: {}\n summary: {}\n cloud_keyword: {}'.format(file, file_path, file_name, content, title, summary, cloud_keyword))
         serializer = SpeechSerializer(speech, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            serializer.save(content=text, title=title, cloud_keyword=cloud_keyword, summary=summary)
+            serializer.save(content=content, title=title, summary=summary, cloud_keyword=cloud_keyword)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
