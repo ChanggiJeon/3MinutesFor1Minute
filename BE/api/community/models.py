@@ -5,11 +5,11 @@ from imagekit.processors import ResizeToFill
 
 
 def image_path(instance, filename):
-    return f'community_{instance.pk}/{filename}'
+    return f'community/community_{instance.pk}/{filename}'
 
 
 def profile_image_path(instance, filename):
-    return f'member_{instance.pk}/{filename}'
+    return f'member/member_{instance.pk}/{filename}'
 
 
 class Community(models.Model):
