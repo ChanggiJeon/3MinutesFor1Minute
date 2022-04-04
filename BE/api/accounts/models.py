@@ -5,7 +5,7 @@ from imagekit.processors import ResizeToFill
 
 
 def profile_image_path(instance, filename):
-    return f'user_{instance.pk}/{filename}'
+    return f'user/user_{instance.pk}/{filename}'
 
 
 class User(AbstractUser):
