@@ -168,17 +168,13 @@ pip install -r requirements.txt
 
 - 스피치 (Speech)
   - 스피치 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/create/
-    - title
-    - content
-    - summary
-    - cloud_keyword
     - record_file (테스트 X)
     - reference_file (필수 X)
   - 스피치 상세 정보 (댓글까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/
   - 스피치 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/delete/
   - 스피치 수정 (수정할 부분만) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/update/
-    - title
     - content
+    - title
     - summary
     - cloud_keyword
     - reference_file (필수 X)
