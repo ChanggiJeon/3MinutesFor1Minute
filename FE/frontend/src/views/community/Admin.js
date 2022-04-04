@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -65,6 +65,11 @@ const TableContainer = styled.div`
 		width: 18px;
 		height: 18px;
 		object-fit: cover;
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
 	}
 `;
 
@@ -288,14 +293,16 @@ function Admin() {
 						{members.map(e => (
 							<tr key={e.id}>
 								<td>
-									{e.profile_image ? (
-										<img src={e.profile_image} alt='' />
-									) : (
-										<FaUserCircle />
-									)}
-									{e.nickname}
-									{e.is_admin && '[관리자]'}
-									{!e.is_active && '[미승인]'}
+									<Link to={`/community/${communityId}/member/${e.id}`}>
+										{e.profile_image ? (
+											<img src={e.profile_image} alt='' />
+										) : (
+											<FaUserCircle />
+										)}
+										{e.nickname}
+										{e.is_admin && '[관리자]'}
+										{!e.is_active && '[미승인]'}
+									</Link>
 								</td>
 								<td>{e.bio}</td>
 								<td>

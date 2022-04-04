@@ -43,6 +43,9 @@ function Profile() {
 	const [updateMode, setUpdateMode] = useState('');
 
 	useEffect(() => {
+		if (userId === 0) {
+			navigate(routes.main);
+		}
 		if (id && userId && userId !== parseInt(id, 10)) {
 			navigate(routes.main);
 		}
