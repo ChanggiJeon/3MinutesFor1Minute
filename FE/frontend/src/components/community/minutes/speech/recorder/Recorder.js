@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import routes from '../../../../../routes';
 import GrayLgButton from '../../../../common/GrayLgButton';
 import RecorderImg from '../RecorderImg';
 import RecordsWave from '../RecordsWave';
@@ -14,6 +16,7 @@ import TextSubTitle from '../../../../common/TextSubTitle';
 import DivLine from '../../../main/DivLine';
 import RecordPlayer from './RecordPlayer';
 import useRecorder from './hooks/useRecorder';
+import { fetchSpeechByAI, finishLoading } from '../../../../../store/speech';
 
 const StartBtn = styled(GrayLgButton)`
 	${props => props.status === 'idle' && `display: inline-block;`}
@@ -42,6 +45,7 @@ const RecContainer = styled(Container)`
 // 레코드 기능 UI (기능 관련 내용은 @/components/community/minutes/speech/recorder의 handlers와 hooks 참조)
 function Recorder() {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const { communityId, minutesId } = useParams();
 	const [recordStatus, setRecordStatus] = useState('idle');
 	const { recorderState, ...handlers } = useRecorder();
@@ -70,11 +74,16 @@ function Recorder() {
 				setRecordStatus('idle');
 		}
 	}, [status]);
-	const upload = () => {
-		navigate(`/community/${communityId}/minutes/${minutesId}/loading`);
-		uploadRecording(communityId, minutesId);
+	const upload = async () => {
+		navigate(
+			`${routes.community}/${communityId}/minutes/${minutesId}/speechCreate`
+		);
+		const result = await uploadRecording(communityId, minutesId);
+		dispatch(fetchSpeechByAI(result));
+		setTimeout(() => {
+			dispatch(finishLoading());
+		}, 4 * 1000);
 	};
-
 	return (
 		<RecContainer>
 			<TextSubTitle>스피치 생성(녹음)</TextSubTitle>

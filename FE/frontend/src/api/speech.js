@@ -12,9 +12,9 @@ export default async function createSpeech(comId, minId, data) {
 				'Content-Type': 'multipart/form-data',
 			},
 		});
-		console.log('response', response);
 		return response.data;
 	} catch (err) {
+		console.log(err);
 		return err.response.data;
 	}
 }

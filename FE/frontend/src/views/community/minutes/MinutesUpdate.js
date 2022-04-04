@@ -88,7 +88,6 @@ function MinutesUpdate() {
 	});
 	// form 제출 로직
 	function onValidSubmit(data) {
-		console.log('data', data);
 		const formData = new FormData();
 		if (data.upload[0]) {
 			formData.append(`reference_file`, data.upload[0]);
@@ -129,7 +128,7 @@ function MinutesUpdate() {
 				수정 취소
 			</CancelBtn>
 			<DivLine />
-			{/* 폼바디 */}
+			{/* Form Body */}
 			<ContentBox>
 				<CreateForm id='createForm' onSubmit={handleSubmit(onValidSubmit)}>
 					{/* 제목 */}
