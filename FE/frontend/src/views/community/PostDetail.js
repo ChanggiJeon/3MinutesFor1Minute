@@ -56,8 +56,9 @@ const CForm = styled(NForm)`
 
 function PostDetail() {
 	const { communityId, postId } = useParams();
-  // const { userId } = useSelector((state) => state.user.id)
-  const { username } = useSelector((state) => state.user)
+
+  const { nickname } = useSelector((state) => state.member)
+  const { username, id } = useSelector((state) => state.user)
 	const [post, setPost] = useState({});
 	const [targetComment, setTargetComment] = useState({});
 	const [isPostUpdating, setPostUpdating] = useState(false);
@@ -278,7 +279,7 @@ function PostDetail() {
 				<p>첨부파일 {post?.upload}</p>
 
 				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
-				{ true ? (
+				{ post?.member?.nickname === nickname ? (
 					<Btns>
 						<SmallBtn type='button' onClick={() => setPostUpdating(true)}>
 							수정
@@ -322,7 +323,7 @@ function PostDetail() {
 								<>
 									{comment?.member?.nickname} - {comment?.content}
 									{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
-									{ true ? (
+									{ comment?.member?.nickname === nickname ? (
 										<>
 											<SmallBtn
 												type='button'
