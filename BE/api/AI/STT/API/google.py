@@ -4,7 +4,8 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from hanspell import spell_checker
 import re
 import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'C:/Users/multicampus/Desktop/S06P22D202/BE/api/AI/STT/API/festive-vim-345604-8faec2e2d112.json'
+from config.settings import BASE_DIR
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR) + "\AI\STT\API\\festive-vim-345604-8faec2e2d112.json"
 
 
 def upload_file(file_path, file_name):
@@ -24,9 +25,9 @@ def transcribe_gcs(file_name):
     client = speech.SpeechClient()
     audio = speech.RecognitionAudio(uri=gcs_uri)
     config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        encoding=speech.RecognitionConfig.AudioEncoding.WEBM_OPUS,
         sample_rate_hertz=48000,
-        audio_channel_count = 2,
+        audio_channel_count = 1,
         language_code="ko",
     )
 
@@ -38,7 +39,7 @@ def transcribe_gcs(file_name):
     for result in response.results:
         text = result.alternatives[0].transcript
         STT_text += (text + "\n")
-    
+    print(STT_text)
     text = STT_text.replace('\n',' ')
     text = ' '.join(text.split())
     p = re.compile('\S\b*다\s')
@@ -53,16 +54,14 @@ def transcribe_gcs(file_name):
             input_list.append(i)  
     
     result = spell_checker.check(input_list)
-
     fixed_text = ''
+
     for i in result:
         fixed_text += i.checked
-
     return fixed_text
-
 
 # if __name__ == "__main__":
 
 # upload_file("C:/Users/multicampus/Desktop/S06P22D202/BE/api/", "media/test/article.wav")
-# text = transcribe_gcs("article.wav")
+# text = transcribe_gcs("1648968825136.wav")
 # print(text)
