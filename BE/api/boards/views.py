@@ -36,6 +36,7 @@ def board_create(request, community_pk):
             if 'reference_file' in key:
                 new_file = BoardFile(board=board, reference_file=value)
                 new_file.save()
+        serializer = BoardSerializer(board)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
