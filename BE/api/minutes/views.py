@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Minute, Participant, Speech, SpeechComment, MinuteFile, SpeechFile
 from community.models import Community, Member
+from notification.models import Notification
 from .serializers import (
     MinuteListSerializer,
     MinuteSerializer,
@@ -69,6 +70,24 @@ def minute_create(request, community_pk):
                     member = get_object_or_404(Member, pk=member_id, community=community)
                     participant = Participant(member=member, minute=minute)
                     participant.save()
+                    notification = Notification(
+                        member=member,
+                        minute=minute,
+                        content=f'{me.nickname}님께서 {member.nickname}을(를) {minute.title}의 참여자로 등록하였습니다.',
+                        is_activate=True
+                    )
+
+                    notification.save()
+
+                    notification_deadline = Notification(
+                        member=member,
+                        minute=minute,
+                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                        is_activate=False
+                    )
+
+                    notification_deadline.save()
+
             for key, value in request.data.items():
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
@@ -112,6 +131,42 @@ def minute_update(request, community_pk, minute_pk):
 
     elif me == assignee.member or me.is_admin:
         serializer = MinuteSerializer(minute, data=request.data)
+        members = get_list_or_404(Member, minute=minute)
+
+        if request.data['is_closed'] == True:
+            for member in members:
+                notification = Notification(
+                    member=member,
+                    minute=minute,
+                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                    is_activate=True
+                )
+
+                notification.save()
+
+        elif request.data['deadline'] != minute.deadline:
+            notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
+
+            if not notifications:
+                for member in members:
+                    notification_deadline = Notification(
+                        member=member,
+                        minute=minute,
+                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                        is_activate=False
+                    )
+
+                    notification_deadline.save()
+
+            for member in members:
+                notification_alarm = Notification(
+                    member=member,
+                    minute=minute,
+                    content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
+                    is_activate=False
+                )
+
+                notification_alarm.save()
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
