@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Minute, Participant, Speech, SpeechComment, MinuteFile, SpeechFile
 from community.models import Community, Member
-from notification.models import Notification
+from notifications.models import Notification
 from .serializers import (
     MinuteListSerializer,
     MinuteSerializer,
@@ -27,8 +27,18 @@ from config.settings import MEDIA_ROOT
 def AI(file_path, file_name):
     upload_file(file_path, file_name)
     text = transcribe_gcs(file_name)
-    title = summary_def(text)
-    summary = summarize(text, ratio=0.4)
+
+    if len(text)<5:
+        raise Exception
+
+    elif len(text) < 300:
+        title = ""
+        summary = "전문이 300자 이하일때는 title과 summary가 제공되지 않습니다."
+
+    else:
+        title = summary_def(text)
+        summary = summarize(text, ratio=0.4)
+
     cload_keyword = wordslist(text)
     return text, title, cload_keyword, summary
 
@@ -65,13 +75,30 @@ def minute_create(request, community_pk):
                 if member_id == me.id:
                     assignee = Participant(member=me, minute=minute, is_assignee=True)
                     assignee.save()
+                    notification = Notification(
+                        user=member.user,
+                        minute=minute,
+                        content=f'{me.nickname}님께서 주최하신 {member.nickname}이(가) 정상적으로 등록되었습니다.',
+                        is_activate=True
+                    )
+
+                    notification.save()
+
+                    notification_deadline = Notification(
+                        user=member.user,
+                        minute=minute,
+                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                        is_activate=False
+                    )
+
+                    notification_deadline.save()
 
                 else:
                     member = get_object_or_404(Member, pk=member_id, community=community)
                     participant = Participant(member=member, minute=minute)
                     participant.save()
                     notification = Notification(
-                        member=member,
+                        user=member.user,
                         minute=minute,
                         content=f'{me.nickname}님께서 {member.nickname}을(를) {minute.title}의 참여자로 등록하였습니다.',
                         is_activate=True
@@ -80,7 +107,7 @@ def minute_create(request, community_pk):
                     notification.save()
 
                     notification_deadline = Notification(
-                        member=member,
+                        user=member.user,
                         minute=minute,
                         content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
                         is_activate=False
@@ -136,7 +163,7 @@ def minute_update(request, community_pk, minute_pk):
         if request.data['is_closed'] == True:
             for member in members:
                 notification = Notification(
-                    member=member,
+                    user=member.user,
                     minute=minute,
                     content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
                     is_activate=True
@@ -150,7 +177,7 @@ def minute_update(request, community_pk, minute_pk):
             if not notifications:
                 for member in members:
                     notification_deadline = Notification(
-                        member=member,
+                        user=member.user,
                         minute=minute,
                         content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
                         is_activate=False
@@ -160,7 +187,7 @@ def minute_update(request, community_pk, minute_pk):
 
             for member in members:
                 notification_alarm = Notification(
-                    member=member,
+                    user=member.user,
                     minute=minute,
                     content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
                     is_activate=False
@@ -171,10 +198,13 @@ def minute_update(request, community_pk, minute_pk):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
+
             if minute.reference_file_set.all():
                 past_files = minute.reference_file_set.all()
+
                 for past_file in past_files:
                     past_file.delete()
+
             for key, value in request.data.items():
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
@@ -182,22 +212,23 @@ def minute_update(request, community_pk, minute_pk):
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-import mimetypes
 
 from config.settings import MEDIA_ROOT
 from django.http import HttpResponse
-from django.core.files.storage import FileSystemStorage
+import mimetypes
+
 
 @api_view(['GET'])
-def minute_file_download(request,community_pk,minute_pk,reference_file_pk):
+def minute_file_download(request, community_pk, minute_pk, reference_file_pk):
     reference_file = get_object_or_404(MinuteFile, pk=reference_file_pk)
     file_name = str(reference_file.reference_file)[7:]
-    file_path = str(MEDIA_ROOT) + '/' +str(reference_file.reference_file)
+    file_path = str(MEDIA_ROOT) + '/' + str(reference_file.reference_file)
     fl = open(file_path, 'rb')
     mime_types, _ = mimetypes.guess_type(file_path)
     response = HttpResponse(fl, content_type=mime_types)
     response['Content-Disposition'] = "attachment; filename=%s" % file_name
     return response
+
 
 @swagger_auto_schema(method='POST', request_body=CustomSpeechSerializer)
 @api_view(['POST'])
@@ -214,16 +245,26 @@ def speech_create(request, community_pk, minute_pk):
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
         speech = get_object_or_404(Speech, pk=serializer.data['id'])
+
         for key, value in request.data.items():
             if 'reference_file' in key:
                 new_file = SpeechFile(speech=speech, reference_file=value)
                 new_file.save()
+    
         file = speech.record_file
         file_path = str(MEDIA_ROOT) + '\\record\\'
         file_name = str(file)[7:]
-        text, title, cloud_keyword, summary = AI(file_path, file_name)
+
+        try : 
+            text, title, cloud_keyword, summary = AI(file_path, file_name)
+
+        except :
+            serializer.delete()
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         # print('file: {}\n file_path: {}\n file_name:{}\n, text: {}\n title: {}\n cloud_keyword: {}\n summary: {}'.format(file, file_path, file_name, text, title, cloud_keyword, summary))
         serializer = SpeechSerializer(speech, data=request.data)
+
         if serializer.is_valid(raise_exception=True):
             serializer.save(content=text, title=title, cloud_keyword=cloud_keyword, summary=summary)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -273,27 +314,32 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             speech = get_object_or_404(Speech, pk=serializer.data['id'])
+
             if speech.reference_file_set.all():
                 past_files = speech.reference_file_set.all()
+
                 for past_file in past_files:
                     past_file.delete()
+
             for key, value in request.data.items():
                 if 'reference_file' in key:
                     new_file = Speech(speech=speech, reference_file=value)
                     new_file.save()
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
-    
+
+
 @api_view(['GET'])
-def speech_file_download(request,community_pk, minute_pk,speech_pk,reference_file_pk):
+def speech_file_download(request, community_pk, minute_pk, speech_pk, reference_file_pk):
     reference_file = get_object_or_404(SpeechFile, pk=reference_file_pk)
     file_name = str(reference_file.reference_file)[7:]
-    file_path = str(MEDIA_ROOT) + '/' +str(reference_file.reference_file)
+    file_path = str(MEDIA_ROOT) + '/' + str(reference_file.reference_file)
     fl = open(file_path, 'rb')
     mime_types, _ = mimetypes.guess_type(file_path)
     response = HttpResponse(fl, content_type=mime_types)
     response['Content-Disposition'] = "attachment; filename=%s" % file_name
     return response
+
 
 @swagger_auto_schema(method='POST', request_body=SpeechCommentSerializer)
 @api_view(['POST'])
