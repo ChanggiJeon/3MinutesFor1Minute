@@ -115,9 +115,34 @@ def minute_update(request, community_pk, minute_pk):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            minute = get_object_or_404(Minute, pk=serializer.data['id'])
+            if minute.reference_file_set.all():
+                past_files = minute.reference_file_set.all()
+                for past_file in past_files:
+                    past_file.delete()
+            for key, value in request.data.items():
+                if 'reference_file' in key:
+                    new_file = MinuteFile(minute=minute, reference_file=value)
+                    new_file.save()
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+import mimetypes
+
+from config.settings import MEDIA_ROOT
+from django.http import HttpResponse
+from django.core.files.storage import FileSystemStorage
+
+@api_view(['GET'])
+def minute_file_download(request,community_pk,minute_pk,reference_file_pk):
+    reference_file = get_object_or_404(MinuteFile, pk=reference_file_pk)
+    file_name = str(reference_file.reference_file)[7:]
+    file_path = str(MEDIA_ROOT) + '/' +str(reference_file.reference_file)
+    fl = open(file_path, 'rb')
+    mime_types, _ = mimetypes.guess_type(file_path)
+    response = HttpResponse(fl, content_type=mime_types)
+    response['Content-Disposition'] = "attachment; filename=%s" % file_name
+    return response
 
 @swagger_auto_schema(method='POST', request_body=CustomSpeechSerializer)
 @api_view(['POST'])
@@ -192,9 +217,28 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            speech = get_object_or_404(Speech, pk=serializer.data['id'])
+            if speech.reference_file_set.all():
+                past_files = speech.reference_file_set.all()
+                for past_file in past_files:
+                    past_file.delete()
+            for key, value in request.data.items():
+                if 'reference_file' in key:
+                    new_file = Speech(speech=speech, reference_file=value)
+                    new_file.save()
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
-
+    
+@api_view(['GET'])
+def speech_file_download(request,community_pk, minute_pk,speech_pk,reference_file_pk):
+    reference_file = get_object_or_404(SpeechFile, pk=reference_file_pk)
+    file_name = str(reference_file.reference_file)[7:]
+    file_path = str(MEDIA_ROOT) + '/' +str(reference_file.reference_file)
+    fl = open(file_path, 'rb')
+    mime_types, _ = mimetypes.guess_type(file_path)
+    response = HttpResponse(fl, content_type=mime_types)
+    response['Content-Disposition'] = "attachment; filename=%s" % file_name
+    return response
 
 @swagger_auto_schema(method='POST', request_body=SpeechCommentSerializer)
 @api_view(['POST'])
