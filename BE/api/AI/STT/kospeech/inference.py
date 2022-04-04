@@ -46,8 +46,8 @@ def getText(audio_path):
     opt = parser.parse_args()
     feature = parse_audio(audio_path, del_silence=True)
     input_length = torch.LongTensor([len(feature)])
-    vocab = KsponSpeechVocabulary('C:/Users/multicampus/Desktop/kospeech/data/vocab/aihub_character_vocabs.csv')
-    model = torch.load('C:/Users/multicampus/Desktop/models/model.pt', map_location=lambda storage, loc: storage).to('cpu')
+    vocab = KsponSpeechVocabulary('C:/Users/multicampus/Desktop/aihub_character_vocabs.csv')
+    model = torch.load('C:/Users/multicampus/Desktop/model.pt', map_location=lambda storage, loc: storage).to('cpu')
 
     if isinstance(model, nn.DataParallel):
         model = model.module
@@ -81,5 +81,5 @@ def getText(audio_path):
 
     return fixed_text
 
-# text = getText("C:/Users/multicampus/Desktop/models/test.wav")
-# print(text)
+text = getText("C:/Users/multicampus/Desktop/bbc.wav")
+print(text)
