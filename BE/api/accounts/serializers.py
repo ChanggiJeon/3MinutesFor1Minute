@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(min_length=5, max_length=16)
     password = serializers.CharField(min_length=8, max_length=20, write_only=True)
     password_confirm = password
-    email = serializers.CharField()
+    email = serializers.EmailField()
     name = serializers.CharField(max_length=16, required=False)
 
     def validate(self, data):

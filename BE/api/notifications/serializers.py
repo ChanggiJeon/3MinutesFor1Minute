@@ -5,9 +5,9 @@ from minutes.serializers import MinuteSerializer
 
 
 class NotificationListSerializer(serializers.ModelSerializer):
-    deadline = serializers.SerializerMethodField('deadline_detect')
+    deadline = serializers.SerializerMethodField('find_deadline')
 
-    def deadline_detect(self, minute):
+    def find_deadline(self, minute):
         deadline = Minute.objects.get(minute=minute).deadline
         serializer = MinuteSerializer(deadline, many=True)
         return serializer.data

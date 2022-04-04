@@ -14,17 +14,17 @@ def notification_list(request):
     return serializer.data
 
 
-# 해당 유저, is_activate=True && is_read=false 인 notification 갯수 반납.
+# 해당 유저, is_activate=True && is_read=false 인 notification 갯수 반납
 @api_view(['GET'])
 def notification_unread(request):
     notifications = get_list_or_404(Notification, user=request.user.pk, is_activate=True, is_read=False)
     len_notifications = len(notifications)
-    return Response({'complete: {len_notifications}'})
+    return Response({f'complete: {len_notifications}'})
 
 
 @api_view(['GET'])
 def notification_detail(request, notification_pk):
-    #알람 조회 is_read => True로 변경.
+    # 알람 조회 is_read => True로 변경
     notification = get_object_or_404(Notification, pk=notification_pk)
     serializer = NotificationListSerializer(notification)
     serializer.save(is_read=True)
@@ -33,7 +33,7 @@ def notification_detail(request, notification_pk):
 
 @api_view(['DELETE'])
 def notification_delete(request, notification_pk):
-    #알람 삭제
+    # 알람 삭제
     notification = get_object_or_404(Notification, pk=notification_pk)
     notification.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
