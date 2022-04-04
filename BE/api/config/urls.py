@@ -26,6 +26,7 @@ urlpatterns = [
    path('api/<int:community_pk>/boards/', include('boards.urls')),
    path('api/community/', include('community.urls')),
    path('api/<int:community_pk>/minutes/', include('minutes.urls')),
+   path('api/notification/', include('notification.urls')),
 ]
 
 if settings.DEBUG:
