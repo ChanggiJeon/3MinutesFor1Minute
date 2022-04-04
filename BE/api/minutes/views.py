@@ -18,7 +18,6 @@ from community.serializers import MemberSerializer
 import sys
 sys.path.append('.')
 from AI.STT.API.google import upload_file, transcribe_gcs
-from AI.Summarization.summarize import summarize
 from AI.Summarization.summarize import summary as summary_def
 from AI.Wordslist.wordslist import wordslist
 from config.settings import MEDIA_ROOT
@@ -32,15 +31,13 @@ def AI(file_path, file_name):
         raise Exception
 
     elif len(text) <= 300:
-        title = ""
         summary = "전문이 300자 이하일때는 title과 summary가 제공되지 않습니다."
 
     else:
-        title = summary_def(text)
-        summary = summarize(text, ratio=0.4)
+        summary = summary_def(text)
 
     cload_keyword = wordslist(text)
-    return text, title, summary, cload_keyword
+    return text, summary, cload_keyword
 
 
 @api_view(['GET'])
@@ -259,17 +256,16 @@ def speech_create(request, community_pk, minute_pk):
         file_name = str(file)[7:]
 
         try: 
-            content, title, summary, cloud_keyword = AI(file_path, file_name)
+            voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
         except:
             speech.delete()
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # print('file: {}\n file_path: {}\n file_name:{}\n content: {}\n title: {}\n summary: {}\n cloud_keyword: {}'.format(file, file_path, file_name, content, title, summary, cloud_keyword))
         serializer = SpeechSerializer(speech, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            serializer.save(content=content, title=title, summary=summary, cloud_keyword=cloud_keyword)
+            serializer.save(voice_text=voice_text, summary=summary, cloud_keyword=cloud_keyword)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
