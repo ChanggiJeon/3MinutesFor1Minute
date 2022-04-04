@@ -58,18 +58,15 @@ pip install -r requirements.txt
     - profile_image (필수 X)
   - 아이디 중복 확인 [GET] : accounts/uniquecheck/username/<str : username>/
   - 이메일 중복 확인 [GET] : accounts/uniquecheck/email/<str : email>/
-  - 회원 검증 [POST] : accounts/authenticate/
-    - usernam
-    - password
   - 회원 탈퇴 [DELETE] : accounts/delete/
     - username
     - password
   - 회원 정보 수정 [PUT] : accounts/update/
     - username
     - password
-    - new_password
-    - new_password_confirm
-    - profile_image (필수 X)
+    - new_password (비밀번호 변경 시에만, 필수 X)
+    - new_password_confirm (비밀번호 변경 시에만, 필수 X)
+    - profile_image (이미지 변경 시에만, 필수 X)
   - 프로필 [GET] : accounts/profile/
   - 아이디 찾기 [GET] : accounts/find/username/<str : email>/<str : name>/
   - 비밀번호 찾기 [GET] : accounts/find/password/<str : username>/<str : email>/<str : name>/
@@ -127,9 +124,10 @@ pip install -r requirements.txt
     - title
     - content
     - is_notice (기본 False)
-    - upload (필수 X)
+    - reference_file1, reference_file2, ... (필수 X)
   - 글 상세 정보 (댓글까지 출력) [GET] : <int : community_pk>/boards/<int : board_pk>/
   - 글 삭제 [DELETE] : <int : community_pk>/boards/<int : board_pk>/delete/
+  - 게시글 파일 다운로드 [GET] : <int : community_pk>/boards/<int : board_pk>/download/<int : reference_file_pk>/
   - 글 수정 (수정할 부분만) [PUT] : <int : community_pk>/boards/<int : board_pk>/update/
     - title
     - content
@@ -156,13 +154,14 @@ pip install -r requirements.txt
     - member_ids = [ids, ..., ] (회의에 참석할 멤버들 id를 리스트로 전송)
   - 회의록 상세 정보 (스피치까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/
   - 회의록 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/delete/
-  - 회의록 수정 (수정할 부분만, 회의에 참석한 멤버 수정 불가) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/update/
+  - 회의록 수정 (수정할 부분만, 회의 주최자만 수정 가능) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/update/
     - title
     - content
     - conclusion
     - is_closed (기본 False)
     - deadline
     - reference_file (필수 X)
+  - 회의록 파일 다운로드 [GET] : <int : community_pk>/minutes/<int : minute_pk>/download/<int : reference_file_pk>/
 
 
 
@@ -178,6 +177,7 @@ pip install -r requirements.txt
     - summary
     - cloud_keyword
     - reference_file (필수 X)
+  - 스피치 파일 다운로드 :  <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/download/<int : reference_file_pk>/
   - 댓글 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/comment/create/
     - content
   - 댓글 수정 [PUT] : <int : community_pk>/minutes/<int : minute_pk>/comment/speech/<int : speech_pk>/<int : comment_pk>/update/
@@ -191,4 +191,3 @@ pip install -r requirements.txt
   - 안 읽은 알람 개수 조회 [GET] : notifications/new/
   - 알람 상세 정보 [GET] : notifications/<int : notification_pk>/
   - 알람 삭제 [DELETE] : notifications/<int : notification_pk>/delete/
-
