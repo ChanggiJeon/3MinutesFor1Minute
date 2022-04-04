@@ -103,8 +103,6 @@ def update(request):
                 return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
             me.set_password(new_password)
             me.save()
-
-
         return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
