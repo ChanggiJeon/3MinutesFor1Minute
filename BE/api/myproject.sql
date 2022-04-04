@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.accounts_user:~1 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.accounts_user:~0 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `accounts_user` DISABLE KEYS */;
 INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `name`, `profile_image`) VALUES
 	(1, 'pbkdf2_sha256$320000$40beOKStGp2V33a2syH7Rv$lptBab2FTKRKMcHlMEK/fkFk5ZiCNAKPVwX0Drhmo3A=', NULL, 0, 'ssafy', '', '', 'ssafy@naver.com', 0, 1, '2022-04-03 21:16:20.665478', 'test1', '');
@@ -111,9 +111,9 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.auth_permission:~68 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.auth_permission:~72 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
 INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
 	(1, 'Can add user', 1, 'add_user'),
@@ -183,7 +183,11 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 	(65, 'Can add session', 17, 'add_session'),
 	(66, 'Can change session', 17, 'change_session'),
 	(67, 'Can delete session', 17, 'delete_session'),
-	(68, 'Can view session', 17, 'view_session');
+	(68, 'Can view session', 17, 'view_session'),
+	(69, 'Can add notification', 18, 'add_notification'),
+	(70, 'Can change notification', 18, 'change_notification'),
+	(71, 'Can delete notification', 18, 'delete_notification'),
+	(72, 'Can view notification', 18, 'view_notification');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 
 -- 테이블 myproject.boards_board 구조 내보내기
@@ -306,9 +310,9 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.django_content_type:~17 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.django_content_type:~18 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
 INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(1, 'accounts', 'user'),
@@ -327,6 +331,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(9, 'minutes', 'speech'),
 	(11, 'minutes', 'speechcomment'),
 	(10, 'minutes', 'speechfile'),
+	(18, 'notifications', 'notification'),
 	(17, 'sessions', 'session');
 /*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
 
@@ -337,9 +342,9 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.django_migrations:~22 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.django_migrations:~23 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(1, 'contenttypes', '0001_initial', '2022-04-03 21:15:55.335883'),
@@ -363,7 +368,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(19, 'community', '0001_initial', '2022-04-03 21:15:56.324899'),
 	(20, 'boards', '0001_initial', '2022-04-03 21:15:56.605005'),
 	(21, 'minutes', '0001_initial', '2022-04-03 21:15:57.147054'),
-	(22, 'sessions', '0001_initial', '2022-04-03 21:15:57.195811');
+	(22, 'sessions', '0001_initial', '2022-04-03 21:15:57.195811'),
+	(23, 'notifications', '0001_initial', '2022-04-04 12:14:54.582582');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- 테이블 myproject.django_session 구조 내보내기
@@ -485,6 +491,25 @@ CREATE TABLE IF NOT EXISTS `minutes_speechfile` (
 -- 테이블 데이터 myproject.minutes_speechfile:~0 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `minutes_speechfile` DISABLE KEYS */;
 /*!40000 ALTER TABLE `minutes_speechfile` ENABLE KEYS */;
+
+-- 테이블 myproject.notifications_notification 구조 내보내기
+CREATE TABLE IF NOT EXISTS `notifications_notification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `content` longtext NOT NULL,
+  `is_activate` tinyint(1) NOT NULL,
+  `is_read` tinyint(1) NOT NULL,
+  `minute_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `notifications_notifi_minute_id_de6a78c2_fk_minutes_m` (`minute_id`),
+  KEY `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` (`user_id`),
+  CONSTRAINT `notifications_notifi_minute_id_de6a78c2_fk_minutes_m` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`),
+  CONSTRAINT `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 테이블 데이터 myproject.notifications_notification:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `notifications_notification` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notifications_notification` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
