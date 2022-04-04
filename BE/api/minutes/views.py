@@ -116,6 +116,7 @@ def minute_create(request, community_pk):
                     notification_deadline.save()
 
             for key, value in request.data.items():
+                print(3, key)
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
                     new_file.save()
@@ -158,49 +159,50 @@ def minute_update(request, community_pk, minute_pk):
 
     elif me == assignee.member or me.is_admin:
         serializer = MinuteSerializer(minute, data=request.data)
-        members = get_list_or_404(Member, minute=minute)
+        participants = get_list_or_404(Participant, minute=minute)
 
-        if request.data['is_closed'] == True:
-            for member in members:
-                notification = Notification(
-                    user=member.user,
-                    minute=minute,
-                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
-                    is_activate=True
-                )
-
-                notification.save()
-
-        elif request.data['deadline'] != minute.deadline:
-            notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
-
-            if not notifications:
-                for member in members:
-                    notification_deadline = Notification(
-                        user=member.user,
+        if 'is_closed' in request.data:
+            if 'is_closed' in request.data['is_closed'] == True:
+                for participant in participants:
+                    notification = Notification(
+                        user=participant.member.user,
                         minute=minute,
-                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                        content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                        is_activate=True
+                    )
+
+                    notification.save()
+
+            elif request.data['deadline'] != minute.deadline:
+                notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
+
+                if not notifications:
+                    for participant in participants:
+                        notification_deadline = Notification(
+                            user=participant.member.user,
+                            minute=minute,
+                            content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                            is_activate=False
+                        )
+
+                        notification_deadline.save()
+
+                for participant in participants:
+                    notification_alarm = Notification(
+                        user=participant.member.user,
+                        minute=minute,
+                        content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
                         is_activate=False
                     )
 
-                    notification_deadline.save()
-
-            for member in members:
-                notification_alarm = Notification(
-                    user=member.user,
-                    minute=minute,
-                    content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
-                    is_activate=False
-                )
-
-                notification_alarm.save()
+                    notification_alarm.save()
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
 
-            if minute.reference_file_set.all():
-                past_files = minute.reference_file_set.all()
+            if minute.minutefile_set.all():
+                past_files = minute.minutefile_set.all()
 
                 for past_file in past_files:
                     past_file.delete()
@@ -209,6 +211,7 @@ def minute_update(request, community_pk, minute_pk):
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
                     new_file.save()
+            serializer = MinuteSerializer(minute)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
