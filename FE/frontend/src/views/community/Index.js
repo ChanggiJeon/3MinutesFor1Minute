@@ -2,9 +2,13 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { apiGetMyMemberProfile } from '../../api/community';
+import {
+	apiGetCommunityInfo,
+	apiGetMyMemberProfile,
+} from '../../api/community';
 import Sidebar from '../../components/nav/Sidebar';
 import routes from '../../routes';
+import { getCommunityData } from '../../store/community';
 import { getMemberData } from '../../store/member';
 
 const Container = styled.div`
@@ -27,8 +31,21 @@ function ComIndex() {
 	const dispatch = useDispatch();
 
 	const getMyMember = async () => {
-		const response = await apiGetMyMemberProfile({ communityId });
-		dispatch(getMemberData(response.data));
+		try {
+			const response = await apiGetMyMemberProfile({ communityId });
+			dispatch(getMemberData(response.data));
+		} catch (e) {
+			navigate(routes.main);
+		}
+	};
+
+	const getCommunityInfo = async () => {
+		try {
+			const response = await apiGetCommunityInfo({ communityId });
+			dispatch(getCommunityData(response.data));
+		} catch (e) {
+			navigate(routes.main);
+		}
 	};
 
 	useEffect(() => {
@@ -36,6 +53,7 @@ function ComIndex() {
 			navigate(routes.main);
 		}
 		if (isLoggedIn) {
+			getCommunityInfo();
 			getMyMember();
 		}
 	}, [isLoggedIn, communityId]);
