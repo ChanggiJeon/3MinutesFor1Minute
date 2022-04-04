@@ -9,7 +9,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participant
         fields = '__all__'
-        read_only_fields = ('minute', 'is_assignee', )
+        read_only_fields = ('member', 'minute', 'is_assignee', )
 
 
 class SpeechCommentSerializer(serializers.ModelSerializer):
@@ -80,9 +80,11 @@ class MinuteSerializer(serializers.ModelSerializer):
         return serializer.data
 
     class MinuteFileSerializer(serializers.ModelSerializer):
+
         class Meta:
             model = MinuteFile
             fields = '__all__'
+            read_only_fields = ('minute', )
 
     minutefile_set = MinuteFileSerializer(many=True, read_only=True)
 
