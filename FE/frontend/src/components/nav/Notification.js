@@ -46,9 +46,9 @@ const NotificationContent = styled.div`
 	padding: 10px;
 	box-sizing: border-box;
 
-	.checked {
-		background-color: ${props => `${props.theme.footerColor}33`};
-		color: 'grey';
+	&.checked {
+		background-color: ${props => props.theme.footerColor};
+		color: grey;
 	}
 `;
 
@@ -125,19 +125,17 @@ function Notification() {
 	};
 
 	const readNotification = async target => {
-		if (!target.is_read) {
-			try {
-				const {
-					data: { community_id: communityId, minute_id: minutesId },
-				} = await apiGetNotificationDetail({ notificationId: target.id });
+		try {
+			const {
+				data: { community_id: communityId, minute_id: minutesId },
+			} = await apiGetNotificationDetail({ notificationId: target.id });
 
-				getUnreadNotificationsCount();
-				getNotifications();
+			getUnreadNotificationsCount();
+			getNotifications();
 
-				navigate(`/community/${communityId}/minutes/${minutesId}`);
-			} catch (e) {
-				// error
-			}
+			navigate(`/community/${communityId}/minutes/${minutesId}`);
+		} catch (e) {
+			// error
 		}
 	};
 
