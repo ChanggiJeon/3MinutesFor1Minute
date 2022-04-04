@@ -24,9 +24,7 @@ def make_random_code():
 
 @api_view(['GET'])
 def community_list(request):
-    User = get_user_model()
-    user = get_object_or_404(User, pk=request.user.pk)
-    members = get_list_or_404(Member, user=user)
+    members = get_list_or_404(Member, user=request.user)
     communities = [member.community for member in members]
     serializer = CommunitySearchSerializer(communities, many=True)
     return Response(serializer.data)
@@ -35,9 +33,7 @@ def community_list(request):
 @api_view(['GET'])
 def profile(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    User = get_user_model()
-    user = get_object_or_404(User, pk=request.user.pk)
-    member = get_object_or_404(Member, user=user, community=community)
+    member = get_object_or_404(Member, user=request.user, community=community)
     serializer = MemberSerializer(member)
     return Response(serializer.data)
 
@@ -52,8 +48,6 @@ def community_create(request):
             break
 
     community_serializer = CommunitySerializer(data=request.data)
-    User = get_user_model()
-    user = get_object_or_404(User, username=request.user)
 
     if community_serializer.is_valid(raise_exception=True):
         community = community_serializer.save(private_code=code)
@@ -62,7 +56,7 @@ def community_create(request):
         member.community = community
         member.is_admin = True
         member.is_active = True
-        member.nickname = user.name
+        member.nickname = request.user.name
         member.save()
         return Response(community_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -74,7 +68,7 @@ def uniquecheck_community_name(request, community_name):
 
     if Community.objects.filter(name=community_name):
         return Response({'error: 커뮤니티 명이 중복됩니다.'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'complete: 사용 가능한 이름입니다.'}, status=status.HTTP_200_OK)
+    return Response({'response: 사용 가능한 이름입니다.'}, status=status.HTTP_200_OK)
 
 
 # 2. 커뮤니티 가입 신청
@@ -128,7 +122,7 @@ def uniquecheck_member_nickname(request, community_pk, nickname):
     for member in members:
         if member.nickname == nickname:
             return Response({'error: 중복되는 닉네임이 있습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'complete: 사용 가능한 닉네임입니다.'}, status=status.HTTP_200_OK)
+    return Response({'response: 사용 가능한 닉네임입니다.'}, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(method='PUT', request_body=CommunitySerializer)
@@ -213,12 +207,10 @@ def invite_user(request, community_pk, user_pk):
     if community.member_set.filter(pk=user_pk):
         return Response({'error: 이미 가입한 사용자입니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    User = get_user_model()
-    user = get_object_or_404(User, pk=user_pk)
     serializer = MemberSerializer(data=request.data)
 
     if serializer.is_valid(raise_exception=True):
-        serializer.save(user=user, community=community, nickname=user.name)
+        serializer.save(user=request.user, community=community, nickname=request.user.name)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
