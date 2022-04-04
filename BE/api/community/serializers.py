@@ -31,7 +31,7 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = '__all__'
-        read_only_fields = ('user', 'community', 'is_admin', 'is_active', 'image',)
+        read_only_fields = ('user', 'community', 'is_admin', 'is_active', )
 
 
 class CustomMemberSerializer(MemberSerializer):
