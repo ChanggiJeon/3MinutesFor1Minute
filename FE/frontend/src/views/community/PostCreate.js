@@ -28,7 +28,7 @@ function PostCreate() {
 	});
 	const { communityId } = useParams();
 	const navigate = useNavigate();
-	const { is_active: isActive, is_admin: isAdmin } = useSelector(state => state.member);
+	const { is_admin: isAdmin } = useSelector(state => state.member);
 	const onValidSubmit = async () => {
 		const { title, content, isNotice, upload } = getValues();
 
@@ -78,7 +78,7 @@ function PostCreate() {
 					</Label>
 
 					{/* 관리자이면 공지인지 아닌지 설정 가능한 체크박스 나온다 */}
-					{ isActive && isAdmin ? (
+					{ isAdmin ? (
 						<Label htmlFor='isNotice'>
 							공지여부
 							<input {...register('isNotice')} type='checkbox' />
