@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'imagekit',
-    'background_task',
 
     # 3rd party
     'django.contrib.admin',
@@ -46,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'notification.apps.NotificationConfig',
 ]
 
 MIDDLEWARE = [
