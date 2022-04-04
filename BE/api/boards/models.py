@@ -15,10 +15,13 @@ class Board(models.Model):
     def __str__(self):
         return self.title
 
+        
+def file_path(instance, filename):
+    return f'board/boardfile_{instance.pk}/{filename}'
 
 class BoardFile(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
-    reference_file = models.FileField(upload_to='board/', null=True, blank=True)
+    reference_file = models.FileField(upload_to=file_path, null=True, blank=True)
 
 
 class BoardComment(models.Model):
