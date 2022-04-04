@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Minute, MinuteFile, Participant, Speech, SpeechComment
+from .models import Minute, MinuteFile, Participant, Speech, SpeechComment, SpeechFile
 from community.serializers import CustomMemberSerializer
 
 class MinuteFileSerializer(serializers.ModelSerializer):
@@ -8,6 +8,15 @@ class MinuteFileSerializer(serializers.ModelSerializer):
         model = MinuteFile
         fields = '__all__'
         read_only_fields = ('minute', )
+
+
+class SpeechFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SpeechFile
+        fields = '__all__'
+        
+
 class ParticipantSerializer(serializers.ModelSerializer):
     member = CustomMemberSerializer()
 
@@ -34,6 +43,7 @@ class SpeechListSerializer(serializers.ModelSerializer):
 
 
 class SpeechSerializer(serializers.ModelSerializer):
+    speechfile_set = SpeechFileSerializer(many=True, read_only=True)
     speech_comments = serializers.SerializerMethodField('sc_filter')
 
     def sc_filter(self, speech):
@@ -48,7 +58,7 @@ class SpeechSerializer(serializers.ModelSerializer):
 
 
 class CustomSpeechSerializer(SpeechSerializer):
-    reference_files = serializers.ListField(required=False)
+    reference_files = SpeechFileSerializer(many=True)
 
     class Meta:
         model = Speech
