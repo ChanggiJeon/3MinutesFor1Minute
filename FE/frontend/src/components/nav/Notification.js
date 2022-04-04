@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import { VscBell } from 'react-icons/vsc';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
 	apiDeleteNotification,
@@ -45,6 +45,11 @@ const NotificationContent = styled.div`
 	width: 100%;
 	padding: 10px;
 	box-sizing: border-box;
+
+	.checked {
+		background-color: ${props => `${props.theme.footerColor}33`};
+		color: 'grey';
+	}
 `;
 
 const UnreadCountContainer = styled.div`
@@ -82,6 +87,7 @@ function Notification() {
 	const [notifications, setNotifications] = useState([]);
 	const [unreadCount, setUnreadCount] = useState(0);
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setShown(false);
@@ -92,10 +98,14 @@ function Notification() {
 		return () => clearInterval(getCount);
 	}, []);
 
+	useEffect(() => getNotifications(), [unreadCount]);
+
 	const getUnreadNotificationsCount = async () => {
 		try {
-			const response = await apiGetUnreadNotificationsCount();
-			setUnreadCount(parseInt(response.data[0].split(': ')[1] || '0', 10));
+			const {
+				data: { response },
+			} = await apiGetUnreadNotificationsCount();
+			setUnreadCount(response);
 		} catch (e) {
 			if (e.response.status === 404) {
 				setUnreadCount(0);
@@ -106,7 +116,7 @@ function Notification() {
 	const getNotifications = async () => {
 		try {
 			const response = await apiGetNotifications();
-			console.log(response.data);
+			setNotifications(response.data);
 		} catch (e) {
 			if (e.response.status === 404) {
 				setNotifications([]);
@@ -115,19 +125,26 @@ function Notification() {
 	};
 
 	const readNotification = async target => {
-		try {
-			await apiGetNotificationDetail({ notificationId: target.id });
-			console.log('읽음');
-			getNotifications();
-		} catch (e) {
-			// error
+		if (!target.is_read) {
+			try {
+				const {
+					data: { community_id: communityId, minute_id: minutesId },
+				} = await apiGetNotificationDetail({ notificationId: target.id });
+
+				getUnreadNotificationsCount();
+				getNotifications();
+
+				navigate(`/community/${communityId}/minutes/${minutesId}`);
+			} catch (e) {
+				// error
+			}
 		}
 	};
 
-	const deleteNotification = async targetId => {
+	const deleteNotification = async target => {
 		try {
-			await apiDeleteNotification({ notificaitionId: targetId });
-			console.log('제거');
+			await apiDeleteNotification({ notificaitionId: target.id });
+			getUnreadNotificationsCount();
 			getNotifications();
 		} catch (e) {
 			// error
@@ -164,12 +181,9 @@ function Notification() {
 				<NotificationWrapper>
 					{notifications.length > 0 ? (
 						notifications.map(e => (
-							<NotificationContent
-								key={e}
-								style={{ color: e.is_read ? 'inherit' : 'grey' }}
-							>
+							<NotificationContent key={e.id} className={e.is_read ? 'checked' : ''}>
 								<Content onClick={() => readNotification(e)}>{e.content}</Content>
-								<ExitBtn onClick={() => deleteNotification(e.id)}>
+								<ExitBtn onClick={() => deleteNotification(e)}>
 									<FiX />
 								</ExitBtn>
 							</NotificationContent>
