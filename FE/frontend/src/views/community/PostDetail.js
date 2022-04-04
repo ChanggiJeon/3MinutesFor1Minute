@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 import {
 	apiGetBoardDetail,
 	apiPutBoardDetail,
@@ -274,9 +275,9 @@ function PostDetail() {
 			<Detail>
 				<p>제목 : {post?.title}</p>
 				<p>작성자 : {post?.member?.nickname}</p>
-				<p>작성시간 : {post?.created_at}</p>
+				<p>작성시간 : {dayjs(post?.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
 				<p>내용 : {post?.content}</p>
-				<p>첨부파일 {post?.upload}</p>
+				{/* <p>첨부파일 {post?.upload}</p> */}
 
 				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
 				{ post?.member?.nickname === nickname ? (

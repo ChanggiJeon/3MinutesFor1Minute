@@ -94,10 +94,10 @@ function PostCreate() {
 							placeholder='내용 없음'
 						/>
 					</AreaLabel>
-					<Label htmlFor='upload'>
+					{/* <Label htmlFor='upload'>
 						파일첨부
 						<input {...register('upload')} type='file' multiple />
-					</Label>
+					</Label> */}
 					<SubmitButton disabled={!isValid}>작성하기</SubmitButton>
 				</NForm>
 			</Background>
