@@ -2,7 +2,12 @@ from rest_framework import serializers
 from .models import Minute, MinuteFile, Participant, Speech, SpeechComment
 from community.serializers import CustomMemberSerializer
 
+class MinuteFileSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = MinuteFile
+        fields = '__all__'
+        read_only_fields = ('minute', )
 class ParticipantSerializer(serializers.ModelSerializer):
     member = CustomMemberSerializer()
 
@@ -79,13 +84,6 @@ class MinuteSerializer(serializers.ModelSerializer):
         serializer = SpeechListSerializer(speeches, many=True)
         return serializer.data
 
-    class MinuteFileSerializer(serializers.ModelSerializer):
-
-        class Meta:
-            model = MinuteFile
-            fields = '__all__'
-            read_only_fields = ('minute', )
-
     minutefile_set = MinuteFileSerializer(many=True, read_only=True)
 
     class Meta:
@@ -96,8 +94,7 @@ class MinuteSerializer(serializers.ModelSerializer):
 
 class CustomMinuteSerializer(MinuteSerializer):
     member_ids = serializers.ListField()
-    reference_files = serializers.ListField(required=False)
-
+    minutefile_set = MinuteFileSerializer(many=True, read_only=True)
     class Meta:
         model = Minute
         fields = '__all__'
