@@ -31,12 +31,21 @@ const Container = styled.div`
 `;
 
 function Profile() {
-	const { id: userId, username, name, email } = useSelector(state => state.user);
+	const {
+		id: userId,
+		username,
+		name,
+		email,
+		profile_image: profileImage,
+	} = useSelector(state => state.user);
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [updateMode, setUpdateMode] = useState('');
 
 	useEffect(() => {
+		if (userId === 0) {
+			navigate(routes.main);
+		}
 		if (id && userId && userId !== parseInt(id, 10)) {
 			navigate(routes.main);
 		}
@@ -79,7 +88,7 @@ function Profile() {
 			<FormContainer>
 				<Form>
 					<ProfileImgContainer>
-						<FaUserCircle />
+						{profileImage ? <img src={profileImage} alt='' /> : <FaUserCircle />}
 					</ProfileImgContainer>
 					<TextTitle>{name}</TextTitle>
 					<span>@{username}</span>

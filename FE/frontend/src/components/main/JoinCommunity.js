@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {
 	apiApplyCommunity,
-	apiUniqueCheckCommunityName,
+	apiUniqueCheckNicknameInCommunity,
 } from '../../api/community';
 import routes from '../../routes';
 import AreaLabel from '../auth/AreaLabel';
@@ -37,7 +37,10 @@ function JoinCommunity({ target }) {
 		const { nickname } = getValues();
 
 		try {
-			await apiUniqueCheckCommunityName({ nickname }).then(res => {
+			await apiUniqueCheckNicknameInCommunity({
+				communityId: target.id,
+				nickname,
+			}).then(res => {
 				if (res.status === 200) {
 					setNicknameCheck(true);
 				}
