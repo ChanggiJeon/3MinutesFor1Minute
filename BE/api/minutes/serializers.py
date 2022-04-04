@@ -63,7 +63,7 @@ class CustomSpeechSerializer(SpeechSerializer):
     class Meta:
         model = Speech
         fields = '__all__'
-        read_only_fields = ('participant', 'minute', 'content', 'title', 'summary', 'cloud_keyword', )
+        read_only_fields = ('participant', 'minute', 'voice_text', 'summary', 'cloud_keyword', )
 
 
 class MinuteListSerializer(serializers.ModelSerializer):

@@ -5,11 +5,11 @@ from imagekit.processors import ResizeToFill
 
 
 def image_path(instance, filename):
-    return f'community/community_{instance.pk}/{filename}'
+    return f'community/{instance.pk}/{filename}'
 
 
 def profile_image_path(instance, filename):
-    return f'member/member_{instance.pk}/{filename}'
+    return f'member/{instance.pk}/{filename}'
 
 
 class Community(models.Model):
@@ -22,7 +22,7 @@ class Community(models.Model):
         upload_to=image_path,
         processors=[ResizeToFill(125, 125)],
         format='JPEG',
-        options={'quality': 80},
+        options={'quality': 100},
         null=True,
         blank=True,
     )
@@ -43,7 +43,7 @@ class Member(models.Model):
         upload_to=profile_image_path,
         processors=[ResizeToFill(125, 125)],
         format='JPEG',
-        options={'quality': 80},
+        options={'quality': 100},
         null=True,
         blank=True,
     )
