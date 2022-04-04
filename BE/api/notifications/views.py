@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Notification
+from minutes.models import Minute
 from .serializers import NotificationSerializer
 
 
@@ -19,7 +20,7 @@ def notification_list(request):
 def notification_unread(request):
     notifications = get_list_or_404(Notification, user=request.user, is_activate=True, is_read=False)
     len_notifications = len(notifications)
-    return Response({f'response: {len_notifications}'})
+    return Response({'response': len_notifications})
 
 
 @api_view(['GET'])
@@ -28,8 +29,8 @@ def notification_detail(request, notification_pk):
     notification = get_object_or_404(Notification, pk=notification_pk)
     notification.is_read = True
     notification.save()
-    serializer = NotificationSerializer(notification)
-    return Response(serializer.data)
+    minute = get_object_or_404(Minute, pk=notification.minute.id)
+    return Response({'community_id': minute.community.id, 'minute_id': notification.minute.id})
 
 
 @api_view(['DELETE'])
