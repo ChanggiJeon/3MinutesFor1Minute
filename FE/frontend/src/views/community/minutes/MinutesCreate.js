@@ -72,12 +72,11 @@ const TextUpload = styled(TextContent)`
 `;
 
 function MinutesCreate() {
-	// useform 설정
+	// useForm 설정
 	const {
 		register,
 		handleSubmit,
 		watch,
-		getValues,
 		formState: { errors },
 	} = useForm({
 		mode: 'onChange',
@@ -89,12 +88,12 @@ function MinutesCreate() {
 	// form 제출 로직
 	function onValidSubmit(data) {
 		const formData = new FormData();
-		const dataLenth = data.upload.length
-		const referenceFile = []
+		const dataLenth = data.upload.length;
+		const referenceFile = [];
 		if (data.upload[0]) {
-			for (let i = 0; i < dataLenth; i+=1) {
+			for (let i = 0; i < dataLenth; i += 1) {
 				formData.append(`reference_file${i}`, data.upload[i]);
-			};
+			}
 		}
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('title', data.title);
