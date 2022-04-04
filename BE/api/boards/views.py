@@ -5,7 +5,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Board, BoardComment, BoardFile
 from community.models import Community, Member
-from .serializers import BoardListSerializer, BoardSerializer, BoardCommentSerializer
+from .serializers import (
+    BoardListSerializer,
+    BoardSerializer,
+    CustomBoardSerializer,
+    BoardCommentSerializer,
+    CustomBoardCommentSerializer
+)
 
 
 @api_view(['GET'])
@@ -16,7 +22,7 @@ def board_list(request, community_pk):
     return Response(serializer.data)
 
 
-@swagger_auto_schema(method='POST', request_body=BoardSerializer)
+@swagger_auto_schema(method='POST', request_body=CustomBoardSerializer)
 @api_view(['POST'])
 def board_create(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
@@ -53,7 +59,7 @@ def board_delete(request, community_pk, board_pk):
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@swagger_auto_schema(method='PUT', request_body=BoardSerializer)
+@swagger_auto_schema(method='PUT', request_body=CustomBoardSerializer)
 @api_view(['PUT'])
 def board_update(request, community_pk, board_pk):
     community = get_object_or_404(Community, pk=community_pk)
@@ -65,11 +71,40 @@ def board_update(request, community_pk, board_pk):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            board = get_object_or_404(Board, pk=serializer.data['id'])
+
+            if board.reference_file_set.all():
+                past_files = board.reference_file_set.all()
+
+                for past_file in past_files:
+                    past_file.delete()
+
+            for key, value in request.data.items():
+                if 'reference_file' in key:
+                    new_file = BoardFile(board=board, reference_file=value)
+                    new_file.save()
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@swagger_auto_schema(method='POST', request_body=BoardCommentSerializer)
+from config.settings import MEDIA_ROOT
+from django.http import HttpResponse
+import mimetypes
+
+
+@api_view(['GET'])
+def board_file_download(request, community_pk, board_pk, reference_file_pk):
+    reference_file = get_object_or_404(BoardFile, pk=reference_file_pk)
+    file_name = str(reference_file.reference_file)[7:]
+    file_path = str(MEDIA_ROOT) + '/' + str(reference_file.reference_file)
+    fl = open(file_path, 'rb')
+    mime_types, _ = mimetypes.guess_type(file_path)
+    response = HttpResponse(fl, content_type=mime_types)
+    response['Content-Disposition'] = "attachment; filename=%s" % file_name
+    return response
+
+
+@swagger_auto_schema(method='POST', request_body=CustomBoardCommentSerializer)
 @api_view(['POST'])
 def board_comment_create(request, community_pk, board_pk):
     community = get_object_or_404(Community, pk=community_pk)
@@ -95,7 +130,7 @@ def board_comment_delete(request, community_pk, board_pk, comment_pk):
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@swagger_auto_schema(method='PUT', request_body=BoardCommentSerializer)
+@swagger_auto_schema(method='PUT', request_body=CustomBoardCommentSerializer)
 @api_view(['PUT'])
 def board_comment_update(request, community_pk, board_pk, comment_pk):
     community = get_object_or_404(Community, pk=community_pk)

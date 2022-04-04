@@ -92,20 +92,20 @@ def update(request):
     new_password_confirm = request.data.get('new_password_confirm')
 
     if request.user == user and user.check_password(password):
-        if new_password != new_password_confirm:
-            return Response({'error: password mismatch'}, status.HTTP_400_BAD_REQUEST)
-
-        if len(new_password) < 8 or len(new_password) > 20 or not re.findall('[a-z]', new_password) or not re.findall('[A-Z]', new_password) \
-            or not re.findall('[0-9]+', new_password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', new_password):
-            return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
-
         serializer = UserUpdateSerializer(user, data=request.data)
-
         if serializer.is_valid(raise_exception=True):
             me = serializer.save()
+        if new_password:
+            if new_password != new_password_confirm:
+                return Response({'error: password mismatch'}, status.HTTP_400_BAD_REQUEST)
+            if len(new_password) < 8 or len(new_password) > 20 or not re.findall('[a-z]', new_password) or not re.findall('[A-Z]', new_password) \
+                or not re.findall('[0-9]+', new_password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', new_password):
+                return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
             me.set_password(new_password)
             me.save()
-            return Response(serializer.data)
+
+
+        return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
