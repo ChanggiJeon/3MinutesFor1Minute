@@ -15,6 +15,7 @@ import HeaderBox from '../../../components/community/HeaderBox';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
 import BtnBox from '../../../components/community/BtnBox';
+import SpeechItem from '../../../components/community/minutes/speech/SpeechItem';
 
 const ContentsContainer = styled(Container)`
 	flex-direction: column;
@@ -43,7 +44,8 @@ const DeleteBtn = styled(RedMdBtn)`
 const SpeechBox = styled.div`
 	display: flex;
 	flex-direction: column;
-	height: 500px;
+	height: 200px;
+	overflow-y: scroll;
 `;
 const SpeechCreateBtn = styled(BlueMdBtn)`
 	margin-right: 10px;
@@ -51,6 +53,7 @@ const SpeechCreateBtn = styled(BlueMdBtn)`
 
 function MinutesDetail() {
 	const [isDeleted, setIsDeleted] = useState(undefined);
+	const [iCanSpeak, setICanSpeak] = useState(false);
 	const params = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -59,6 +62,7 @@ function MinutesDetail() {
 		dispatch(detailMinutesById(params));
 	}, []);
 	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
+	const { speeches } = singleMinutes;
 	const deleteMinutes = () => {
 		Swal.fire({
 			title: '삭제하시겠습니까?',
@@ -75,11 +79,10 @@ function MinutesDetail() {
 			}
 		});
 	};
-	useEffect(() => {
+	useEffect(async () => {
 		if (isDeleted) {
-			dispatch(deleteMinutesById(params)).then(
-				navigate(`/community/${params.communityId}/minutes/`)
-			);
+			await dispatch(deleteMinutesById(params));
+			navigate(`/community/${params.communityId}/minutes/`);
 		}
 	}, [isDeleted]);
 
@@ -121,7 +124,23 @@ function MinutesDetail() {
 					<TextSubTitle>스피치</TextSubTitle>
 				</HeaderBox>
 				<DivLine />
-				<SpeechBox>{/* <SpeechList /> */}</SpeechBox>
+				<SpeechBox>
+					<ul>
+						{speeches[0] ? (
+							speeches.map(speech => (
+								<SpeechItem
+									key={speech.id}
+									spcId={speech.id}
+									title={speech.title}
+									updatedAt={speech.updated_at}
+									author={speech.participant.member.nickname}
+								/>
+							))
+						) : (
+							<TextSubTitle>스피치를 등록해주세요.</TextSubTitle>
+						)}
+					</ul>
+				</SpeechBox>
 				<BtnBox>
 					<SpeechCreateBtn
 						onClick={() =>
@@ -133,6 +152,17 @@ function MinutesDetail() {
 						스피치 등록
 					</SpeechCreateBtn>
 				</BtnBox>
+				<br />
+				<HeaderBox>
+					<TextSubTitle>회의 결과</TextSubTitle>
+				</HeaderBox>
+				<DivLine />
+				<br />
+				{singleMinutes.conclusion ? (
+					<ContentBox>{singleMinutes.conclusion}</ContentBox>
+				) : (
+					<TextSubTitle>회의가 진행중입니다.</TextSubTitle>
+				)}
 			</SpeechContainer>
 		</Main>
 	);

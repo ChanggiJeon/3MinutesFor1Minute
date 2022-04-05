@@ -25,27 +25,14 @@ function Sidebar() {
 
 	return (
 		<SidebarMenu>
-			{dataSet.map(item =>
-				item.name === 'Minutes' ? (
-					<SideItem key={item.name}>
+			{dataSet.map(item => (
+				<SideItems key={item.name}>
+					<SideItemLinks to={item.path}>
 						{item.icon}
 						<span style={{ marginLeft: '16px' }}>{item.title}</span>
-						<SideSubItemLinks to={item.path.List}>
-							<SubText>- 리스트형</SubText>
-						</SideSubItemLinks>
-						<SideSubItemLinks to={item.path.Calander}>
-							<SubText>- 달력형</SubText>
-						</SideSubItemLinks>
-					</SideItem>
-				) : (
-					<SideItems key={item.name}>
-						<SideItemLinks to={item.path}>
-							{item.icon}
-							<span style={{ marginLeft: '16px' }}>{item.title}</span>
-						</SideItemLinks>
-					</SideItems>
-				)
-			)}
+					</SideItemLinks>
+				</SideItems>
+			))}
 			{isAdmin && (
 				<SideItems>
 					<SideItemLinks to='admin'>

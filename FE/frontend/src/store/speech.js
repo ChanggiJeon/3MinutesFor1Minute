@@ -1,9 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { deleteSpeech, updateSpeech } from '../api/speech';
-// import { createSpeech } from '../api/speech';
+import { deleteSpeech, updateSpeech, getSingleSpeech } from '../api/speech';
 
 const name = 'speech';
 
+export const readSingleSpeechById = createAsyncThunk(
+	`${name}/READ_SPEECH`,
+	async data => {
+		const { communityId, minutesId, speechId } = data;
+		const response = await getSingleSpeech(communityId, minutesId, speechId);
+		return response;
+	}
+);
 export const updateSpeechByData = createAsyncThunk(
 	`${name}/UPDATE_SPEECH`,
 	async data => {
@@ -17,7 +24,6 @@ export const updateSpeechByData = createAsyncThunk(
 export const deleteSpeechById = createAsyncThunk(
 	`${name}/CLEAR_SPEECH`,
 	async data => {
-		console.log('data', data);
 		const { communityId, minutesId, speechId } = data;
 		const res = await deleteSpeech(communityId, minutesId, speechId);
 		return res;
@@ -27,45 +33,60 @@ export const deleteSpeechById = createAsyncThunk(
 const initialState = {
 	singleSpeech: {
 		id: undefined,
+		author: '',
+		title: '',
 		summary: '',
+		referenceFile: [],
 		wordCloudList: [],
 		recordFile: '',
 		voiceText: '',
+		updatedAt: '',
 		completed: false,
 		loading: true,
 	},
 };
+
+function polishData(data) {
+	// 기본 데이터 입력받기
+	const polished = {};
+	polished.id = data.id;
+	polished.title = data.title;
+	polished.summary = data.summary;
+	polished.recordFile = data.record_file;
+	polished.voiceText = data.voice_text;
+	polished.updatedAt = data.updated_at;
+	// 워드 클라우드 데이터 가공 WORD[{text: string, value: number,}]
+	const text = data.cloud_keyword.slice(1, -1);
+	const arr = text.split(', ');
+	const result = arr.map(word => word.slice(1, -1));
+	const countWords = {};
+	result.forEach(word => {
+		if (countWords[word]) {
+			countWords[word] += 1;
+		} else {
+			countWords[word] = 1;
+		}
+	});
+	const wordCloudList = [];
+	const keyWords = Object.keys(countWords);
+	keyWords.forEach(word => {
+		wordCloudList.push({
+			text: word,
+			value: countWords[word],
+		});
+	});
+	polished.wordCloudList = wordCloudList;
+	return polished;
+}
 
 const speech = createSlice({
 	name,
 	initialState,
 	reducers: {
 		fetchSpeechByAI: (state, action) => {
-			// 기본 데이터 입력받기
-			const { id, summary } = action.payload;
-			const recordFile = action.payload.record_file;
-			const voiceText = action.payload.voice_text;
-			// 워드 클라우드 데이터 가공 WORD[{text: string, value: number,}]
-			const cloudKeyword = action.payload.cloud_keyword;
-			const text = cloudKeyword.slice(1, -1);
-			const arr = text.split(', ');
-			const result = arr.map(word => word.slice(1, -1));
-			const countWords = {};
-			result.forEach(word => {
-				if (countWords[word]) {
-					countWords[word] += 1;
-				} else {
-					countWords[word] = 1;
-				}
-			});
-			const wordCloudList = [];
-			const keyWords = Object.keys(countWords);
-			keyWords.forEach(word => {
-				wordCloudList.push({
-					text: word,
-					value: countWords[word],
-				});
-			});
+			const { id, summary, wordCloudList, recordFile, voiceText } = polishData(
+				action.payload
+			);
 
 			state.singleSpeech = {
 				id,
@@ -84,6 +105,9 @@ const speech = createSlice({
 	extraReducers: {
 		[deleteSpeechById.fulfilled]: state => Object.assign(state, initialState),
 		[updateSpeechByData.fulfilled]: state => Object.assign(state, initialState),
+		[readSingleSpeechById.fulfilled]: (state, action) => {
+			state.singleSpeech = polishData(action.payload);
+		},
 	},
 });
 

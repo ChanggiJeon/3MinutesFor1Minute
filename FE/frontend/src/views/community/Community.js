@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RiCommunityLine } from 'react-icons/ri';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import Main from '../../components/community/MainStart';
 import TextSubTitle from '../../components/common/TextSubTitle';
 import DivLine from '../../components/community/main/DivLine';
@@ -38,6 +40,7 @@ const ImageContainer = styled.div`
 `;
 
 function Community() {
+	const [date, setDate] = useState(new Date());
 	const { communityId } = useParams();
 	const dispatch = useDispatch();
 	const {
