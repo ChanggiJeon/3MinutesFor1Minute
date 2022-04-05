@@ -11,17 +11,19 @@ import SubmitButton from '../components/auth/SubmitButton';
 import TextSubTitle from '../components/common/TextSubTitle';
 import TextTitle from '../components/common/TextTitle';
 import UpdatePassword from '../components/main/UpdatePassword';
+import UpdateProfile from '../components/main/UpdateProfile';
 import Withdraw from '../components/main/Withdraw';
 import routes from '../routes';
 
 const ProfileImgContainer = styled.div`
-	border-radius: 50%;
 	align-self: center;
 
 	svg,
 	img {
 		width: 250px;
 		height: 250px;
+		border-radius: 50%;
+		box-shadow: 0 0 3px black;
 	}
 `;
 
@@ -64,9 +66,9 @@ function Profile() {
 			<SubmitButton type='button' onClick={() => toggleMode('password')}>
 				비밀번호 변경
 			</SubmitButton>
-			{/* <SubmitButton type='button' onClick={() => toggleMode('profile')}>
+			<SubmitButton type='button' onClick={() => toggleMode('profile')}>
 				프로필 사진 변경
-			</SubmitButton> */}
+			</SubmitButton>
 			<SubmitButton type='button' onClick={() => toggleMode('withdraw')}>
 				회원 탈퇴
 			</SubmitButton>
@@ -76,6 +78,9 @@ function Profile() {
 	const updateForm = () => {
 		if (updateMode === 'password') {
 			return <UpdatePassword />;
+		}
+		if (updateMode === 'profile') {
+			return <UpdateProfile toggleMode={toggleMode} />;
 		}
 		if (updateMode === 'withdraw') {
 			return <Withdraw />;
@@ -88,7 +93,11 @@ function Profile() {
 			<FormContainer>
 				<Form>
 					<ProfileImgContainer>
-						{profileImage ? <img src={profileImage} alt='' /> : <FaUserCircle />}
+						{profileImage ? (
+							<img src={`${process.env.REACT_APP_API_URL}${profileImage}`} alt='' />
+						) : (
+							<FaUserCircle />
+						)}
 					</ProfileImgContainer>
 					<TextTitle>{name}</TextTitle>
 					<span>@{username}</span>

@@ -113,7 +113,7 @@ function FindId() {
 			</Label>
 			{EmailError}
 			<SubmitButton type='submit' disabled={!isValid || isLoading}>
-				{isLoading ? '로딩중' : '찾 기'}
+				{isLoading ? '발송완료' : '찾 기'}
 			</SubmitButton>
 		</Form>
 	);

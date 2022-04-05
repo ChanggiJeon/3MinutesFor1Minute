@@ -39,6 +39,10 @@ const ResultList = styled.div`
 	}
 `;
 
+const ResultBtn = styled(EmptyBtn)`
+	font-size: 18px;
+`;
+
 function ApplyCommunity() {
 	const {
 		register,
@@ -65,7 +69,7 @@ function ApplyCommunity() {
 		try {
 			if (searchMode === 'codeMode') {
 				await apiSearchCommunityByCode({ code }).then(res => {
-					setResults(res.data);
+					setResults([res.data]);
 				});
 			} else if (searchMode === 'nameMode') {
 				await apiSearchCommunityByName({ name }).then(res => {
@@ -104,9 +108,9 @@ function ApplyCommunity() {
 			<ResultWrapper>
 				<ResultList>
 					{results?.map(e => (
-						<EmptyBtn key={e.id} onClick={() => setTarget(e)}>
+						<ResultBtn key={e.id} onClick={() => setTarget(e)}>
 							{e?.name}
-						</EmptyBtn>
+						</ResultBtn>
 					))}
 				</ResultList>
 			</ResultWrapper>
