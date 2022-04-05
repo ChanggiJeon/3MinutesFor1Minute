@@ -104,3 +104,13 @@ export const apiUpdateUser = ({
 			...setToken(),
 		},
 	});
+
+export const apiUpdateProfileImage = ({ formData }) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/accounts/update/`,
+		data: formData,
+		headers: {
+			...setToken(),
+		},
+	});
