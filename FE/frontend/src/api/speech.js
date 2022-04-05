@@ -1,6 +1,21 @@
 import axios from 'axios';
 import { BASE_URL, setToken } from './utils';
 
+export async function getSingleSpeech(comId, minId, spcId) {
+	try {
+		const response = await axios({
+			method: 'get',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/speech/${spcId}/`,
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.data;
+	} catch (err) {
+		console.log(err);
+		return err.response.data;
+	}
+}
 export async function createSpeech(comId, minId, data) {
 	try {
 		const response = await axios({

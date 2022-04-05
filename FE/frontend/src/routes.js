@@ -17,6 +17,7 @@ const routes = {
 	recordCreate: 'minutes/:minutesId/recordCreate',
 	// speech
 	speechCreate: 'minutes/:minutesId/speechCreate',
+	speechDetail: 'minutes/:minutesId/speech/:speechId',
 	// posts
 	posts: 'posts',
 	postCreate: 'posts/postcreate',

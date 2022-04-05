@@ -29,10 +29,7 @@ function sidebarData() {
 		{
 			name: 'Minutes',
 			title: '회의록',
-			path: {
-				List: `/community/${communityId}/minutes`,
-				Calander: '/',
-			},
+			path: `/community/${communityId}/minutes`, 
 			icon: <FaBook />,
 		},
 		{
