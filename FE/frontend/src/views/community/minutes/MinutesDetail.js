@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { detailMinutesById, deleteMinutesById } from '../../../store/minutes';
 import routes from '../../../routes';
 import Container from '../../../components/community/Container';
@@ -59,7 +60,20 @@ function MinutesDetail() {
 	}, []);
 	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
 	const deleteMinutes = () => {
-		setIsDeleted('deleted');
+		Swal.fire({
+			title: '삭제하시겠습니까?',
+			text: '본 회의록과 관련된 모든 데이터가 사라집니다.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes',
+		}).then(result => {
+			if (result.isConfirmed) {
+				Swal.fire('완료', '회의록이 삭제되었습니다.', 'success');
+				setIsDeleted('deleted');
+			}
+		});
 	};
 	useEffect(() => {
 		if (isDeleted) {
