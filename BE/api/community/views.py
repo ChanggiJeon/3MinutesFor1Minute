@@ -36,9 +36,9 @@ def community_list(request):
 
 
 @api_view(['GET'])
-def profile(request, community_pk):
+def profile(request, community_pk, nickname):
     community = get_object_or_404(Community, pk=community_pk)
-    member = get_object_or_404(Member, user=request.user, community=community)
+    member = get_object_or_404(Member, nickname=nickname, community=community)
     serializer = MemberSerializer(member)
     return Response(serializer.data)
 

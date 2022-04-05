@@ -93,10 +93,10 @@ function Notification() {
 		setShown(false);
 	}, [location]);
 
-	useEffect(() => {
-		const getCount = setInterval(() => getUnreadNotificationsCount(), 3000);
-		return () => clearInterval(getCount);
-	}, []);
+	// useEffect(() => {
+	// 	const getCount = setInterval(() => getUnreadNotificationsCount(), 3000);
+	// 	return () => clearInterval(getCount);
+	// }, []);
 
 	useEffect(() => getNotifications(), [unreadCount]);
 
