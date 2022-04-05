@@ -43,7 +43,7 @@ def AI(file_path, file_name):
 @api_view(['GET'])
 def minute_list(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    minutes = get_list_or_404(Minute, community=community)
+    minutes = Minute.objects.filter(community=community)
     serializer = MinuteListSerializer(minutes, many=True)
     return Response(serializer.data)
 
@@ -113,7 +113,6 @@ def minute_create(request, community_pk):
                     notification_deadline.save()
 
             for key, value in request.data.items():
-                print(3, key)
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
                     new_file.save()
@@ -208,6 +207,7 @@ def minute_update(request, community_pk, minute_pk):
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
                     new_file.save()
+
             serializer = MinuteSerializer(minute)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -245,10 +245,12 @@ def speech_create(request, community_pk, minute_pk):
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
         speech = get_object_or_404(Speech, pk=serializer.data['id'])
+
         for key, value in request.data.items():
             if 'reference_file' in key:
                 new_file = SpeechFile(speech=speech, reference_file=value)
                 new_file.save()
+
         file = speech.record_file
         file_path = str(MEDIA_ROOT) + '\\record\\'
         file_name = '1648986351112.wav'
@@ -302,6 +304,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
+
     if minute.is_closed:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -314,6 +317,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
 
             if speech.speechfile_set.all():
                 past_files = speech.speechfile_set.all()
+
                 for past_file in past_files:
                     past_file.delete()
 
@@ -321,6 +325,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
                 if 'reference_file' in key:
                     new_file = SpeechFile(speech=speech, reference_file=value)
                     new_file.save()
+
             serializer = SpeechSerializer(speech)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
