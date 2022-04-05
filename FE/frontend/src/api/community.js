@@ -87,7 +87,7 @@ export const apiUpdateMemberProfile = ({ communityId, memberId, formData }) =>
 export const apiWithdrawMember = ({ communityId, memberId }) =>
 	axios({
 		method: 'delete',
-		url: `${BASE_URL}/community/${communityId}/member/${memberId}/withDraw/`,
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/withdraw/`,
 		headers: {
 			...setToken(),
 		},

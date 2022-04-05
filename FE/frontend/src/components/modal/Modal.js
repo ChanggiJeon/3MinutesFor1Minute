@@ -32,18 +32,12 @@ const ExitBtn = styled.button`
 `;
 
 function Modal({ children, setMode }) {
-	const handleMode = e => {
-		if (e.target === e.currentTarget) {
-			setMode(false);
-		}
-	};
-
 	const handleModeBtn = e => {
 		setMode(false);
 	};
 
 	return (
-		<Container onClick={handleMode}>
+		<Container>
 			<Wrapper>
 				<ExitBtn onClick={handleModeBtn}>
 					<FiX />

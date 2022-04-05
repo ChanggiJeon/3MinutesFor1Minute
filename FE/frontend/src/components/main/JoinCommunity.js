@@ -104,6 +104,10 @@ function JoinCommunity({ target }) {
 							value: 2,
 							message: '2자 이상 입력하세요.',
 						},
+						pattern: {
+							value: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,}$/,
+							message: '특수문자, 공백은 사용할 수 없습니다.',
+						},
 					})}
 					type='nickname'
 					placeholder='닉네임'
