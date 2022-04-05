@@ -16,6 +16,7 @@ export const apiCreateBoard = ({ communityId, title, content, isNotice, upload }
     }
   });
 
+
 export const apiCreateComment = ({ communityId, postId, content }) => 
   axios({
     method: 'post',
