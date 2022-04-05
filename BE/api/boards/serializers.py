@@ -2,9 +2,13 @@ from rest_framework import serializers
 from .models import Board, BoardComment, BoardFile
 from community.serializers import CustomMemberSerializer
 
+class BoardFileSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = BoardFile
+        fields = '__all__'
 class BoardCommentSerializer(serializers.ModelSerializer):
-    member = CustomMemberSerializer(required=False)
+    member = CustomMemberSerializer()
 
     class Meta:
         model = BoardComment
@@ -12,8 +16,14 @@ class BoardCommentSerializer(serializers.ModelSerializer):
         read_only_fields = ('member', 'board', )
 
 
+class CustomBoardCommentSerializer(BoardCommentSerializer):
+    class Meta:
+        model = BoardComment
+        fields = ('content', )
+
+
 class BoardListSerializer(serializers.ModelSerializer):
-    member = CustomMemberSerializer(required=False)
+    member = CustomMemberSerializer()
 
     class Meta:
         model = Board
@@ -22,7 +32,7 @@ class BoardListSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
-    member = CustomMemberSerializer(required=False)
+    member = CustomMemberSerializer(read_only=True)
     board_comments = serializers.SerializerMethodField('bc_filter')
 
     def bc_filter(self, board):
@@ -34,9 +44,17 @@ class BoardSerializer(serializers.ModelSerializer):
         
         class Meta:
             model = BoardFile
-            fileds = '__all__'
+            fields = '__all__'
+    boardfile_set = BoardFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = Board
         fields = '__all__'
         read_only_fields = ('member', 'community', )
+
+
+class CustomBoardSerializer(BoardSerializer):
+    boardfile_set = BoardFileSerializer(many=True, read_only=True)
+    class Meta:
+        model = Board
+        fields = ('title', 'content', 'is_notice', 'boardfile_set')
