@@ -1,6 +1,10 @@
 from django.db import models
 from community.models import Community, Member
 
+        
+def file_path(instance, filename):
+    return f'boardfile/{instance.pk}/{filename}'
+
 
 class Board(models.Model):
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
@@ -11,13 +15,9 @@ class Board(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return self.title
 
-        
-def file_path(instance, filename):
-    return f'board/boardfile_{instance.pk}/{filename}'
 
 class BoardFile(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
