@@ -6,7 +6,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, AuthenticateSerializer, UserUpdateSerializer
+from .serializers import (
+    UserSerializer,
+    AuthenticateSerializer,
+    UserUpdateSerializer
+)
 from community.views import make_random_code
 import re
 
@@ -62,8 +66,8 @@ def unique_check_email(request, email):
 
     else:
         code = make_random_code()
-        message = f"아래의 인증번호를 사용하여 이메일 주소 인증을 완료하면 다음 단계로 진행이 가능합니다.\n\n인증번호 : {code}\n\n감사합니다."
-        mail_title = "3Minutes for 1Minute 회원가입을 위한 인증번호 발송 메일입니다."
+        message = f'아래의 인증번호를 사용하여 이메일 주소 인증을 완료하면 다음 단계로 진행이 가능합니다.\n\n인증번호 : {code}\n\n감사합니다.'
+        mail_title = '3Minutes for 1Minute 회원가입을 위한 인증번호 발송 메일입니다.'
         mail_to = email
         email = EmailMessage(mail_title, message, to=[mail_to])
         email.send()
@@ -121,8 +125,8 @@ def find_username(request, email, name):
     User = get_user_model()
     user = get_object_or_404(User, email=email, name=name)
     username = user.username
-    message = f"회원님의 아이디는 아래와 같습니다.\n\n아이디 : {username}\n\n감사합니다."
-    mail_title = "3Minutes for 1Minute 회원님의 아이디입니다."
+    message = f'회원님의 아이디는 아래와 같습니다.\n\n아이디 : {username}\n\n감사합니다.'
+    mail_title = '3Minutes for 1Minute 회원님의 아이디입니다.'
     mail_to = email
     email = EmailMessage(mail_title, message, to=[mail_to])
     email.send()
@@ -137,8 +141,8 @@ def find_password(request, username, email, name):
     password = make_random_code()
     user.set_password(password)
     user.save()
-    message = f"아래의 임시 비밀번호를 사용하여 로그인하시어 비밀번호를 변경해주시길 바랍니다.\n\n임시 비밀번호 : {password}\n\n감사합니다."
-    mail_title = "3Minutes for 1Minute 회원님의 임시 비밀번호입니다."
+    message = f'아래의 임시 비밀번호를 사용하여 로그인하시어 비밀번호를 변경해주시길 바랍니다.\n\n임시 비밀번호 : {password}\n\n감사합니다.'
+    mail_title = '3Minutes for 1Minute 회원님의 임시 비밀번호입니다.'
     mail_to = email
     email = EmailMessage(mail_title, message, to=[mail_to])
     email.send()
