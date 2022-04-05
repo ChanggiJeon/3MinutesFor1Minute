@@ -67,7 +67,7 @@ pip install -r requirements.txt
     - new_password (비밀번호 변경 시에만, 필수 X)
     - new_password_confirm (비밀번호 변경 시에만, 필수 X)
     - profile_image (이미지 변경 시에만, 필수 X)
-  - 프로필 [GET] : accounts/profile/
+  - 프로필 [GET] : accounts/profile/<str : username>/
   - 아이디 찾기 [GET] : accounts/find/username/<str : email>/<str : name>/
   - 비밀번호 찾기 [GET] : accounts/find/password/<str : username>/<str : email>/<str : name>/
 
@@ -76,7 +76,7 @@ pip install -r requirements.txt
 - 커뮤니티 (Community)
 
   - 본인이 가입한 커뮤니티 목록 [GET] : community/
-  - 커뮤니티 본인 프로필 [GET] : community/<int : community_pk>/profile/
+  - 커뮤니티 본인 프로필 [GET] : community/<int : community_pk>/profile/<str : nickname>/
 
   1. 커뮤니티 생성
      - 커뮤니티 생성 [POST] : community/create/
@@ -142,6 +142,7 @@ pip install -r requirements.txt
 
 - 회의록 (Minute)
   - 회의록 목록 출력 [GET] : <int : community_pk>/minutes/
+  - 메인 페이지에 회의록 목록 출력 (마감 시간 임박한것 3개만) [GET] : <int : community_pk>/minutes/main/
   - 회의록 작성 (멤버 목록 호출) [GET] : <int : community_pk>/minutes/create/
   - 회의록 작성 (진짜 생성) [POST] : <int : community_pk>/minutes/create/
     - title
@@ -149,7 +150,7 @@ pip install -r requirements.txt
     - conclusion
     - is_closed (기본 False)
     - deadline
-    - reference_file (필수 X)
+    - reference_file1, reference_file2, ... (필수 X)
     - member_ids = [ids, ..., ] (회의에 참석할 멤버들 id를 리스트로 전송)
   - 회의록 상세 정보 (스피치까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/
   - 회의록 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/delete/
@@ -159,7 +160,8 @@ pip install -r requirements.txt
     - conclusion
     - is_closed (기본 False)
     - deadline
-    - reference_file (필수 X)
+    - reference_file1, reference_file2, ... (필수 X)
+      - 수정하면 기존 파일 다 날아가고 새로운 파일만 등록
   - 회의록 파일 다운로드 [GET] : <int : community_pk>/minutes/<int : minute_pk>/download/<int : reference_file_pk>/
 
 
@@ -167,7 +169,7 @@ pip install -r requirements.txt
 - 스피치 (Speech)
   - 스피치 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/create/
     - record_file (테스트 X)
-    - reference_file (필수 X)
+    - reference_file1, reference_file2, ... (필수 X)
   - 스피치 상세 정보 (댓글까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/
   - 스피치 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/delete/
   - 스피치 수정 (수정할 부분만) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/update/
@@ -175,7 +177,8 @@ pip install -r requirements.txt
     - title
     - summary
     - cloud_keyword
-    - reference_file (필수 X)
+    - reference_file1, reference_file2, ... (필수 X)
+      - 수정하면 기존 파일 다 날아가고 새로운 파일만 등록
   - 스피치 파일 다운로드 :  <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/download/<int : reference_file_pk>/
   - 댓글 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/comment/create/
     - content
