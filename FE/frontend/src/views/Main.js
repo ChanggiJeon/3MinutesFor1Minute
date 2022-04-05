@@ -140,7 +140,11 @@ function Main() {
 						<Link to={`/community/${e.id}`} key={e.id}>
 							<Contents>
 								<CommunityImgContainer>
-									{e.image ? <img src={e.image} alt='' /> : <RiCommunityLine />}
+									{e.image ? (
+										<img src={`${process.env.REACT_APP_API_URL}${e.image}`} alt='' />
+									) : (
+										<RiCommunityLine />
+									)}
 								</CommunityImgContainer>
 								<CommunityName>{e.name}</CommunityName>
 								<div>{e.intro}</div>
