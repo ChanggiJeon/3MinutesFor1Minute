@@ -34,12 +34,13 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
   `profile_image` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- 테이블 데이터 myproject.accounts_user:~1 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `accounts_user` DISABLE KEYS */;
 INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `name`, `profile_image`) VALUES
-	(1, 'pbkdf2_sha256$320000$B3uhBFzqQzz1MMIz8rYy0y$vKqOaO+qAOJ1ONv5VXsdML7FM0UVirKbyUBpb2eNbTs=', NULL, 0, 'ssafy', '', '', 'wotjd4725@naver.com', 0, 1, '2022-04-04 21:58:30.659723', 'dd', '');
+	(1, 'pbkdf2_sha256$320000$6DaC7kk6tAtI9odQgyNsl1$vgofLJN1qiEphw8v07FQozuLqs7/JtS5KbSHo0NCpWY=', NULL, 1, 'admin', '', '', 'admin@admin.com', 1, 1, '2022-04-05 11:06:54.015033', 'admin', ''),
+	(2, 'pbkdf2_sha256$320000$E32GsX9LDeGAT5xXvgbybX$38bOPrgX0snvAzH8DG0tKOIYzzoVQ5AwRQFOsxflP4I=', NULL, 1, 'ssafy', '', '', 'ssafy@ssafy.com', 1, 1, '2022-04-05 11:08:09.878455', 'ssafy', '');
 /*!40000 ALTER TABLE `accounts_user` ENABLE KEYS */;
 
 -- 테이블 myproject.accounts_user_groups 구조 내보내기
@@ -347,29 +348,29 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
 -- 테이블 데이터 myproject.django_migrations:~23 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
-	(1, 'contenttypes', '0001_initial', '2022-04-04 21:58:04.465749'),
-	(2, 'contenttypes', '0002_remove_content_type_name', '2022-04-04 21:58:04.532751'),
-	(3, 'auth', '0001_initial', '2022-04-04 21:58:04.759748'),
-	(4, 'auth', '0002_alter_permission_name_max_length', '2022-04-04 21:58:04.805750'),
-	(5, 'auth', '0003_alter_user_email_max_length', '2022-04-04 21:58:04.812747'),
-	(6, 'auth', '0004_alter_user_username_opts', '2022-04-04 21:58:04.819750'),
-	(7, 'auth', '0005_alter_user_last_login_null', '2022-04-04 21:58:04.826746'),
-	(8, 'auth', '0006_require_contenttypes_0002', '2022-04-04 21:58:04.830750'),
-	(9, 'auth', '0007_alter_validators_add_error_messages', '2022-04-04 21:58:04.837748'),
-	(10, 'auth', '0008_alter_user_username_max_length', '2022-04-04 21:58:04.845748'),
-	(11, 'auth', '0009_alter_user_last_name_max_length', '2022-04-04 21:58:04.854747'),
-	(12, 'auth', '0010_alter_group_name_max_length', '2022-04-04 21:58:04.931751'),
-	(13, 'auth', '0011_update_proxy_permissions', '2022-04-04 21:58:04.940747'),
-	(14, 'auth', '0012_alter_user_first_name_max_length', '2022-04-04 21:58:04.948747'),
-	(15, 'accounts', '0001_initial', '2022-04-04 21:58:05.222751'),
-	(16, 'admin', '0001_initial', '2022-04-04 21:58:05.330781'),
-	(17, 'admin', '0002_logentry_remove_auto_add', '2022-04-04 21:58:05.340749'),
-	(18, 'admin', '0003_logentry_add_action_flag_choices', '2022-04-04 21:58:05.348751'),
-	(19, 'community', '0001_initial', '2022-04-04 21:58:05.502785'),
-	(20, 'boards', '0001_initial', '2022-04-04 21:58:05.785747'),
-	(21, 'minutes', '0001_initial', '2022-04-04 21:58:06.331795'),
-	(22, 'notifications', '0001_initial', '2022-04-04 21:58:06.455795'),
-	(23, 'sessions', '0001_initial', '2022-04-04 21:58:06.503796');
+	(1, 'contenttypes', '0001_initial', '2022-04-05 11:06:11.665411'),
+	(2, 'contenttypes', '0002_remove_content_type_name', '2022-04-05 11:06:11.716249'),
+	(3, 'auth', '0001_initial', '2022-04-05 11:06:11.887521'),
+	(4, 'auth', '0002_alter_permission_name_max_length', '2022-04-05 11:06:11.924926'),
+	(5, 'auth', '0003_alter_user_email_max_length', '2022-04-05 11:06:11.932890'),
+	(6, 'auth', '0004_alter_user_username_opts', '2022-04-05 11:06:11.940868'),
+	(7, 'auth', '0005_alter_user_last_login_null', '2022-04-05 11:06:11.947849'),
+	(8, 'auth', '0006_require_contenttypes_0002', '2022-04-05 11:06:11.951838'),
+	(9, 'auth', '0007_alter_validators_add_error_messages', '2022-04-05 11:06:11.957822'),
+	(10, 'auth', '0008_alter_user_username_max_length', '2022-04-05 11:06:11.964803'),
+	(11, 'auth', '0009_alter_user_last_name_max_length', '2022-04-05 11:06:11.971783'),
+	(12, 'auth', '0010_alter_group_name_max_length', '2022-04-05 11:06:11.993745'),
+	(13, 'auth', '0011_update_proxy_permissions', '2022-04-05 11:06:12.000727'),
+	(14, 'auth', '0012_alter_user_first_name_max_length', '2022-04-05 11:06:12.006711'),
+	(15, 'accounts', '0001_initial', '2022-04-05 11:06:12.249463'),
+	(16, 'admin', '0001_initial', '2022-04-05 11:06:12.334349'),
+	(17, 'admin', '0002_logentry_remove_auto_add', '2022-04-05 11:06:12.346320'),
+	(18, 'admin', '0003_logentry_add_action_flag_choices', '2022-04-05 11:06:12.355291'),
+	(19, 'community', '0001_initial', '2022-04-05 11:06:12.452453'),
+	(20, 'boards', '0001_initial', '2022-04-05 11:06:12.686799'),
+	(21, 'minutes', '0001_initial', '2022-04-05 11:06:13.174997'),
+	(22, 'notifications', '0001_initial', '2022-04-05 11:06:13.268985'),
+	(23, 'sessions', '0001_initial', '2022-04-05 11:06:13.308552');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- 테이블 myproject.django_session 구조 내보내기
@@ -439,8 +440,9 @@ CREATE TABLE IF NOT EXISTS `minutes_participant` (
 -- 테이블 myproject.minutes_speech 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_speech` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
   `content` longtext NOT NULL,
-  `title` longtext NOT NULL,
+  `voice_text` longtext NOT NULL,
   `summary` longtext NOT NULL,
   `cloud_keyword` longtext NOT NULL,
   `created_at` datetime(6) NOT NULL,
