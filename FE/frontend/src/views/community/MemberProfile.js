@@ -11,7 +11,11 @@ import Form from '../../components/auth/Form';
 import FormContainer from '../../components/auth/FormContainer';
 import TextSubTitle from '../../components/common/TextSubTitle';
 import TextTitle from '../../components/common/TextTitle';
-import { apiGetMemberProfile, apiWithdrawMember } from '../../api/community';
+import {
+	apiGetMemberProfile,
+	apiGetMyMemberProfile,
+	apiWithdrawMember,
+} from '../../api/community';
 import SubmitButton from '../../components/auth/SubmitButton';
 import routes from '../../routes';
 import UpdateMember from '../../components/community/member/UpdateMember';
@@ -49,11 +53,14 @@ function MemberProfile() {
 	const dispatch = useDispatch();
 
 	const getMember = async () => {
-		const response = await apiGetMemberProfile({ communityId, memberId });
+		const response = await apiGetMyMemberProfile({ communityId });
 		setMember(response.data);
 	};
 
 	useEffect(() => {
+		if (parseInt(memberId, 10) !== id) {
+			navigate(`/community/${communityId}`);
+		}
 		if (memberId) {
 			getMember();
 		}
