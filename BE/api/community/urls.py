@@ -17,14 +17,13 @@ urlpatterns = [
     path('<int:community_pk>/waitinglist/', views.members_get_waiting),
     path('<int:community_pk>/waitinglist/<int:member_pk>/approval/', views.approve_waiting_member),
     # 커뮤니티 조회, 수정, 삭제
-    path('<int:community_pk>/', views.community_detail_update_or_delete),
+    path('<int:community_pk>/', views.community_detail_update_delete),
     # 멤버 조회
     path('<int:community_pk>/member/', views.community_get_members),
     # 멤버 초대
     path('invite/<int:community_pk>/<int:user_pk>/', views.invite_user),
     path('invite/search/<keyword>/', views.find_user),
-    # 멤버 조회 / 수정 / 삭제
-    path('<int:community_pk>/member/<int:member_pk>/detail/', views.member_detail),
+    # 멤버 수정, 삭제
     path('<int:community_pk>/member/<int:member_pk>/update/', views.member_update),
     path('<int:community_pk>/member/<int:member_pk>/withdraw/', views.member_delete),
 ]

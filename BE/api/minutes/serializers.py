@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Minute, MinuteFile, Participant, Speech, SpeechComment, SpeechFile
+from .models import Minute, MinuteFile, Participant, Speech, SpeechFile, SpeechComment
 from community.serializers import CustomMemberSerializer
+
 
 class MinuteFileSerializer(serializers.ModelSerializer):
 
@@ -35,11 +36,12 @@ class SpeechCommentSerializer(serializers.ModelSerializer):
 
 
 class SpeechListSerializer(serializers.ModelSerializer):
+    participant = ParticipantSerializer()
 
     class Meta:
         model = Speech
-        fields = ('id', 'title', )
-        read_only_fields = ('id', 'title', )
+        fields = ('id', 'participant', 'title', 'updated_at', )
+        read_only_fields = ('id', 'participant', 'updated_at', )
 
 
 class SpeechSerializer(serializers.ModelSerializer):
@@ -58,7 +60,6 @@ class SpeechSerializer(serializers.ModelSerializer):
 
 
 class CustomSpeechSerializer(SpeechSerializer):
-    reference_files = SpeechFileSerializer(many=True)
 
     class Meta:
         model = Speech
@@ -81,6 +82,7 @@ class MinuteListSerializer(serializers.ModelSerializer):
 
 
 class MinuteSerializer(serializers.ModelSerializer):
+    minutefile_set = MinuteFileSerializer(many=True, read_only=True)
     minute_participants = serializers.SerializerMethodField('mp_filter')
     minute_speeches = serializers.SerializerMethodField('ms_filter')
 
@@ -94,17 +96,17 @@ class MinuteSerializer(serializers.ModelSerializer):
         serializer = SpeechListSerializer(speeches, many=True)
         return serializer.data
 
-    minutefile_set = MinuteFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = Minute
         fields = '__all__'
-        read_only_fields = ('community', 'minutefile_set', )
+        read_only_fields = ('community', )
 
 
 class CustomMinuteSerializer(MinuteSerializer):
     member_ids = serializers.ListField()
     minutefile_set = MinuteFileSerializer(many=True, read_only=True)
+
     class Meta:
         model = Minute
         fields = '__all__'
