@@ -58,7 +58,6 @@ class SpeechSerializer(serializers.ModelSerializer):
 
 
 class CustomSpeechSerializer(SpeechSerializer):
-    reference_files = SpeechFileSerializer(many=True)
 
     class Meta:
         model = Speech
