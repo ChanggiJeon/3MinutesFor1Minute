@@ -2,6 +2,14 @@ from django.db import models
 from community.models import Community, Member
 
 
+def minute_file_path(instance, filename):
+    return f'minutefile/{instance.pk}/{filename}'
+
+
+def speech_file_path(instance, filename):
+    return f'speechfile/{instance.pk}/{filename}'
+
+
 class Minute(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
@@ -15,9 +23,6 @@ class Minute(models.Model):
     def __str__(self):
         return self.title
 
-
-def minute_file_path(instance, filename):
-    return f'minute_file/minute_file_{instance.pk}/{filename}'
 
 class MinuteFile(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
@@ -44,9 +49,6 @@ class Speech(models.Model):
 
     def __str__(self):
         return self.title
-
-def speech_file_path(instance, filename):
-    return f'speech_file/speech_file_{instance.pk}/{filename}'
 
 
 class SpeechFile(models.Model):
