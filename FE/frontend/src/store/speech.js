@@ -1,28 +1,52 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { deleteSpeech, updateSpeech } from '../api/speech';
 // import { createSpeech } from '../api/speech';
 
 const name = 'speech';
 
+export const updateSpeechByData = createAsyncThunk(
+	`${name}/UPDATE_SPEECH`,
+	async data => {
+		const comId = data.get('comId');
+		const minId = data.get('minId');
+		const spcId = data.get('spcId');
+		const res = await updateSpeech(comId, minId, spcId, data);
+		return res;
+	}
+);
+export const deleteSpeechById = createAsyncThunk(
+	`${name}/CLEAR_SPEECH`,
+	async data => {
+		console.log('data', data);
+		const { communityId, minutesId, speechId } = data;
+		const res = await deleteSpeech(communityId, minutesId, speechId);
+		return res;
+	}
+);
+
+const initialState = {
+	singleSpeech: {
+		id: undefined,
+		summary: '',
+		wordCloudList: [],
+		recordFile: '',
+		voiceText: '',
+		completed: false,
+		loading: true,
+	},
+};
+
 const speech = createSlice({
 	name,
-	initialState: {
-		createdSpeech: {
-			id: undefined,
-			summary: '',
-			wordCloudList: [],
-			recordFile: '',
-			voiceText: '',
-			completed: false,
-			loading: true,
-		},
-	},
+	initialState,
 	reducers: {
 		fetchSpeechByAI: (state, action) => {
+			// 기본 데이터 입력받기
 			const { id, summary } = action.payload;
-			// 워드 클라우드 데이터 가공 WORD[{text: string, value: number,}]
-			const cloudKeyword = action.payload.cloud_keyword;
 			const recordFile = action.payload.record_file;
 			const voiceText = action.payload.voice_text;
+			// 워드 클라우드 데이터 가공 WORD[{text: string, value: number,}]
+			const cloudKeyword = action.payload.cloud_keyword;
 			const text = cloudKeyword.slice(1, -1);
 			const arr = text.split(', ');
 			const result = arr.map(word => word.slice(1, -1));
@@ -43,7 +67,7 @@ const speech = createSlice({
 				});
 			});
 
-			state.createdSpeech = {
+			state.singleSpeech = {
 				id,
 				summary,
 				wordCloudList,
@@ -54,10 +78,13 @@ const speech = createSlice({
 			};
 		},
 		finishLoading: state => {
-			state.createdSpeech.loading = false;
+			state.singleSpeech.loading = false;
 		},
 	},
-	extraReducers: {},
+	extraReducers: {
+		[deleteSpeechById.fulfilled]: state => Object.assign(state, initialState),
+		[updateSpeechByData.fulfilled]: state => Object.assign(state, initialState),
+	},
 });
 
 export const { fetchSpeechByAI, finishLoading } = speech.actions;

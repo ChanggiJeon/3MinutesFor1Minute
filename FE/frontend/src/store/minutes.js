@@ -80,6 +80,7 @@ const minutes = createSlice({
 			}
 		},
 		[detailMinutesById.fulfilled]: (state, action) => {
+			console.log(action.payload);
 			const response = action.payload;
 			// 기본 데이터 생성
 			const writtenDate = response?.created_at;
@@ -87,8 +88,9 @@ const minutes = createSlice({
 				member => member.is_assignee
 			)[0]?.member?.nickname;
 			const tmpParticipants = response?.minute_participants;
-			const referenceFile = response?.reference_file;
-			const { title, deadline, content } = response;
+			const referenceFile = response?.minutefile_set;
+			const speeches = response?.minute_speeches;
+			const { title, deadline, content, conclusion } = response;
 			// 작성일자 데이터 가공
 			const createdAt = `${writtenDate.substr(2, 2)}.
 			${writtenDate.substr(5, 2)}. ${writtenDate.substr(8, 2)}.
@@ -102,9 +104,11 @@ const minutes = createSlice({
 			// state 변경
 			state.singleMinutes = {
 				createdAt,
+				conclusion,
 				author,
 				title,
 				participants,
+				speeches,
 				deadline,
 				Dday,
 				content,
