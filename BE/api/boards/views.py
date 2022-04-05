@@ -1,4 +1,4 @@
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from pyrsistent import b
 from rest_framework.decorators import api_view
@@ -18,7 +18,7 @@ from .serializers import (
 @api_view(['GET'])
 def board_list(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    boards = get_list_or_404(Board, community=community)
+    boards = Board.objects.filter(community=community)
     serializer = BoardListSerializer(boards, many=True)
     return Response(serializer.data)
 

@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -15,6 +15,8 @@ import { apiGetMemberProfile, apiWithdrawMember } from '../../api/community';
 import SubmitButton from '../../components/auth/SubmitButton';
 import routes from '../../routes';
 import UpdateMember from '../../components/community/member/UpdateMember';
+import UpdateProfile from '../../components/community/member/UpdateProfile';
+import { updateMemberData } from '../../store/member';
 
 const ProfileImgContainer = styled.div`
 	border-radius: 50%;
@@ -24,6 +26,7 @@ const ProfileImgContainer = styled.div`
 	img {
 		width: 250px;
 		height: 250px;
+		border-radius: 50%;
 	}
 `;
 
@@ -43,6 +46,7 @@ function MemberProfile() {
 	const navigate = useNavigate();
 	const [updateMode, setUpdateMode] = useState('');
 	const [member, setMember] = useState({});
+	const dispatch = useDispatch();
 
 	const getMember = async () => {
 		const response = await apiGetMemberProfile({ communityId, memberId });
@@ -54,6 +58,12 @@ function MemberProfile() {
 			getMember();
 		}
 	}, [memberId, communityId]);
+
+	useEffect(() => {
+		if (parseInt(memberId, 10) === id) {
+			dispatch(updateMemberData({ ...member }));
+		}
+	}, [member]);
 
 	const toggleMode = modename => {
 		if (updateMode === modename) {
@@ -90,9 +100,9 @@ function MemberProfile() {
 			<SubmitButton type='button' onClick={() => toggleMode('info')}>
 				멤버 정보 변경
 			</SubmitButton>
-			{/* <SubmitButton type='button' onClick={() => toggleMode('profile')}>
+			<SubmitButton type='button' onClick={() => toggleMode('profile')}>
 				프로필 사진 변경
-			</SubmitButton> */}
+			</SubmitButton>
 			<SubmitButton type='button' onClick={handleWithdraw}>
 				커뮤니티 탈퇴
 			</SubmitButton>
@@ -103,6 +113,9 @@ function MemberProfile() {
 		if (updateMode === 'info') {
 			return <UpdateMember toggleMode={toggleMode} getMember={getMember} />;
 		}
+		if (updateMode === 'profile') {
+			return <UpdateProfile toggleMode={toggleMode} getMember={getMember} />;
+		}
 		return null;
 	};
 
@@ -112,7 +125,10 @@ function MemberProfile() {
 				<Form>
 					<ProfileImgContainer>
 						{member.profile_image ? (
-							<img src={member.profile_image} alt='' />
+							<img
+								src={`${process.env.REACT_APP_API_URL}${member.profile_image}`}
+								alt=''
+							/>
 						) : (
 							<FaUserCircle />
 						)}

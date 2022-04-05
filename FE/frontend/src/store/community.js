@@ -5,6 +5,7 @@ const communityInitialState = {
 	name: '',
 	intro: '',
 	private_code: '',
+	image: '',
 	is_private: false,
 	member_set: [],
 };
