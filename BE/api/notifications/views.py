@@ -1,4 +1,4 @@
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -23,9 +23,9 @@ def notification_unread(request):
     return Response({'response': len_notifications})
 
 
+# 알람 조회 is_read => True로 변경
 @api_view(['GET'])
 def notification_detail(request, notification_pk):
-    # 알람 조회 is_read => True로 변경
     notification = get_object_or_404(Notification, pk=notification_pk)
     notification.is_read = True
     notification.save()
@@ -33,9 +33,9 @@ def notification_detail(request, notification_pk):
     return Response({'community_id': minute.community.id, 'minute_id': notification.minute.id})
 
 
+# 알람 삭제
 @api_view(['DELETE'])
 def notification_delete(request, notification_pk):
-    # 알람 삭제
     notification = get_object_or_404(Notification, pk=notification_pk)
     notification.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
