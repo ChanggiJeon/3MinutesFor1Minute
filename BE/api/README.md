@@ -96,7 +96,7 @@ pip install -r requirements.txt
      - 가입 허용 대기자 조회 [GET]:  community/<int : community_pk>/waitinglist/
      - 가입 승인 [PUT]: conmmunity/<int : community_pk>/waitinglist/<int : member_pk>/approval/
   4. 커뮤니티 상세관리
-     - 커뮤니티 상세 조회, 수정 및 삭제 [GET, PUT, DELETE] : community/<int : community_pk>/member/<int : member_pk>/withdraw/
+     - 커뮤니티 상세 조회, 수정, 삭제 [GET, PUT, DELETE] : community/<int : community_pk>/
        1. GET
        2. PUT
           - 커뮤니티 이름 : name
@@ -109,8 +109,7 @@ pip install -r requirements.txt
   6. 커뮤니티 멤버 초대
      - 커뮤니티 멤버 초대 [GET] : community/invite/<int : community_pk>/<int : user_pk>/
      - 유저 검색 [GET] : community/invite/search/<str : keyword>/
-  7. 커뮤니티 멤버 개인 정보 조회, 수정 및 탈퇴
-     - 멤버 상세조회 [GET] : community/<int : community_pk>/member/<int : member_pk>/detail/
+  7. 커뮤니티 멤버 개인 정보 수정, 탈퇴
      - 커뮤니티 멤버 개인 수정 [PUT] : community/<int : community_pk>/member/<int : member_pk>/update/
        - 닉네임 : nickname
        - 소개 : bio
