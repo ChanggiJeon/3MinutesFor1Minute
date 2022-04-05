@@ -75,8 +75,8 @@ def board_update(request, community_pk, board_pk):
             serializer.save()
             board = get_object_or_404(Board, pk=serializer.data['id'])
 
-            if board.reference_file_set.all():
-                past_files = board.reference_file_set.all()
+            if board.boardfile_set.all():
+                past_files = board.boardfile_set.all()
 
                 for past_file in past_files:
                     past_file.delete()
@@ -85,6 +85,7 @@ def board_update(request, community_pk, board_pk):
                 if 'reference_file' in key:
                     new_file = BoardFile(board=board, reference_file=value)
                     new_file.save()
+            serializer = BoardSerializer(board)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
