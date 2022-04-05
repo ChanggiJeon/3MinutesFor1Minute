@@ -18,7 +18,7 @@ const speech = createSlice({
 	},
 	reducers: {
 		fetchSpeechByAI: (state, action) => {
-			const { id, content, summary } = action.payload;
+			const { id, summary } = action.payload;
 			// 워드 클라우드 데이터 가공 WORD[{text: string, value: number,}]
 			const cloudKeyword = action.payload.cloud_keyword;
 			const recordFile = action.payload.record_file;

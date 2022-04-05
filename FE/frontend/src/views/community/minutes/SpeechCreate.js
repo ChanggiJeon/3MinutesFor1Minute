@@ -18,6 +18,7 @@ import LabelFile from '../../../components/community/minutes/create/LabelFile';
 import InputFile from '../../../components/community/minutes/create/InputFile';
 import BtnBox from '../../../components/community/minutes/speech/BtnBox';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
+import RedMdBtn from '../../../components/common/RedMdBtn';
 // 워드 클라우드 디자인 제공 라이브러리
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale.css';
@@ -81,6 +82,10 @@ const InputLabel = styled(Label)`
 	}
 `;
 const SubmitBtn = styled(BlueMdBtn)`
+	padding: 8px 20px;
+	margin-right: 10px;
+`;
+const CanceltBtn = styled(RedMdBtn)`
 	padding: 8px 20px;
 	margin-right: 10px;
 `;
