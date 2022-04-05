@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 import routes from '../../../routes';
 import { updateMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
@@ -102,6 +103,13 @@ function MinutesUpdate() {
 		formData.append('minId', minutesId);
 		try {
 			dispatch(updateMinutesByData(formData)).then(res => {
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: '수정 완료',
+					showConfirmButton: false,
+					timer: 1500,
+				});
 				const { community, id } = res.payload;
 				navigate(`/community/${community}/minutes/${id}`);
 			});
@@ -122,7 +130,7 @@ function MinutesUpdate() {
 			</CompleteBtn>
 			<CancelBtn
 				onClick={() =>
-					navigate(`${routes.community}/${communityId}/${routes.minutesList}`)
+					navigate(`${routes.community}/${communityId}/minutes/${minutesId}`)
 				}
 			>
 				수정 취소
