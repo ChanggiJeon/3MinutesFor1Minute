@@ -250,10 +250,10 @@ function PostDetail() {
 						placeholder='내용 없음'
 					/>
 				</AreaLabel>
-				<Label htmlFor='upload'>
+				{/* <Label htmlFor='upload'>
 					파일첨부
 					<input {...register('upload')} type='file' multiple />
-				</Label>
+				</Label> */}
 				<SubmitButton type='submit'>수정</SubmitButton>
 			</NForm>
 		</Background>
