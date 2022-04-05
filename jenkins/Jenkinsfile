@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PATH = "$PATH:/var/run/bin"
+        PATH = "$PATH:/usr/local/bin"
     }
     stages {
         stage('Build') {
