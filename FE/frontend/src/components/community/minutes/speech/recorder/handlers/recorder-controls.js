@@ -1,4 +1,4 @@
-import createSpeech from '../../../../../../api/speech';
+import { createSpeech } from '../../../../../../api/speech';
 
 export async function startRecording(setRecorderState) {
 	try {

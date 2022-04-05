@@ -158,7 +158,7 @@ function SpeechCreate() {
 		getValues,
 		formState: { errors },
 	} = useForm({
-		mode: 'onChange',
+		mode: 'all',
 		defaultValues: {
 			content: '',
 			title: '',
@@ -176,6 +176,7 @@ function SpeechCreate() {
 	const { communityId, minutesId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	// ************제출 로직**************
 	function onValidSubmit(data) {
 		console.log(data);
 	}
