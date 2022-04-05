@@ -83,14 +83,12 @@ function PostDetail() {
 
 	const getPost = async () => {
 		try {
-			// console.log(communityId, postId)
 			await apiGetBoardDetail({ communityId, postId }).then(res => {
 				setPost(res.data);
 				setValue('title', res.data?.title);
 				setValue('content', res.data?.content);
 				setValue('isNotice', res.data?.isNotice);
 				setValue('upload', res.data?.upload);
-				console.log(res.data);
 			});
 		} catch (e) {
 			// error

@@ -41,7 +41,6 @@ function PostCreate() {
 				upload,
 			});
 			const { id: postId } = response.data;
-			// console.log(response.data)
 
 			await Swal.fire({
 				icon: 'success',
