@@ -3,11 +3,11 @@ from community.models import Community, Member
 
 
 def minute_file_path(instance, filename):
-    return f'minutefile/{instance.pk}/{filename}'
+    return f'minutefile/{instance.minute.pk}/{filename}'
 
 
 def speech_file_path(instance, filename):
-    return f'speechfile/{instance.pk}/{filename}'
+    return f'speechfile/{instance.speech.pk}/{filename}'
 
 
 class Minute(models.Model):

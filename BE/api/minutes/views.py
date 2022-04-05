@@ -48,6 +48,17 @@ def minute_list(request, community_pk):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+def minute_main(request, community_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    me = get_object_or_404(Member, user=request.user, community=community)
+    participants = me.participant_set.filter()
+    minutes = [participant.minute for participant in participants]
+    main_minutes = sorted(minutes, key=lambda x: x.deadline)[0:3]
+    serializer = MinuteListSerializer(main_minutes, many=True)
+    return Response(serializer.data)
+
+
 @swagger_auto_schema(method='POST', request_body=CustomMinuteSerializer)
 @api_view(['GET', 'POST'])
 def minute_create(request, community_pk):
@@ -157,41 +168,40 @@ def minute_update(request, community_pk, minute_pk):
         serializer = MinuteSerializer(minute, data=request.data)
         participants = get_list_or_404(Participant, minute=minute)
 
-        if 'is_closed' in request.data:
-            if 'is_closed' in request.data['is_closed'] == True:
+        if 'is_closed' in request.data and request.data['is_closed']:
+            for participant in participants:
+                notification = Notification(
+                    user=participant.member.user,
+                    minute=minute,
+                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                    is_activate=True
+                )
+
+                notification.save()
+
+        elif 'deadline' in request.data and request.data['deadline'] != minute.deadline:
+            notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
+
+            if not notifications:
                 for participant in participants:
-                    notification = Notification(
+                    notification_deadline = Notification(
                         user=participant.member.user,
                         minute=minute,
-                        content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
-                        is_activate=True
-                    )
-
-                    notification.save()
-
-            elif request.data['deadline'] != minute.deadline:
-                notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
-
-                if not notifications:
-                    for participant in participants:
-                        notification_deadline = Notification(
-                            user=participant.member.user,
-                            minute=minute,
-                            content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
-                            is_activate=False
-                        )
-
-                        notification_deadline.save()
-
-                for participant in participants:
-                    notification_alarm = Notification(
-                        user=participant.member.user,
-                        minute=minute,
-                        content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
+                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
                         is_activate=False
                     )
 
-                    notification_alarm.save()
+                    notification_deadline.save()
+
+            for participant in participants:
+                notification_alarm = Notification(
+                    user=participant.member.user,
+                    minute=minute,
+                    content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
+                    is_activate=False
+                )
+
+                notification_alarm.save()
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
