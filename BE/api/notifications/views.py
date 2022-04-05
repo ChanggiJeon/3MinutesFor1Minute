@@ -10,7 +10,7 @@ from .serializers import NotificationSerializer
 # 해당 유저의 is_activate=True 인 notification 목록
 @api_view(['GET'])
 def notification_list(request):
-    notifications = get_list_or_404(Notification, user=request.user, is_activate=True)
+    notifications = Notification.objects.filter(user=request.user, is_activate=True)
     serializer = NotificationSerializer(notifications, many=True)
     return Response(serializer.data)
 
@@ -18,7 +18,7 @@ def notification_list(request):
 # 해당 유저, is_activate=True && is_read=false 인 notification 갯수 반납
 @api_view(['GET'])
 def notification_unread(request):
-    notifications = get_list_or_404(Notification, user=request.user, is_activate=True, is_read=False)
+    notifications = Notification.objects.filter(user=request.user, is_activate=True, is_read=False)
     len_notifications = len(notifications)
     return Response({'response': len_notifications})
 
