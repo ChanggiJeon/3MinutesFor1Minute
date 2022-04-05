@@ -18,7 +18,6 @@ from community.serializers import MemberSerializer
 import sys
 sys.path.append('.')
 from AI.STT.API.google import upload_file, transcribe_gcs
-from AI.Summarization.summarize import summarize
 from AI.Summarization.summarize import summary as summary_def
 from AI.Wordslist.wordslist import wordslist
 from config.settings import MEDIA_ROOT
@@ -32,15 +31,13 @@ def AI(file_path, file_name):
         raise Exception
 
     elif len(text) <= 300:
-        title = ""
         summary = "전문이 300자 이하일때는 title과 summary가 제공되지 않습니다."
 
     else:
-        title = summary_def(text)
-        summary = summarize(text, ratio=0.4)
+        summary = summary_def(text)
 
     cload_keyword = wordslist(text)
-    return text, title, summary, cload_keyword
+    return text, summary, cload_keyword
 
 
 @api_view(['GET'])
@@ -116,6 +113,7 @@ def minute_create(request, community_pk):
                     notification_deadline.save()
 
             for key, value in request.data.items():
+                print(3, key)
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
                     new_file.save()
@@ -158,49 +156,50 @@ def minute_update(request, community_pk, minute_pk):
 
     elif me == assignee.member or me.is_admin:
         serializer = MinuteSerializer(minute, data=request.data)
-        members = get_list_or_404(Member, minute=minute)
+        participants = get_list_or_404(Participant, minute=minute)
 
-        if request.data['is_closed'] == True:
-            for member in members:
-                notification = Notification(
-                    user=member.user,
-                    minute=minute,
-                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
-                    is_activate=True
-                )
-
-                notification.save()
-
-        elif request.data['deadline'] != minute.deadline:
-            notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
-
-            if not notifications:
-                for member in members:
-                    notification_deadline = Notification(
-                        user=member.user,
+        if 'is_closed' in request.data:
+            if 'is_closed' in request.data['is_closed'] == True:
+                for participant in participants:
+                    notification = Notification(
+                        user=participant.member.user,
                         minute=minute,
-                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                        content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                        is_activate=True
+                    )
+
+                    notification.save()
+
+            elif request.data['deadline'] != minute.deadline:
+                notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
+
+                if not notifications:
+                    for participant in participants:
+                        notification_deadline = Notification(
+                            user=participant.member.user,
+                            minute=minute,
+                            content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                            is_activate=False
+                        )
+
+                        notification_deadline.save()
+
+                for participant in participants:
+                    notification_alarm = Notification(
+                        user=participant.member.user,
+                        minute=minute,
+                        content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
                         is_activate=False
                     )
 
-                    notification_deadline.save()
-
-            for member in members:
-                notification_alarm = Notification(
-                    user=member.user,
-                    minute=minute,
-                    content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
-                    is_activate=False
-                )
-
-                notification_alarm.save()
+                    notification_alarm.save()
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
 
-            if minute.reference_file_set.all():
-                past_files = minute.reference_file_set.all()
+            if minute.minutefile_set.all():
+                past_files = minute.minutefile_set.all()
 
                 for past_file in past_files:
                     past_file.delete()
@@ -209,6 +208,7 @@ def minute_update(request, community_pk, minute_pk):
                 if 'reference_file' in key:
                     new_file = MinuteFile(minute=minute, reference_file=value)
                     new_file.save()
+            serializer = MinuteSerializer(minute)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -245,28 +245,25 @@ def speech_create(request, community_pk, minute_pk):
     elif serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
         speech = get_object_or_404(Speech, pk=serializer.data['id'])
-
         for key, value in request.data.items():
             if 'reference_file' in key:
                 new_file = SpeechFile(speech=speech, reference_file=value)
                 new_file.save()
-    
         file = speech.record_file
         file_path = str(MEDIA_ROOT) + '\\record\\'
         file_name = str(file)[7:]
 
         try: 
-            content, title, summary, cloud_keyword = AI(file_path, file_name)
+            voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
         except:
             speech.delete()
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # print('file: {}\n file_path: {}\n file_name:{}\n content: {}\n title: {}\n summary: {}\n cloud_keyword: {}'.format(file, file_path, file_name, content, title, summary, cloud_keyword))
         serializer = SpeechSerializer(speech, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            serializer.save(content=content, title=title, summary=summary, cloud_keyword=cloud_keyword)
+            serializer.save(voice_text=voice_text, summary=summary, cloud_keyword=cloud_keyword)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -304,7 +301,6 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     speech = get_object_or_404(Speech, pk=speech_pk, minute=minute)
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
-
     if minute.is_closed:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -315,16 +311,16 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
             serializer.save()
             speech = get_object_or_404(Speech, pk=serializer.data['id'])
 
-            if speech.reference_file_set.all():
-                past_files = speech.reference_file_set.all()
-
+            if speech.speechfile_set.all():
+                past_files = speech.speechfile_set.all()
                 for past_file in past_files:
                     past_file.delete()
 
             for key, value in request.data.items():
                 if 'reference_file' in key:
-                    new_file = Speech(speech=speech, reference_file=value)
+                    new_file = SpeechFile(speech=speech, reference_file=value)
                     new_file.save()
+            serializer = SpeechSerializer(speech)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
