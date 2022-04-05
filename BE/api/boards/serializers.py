@@ -3,6 +3,14 @@ from .models import Board, BoardComment, BoardFile
 from community.serializers import CustomMemberSerializer
 
 
+class BoardFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BoardFile
+        fields = '__all__'
+        read_only_fields = ('board', )
+
+
 class BoardCommentSerializer(serializers.ModelSerializer):
     member = CustomMemberSerializer(read_only=True)
 
@@ -17,14 +25,6 @@ class CustomBoardCommentSerializer(BoardCommentSerializer):
     class Meta:
         model = BoardComment
         fields = ('content', )
-
-
-class BoardFileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = BoardFile
-        fields = '__all__'
-        read_only_fields = ('board', )
 
 
 class BoardListSerializer(serializers.ModelSerializer):
@@ -57,4 +57,4 @@ class CustomBoardSerializer(BoardSerializer):
 
     class Meta:
         model = Board
-        fields = ('title', 'content', 'is_notice', 'boardfile_set', )
+        fields = ('title', 'content', 'is_notice', )
