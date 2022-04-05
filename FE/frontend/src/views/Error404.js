@@ -14,7 +14,8 @@ function Error404() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		setTimeout(() => navigate(routes.main), 5000);
+		const out = setTimeout(() => navigate(routes.main), 5000);
+		return () => clearTimeout(out);
 	});
 
 	return (

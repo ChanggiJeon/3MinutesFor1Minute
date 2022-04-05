@@ -22,7 +22,6 @@ const MainSubTitle = styled(TextSubTitle)`
 const CommunityContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
 	justify-content: center;
 
 	a {
@@ -38,6 +37,7 @@ const Contents = styled.div`
 	min-height: 200px;
 	border: 1px solid black;
 	border-radius: 5px;
+	line-height: 1.5;
 `;
 
 const CommunityImgContainer = styled.div`

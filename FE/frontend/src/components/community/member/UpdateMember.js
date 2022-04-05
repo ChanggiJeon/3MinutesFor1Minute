@@ -43,20 +43,25 @@ function UpdateMember({ toggleMode, getMember }) {
 	const handleNicknameCheck = async () => {
 		const { nickname: newNickname } = getValues();
 
-		try {
-			await apiUniqueCheckNicknameInCommunity({
-				communityId,
-				nickname: newNickname,
-			}).then(res => {
-				if (res.status === 200) {
-					setNicknameCheck(true);
-				}
-			});
-		} catch (e) {
-			if (e.response.status === 400) {
-				setError('nickname', {
-					message: '이미 사용 중인 닉네임 입니다.',
+		if (nickname === newNickname) {
+			setNicknameCheck(true);
+		} else {
+			try {
+				await apiUniqueCheckNicknameInCommunity({
+					communityId,
+					nickname: newNickname,
+				}).then(res => {
+					if (res.status === 200) {
+						setNicknameCheck(true);
+					}
 				});
+			} catch (e) {
+				if (e.response.status === 400) {
+					setError('nickname', {
+						message: '이미 사용 중인 닉네임 입니다.',
+					});
+					setNicknameCheck(false);
+				}
 			}
 		}
 	};
@@ -129,14 +134,12 @@ function UpdateMember({ toggleMode, getMember }) {
 				<AreaLabel htmlFor='bio'>
 					자기소개
 					<textarea
-						{...register('bio', {
-							required: '자기소개를 입력하세요.',
-						})}
+						{...register('bio')}
 						placeholder='자기소개'
 						onInput={() => clearErrors('result')}
 					/>
 				</AreaLabel>
-				<SubmitButton type='submit' disabled={!isValid}>
+				<SubmitButton type='submit' disabled={!isValid && !nicknameCheck}>
 					변경
 				</SubmitButton>
 			</Form>
