@@ -9,12 +9,10 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Test API",
+      title="341 API",
       default_version="v1",
-      description="Test를 위한 API 문서",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(name="test", email="test@test.com"),
-      license=openapi.License(name="Test License"),
+      description="341를 위한 API 문서",
+      terms_of_service="https://forest-rotate-668.notion.site/API-7ade0d1288d14738bba5c6b5504d0413",
    ), 
    public=True,
    permission_classes=(permissions.AllowAny, ),
