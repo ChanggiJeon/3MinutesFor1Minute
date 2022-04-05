@@ -1,4 +1,4 @@
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -17,7 +17,7 @@ from .serializers import (
 @api_view(['GET'])
 def board_list(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    boards = get_list_or_404(Board, community=community)
+    boards = Board.objects.filter(community=community)
     serializer = BoardListSerializer(boards, many=True)
     return Response(serializer.data)
 
@@ -32,7 +32,6 @@ def board_create(request, community_pk):
     if serializer.is_valid(raise_exception=True):
         serializer.save(member=me, community=community)
         board = get_object_or_404(Board, pk=serializer.data['id'])
-
         for key, value in request.data.items():
             if 'reference_file' in key:
                 new_file = BoardFile(board=board, reference_file=value)
