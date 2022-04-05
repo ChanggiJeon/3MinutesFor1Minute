@@ -45,6 +45,7 @@ class SpeechListSerializer(serializers.ModelSerializer):
 
 
 class SpeechSerializer(serializers.ModelSerializer):
+    participant = ParticipantSerializer()
     speechfile_set = SpeechFileSerializer(many=True, read_only=True)
     speech_comments = serializers.SerializerMethodField('sc_filter')
 
