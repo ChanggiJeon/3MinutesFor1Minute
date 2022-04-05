@@ -40,8 +40,9 @@ export const deleteMinutesById = createAsyncThunk(
 	`${name}/DELETE_MINUTES`,
 	async data => {
 		const { communityId, minutesId } = data;
-		const response = await deleteMinutes(communityId, minutesId);
-		return response;
+		const res = await deleteMinutes(communityId, minutesId);
+		fetchMinutesByComId(communityId);
+		return res;
 	}
 );
 
@@ -54,22 +55,24 @@ export const updateMinutesByData = createAsyncThunk(
 		return response;
 	}
 );
+const initialState = {
+	allMinutes: [],
+	singleMinutes: {
+		createdAt: '',
+		author: '',
+		title: '',
+		participants: [],
+		speeches: [],
+		deadline: '',
+		Dday: '',
+		content: '',
+		referenceFile: undefined,
+	},
+};
 
 const minutes = createSlice({
 	name,
-	initialState: {
-		allMinutes: [],
-		singleMinutes: {
-			createdAt: '',
-			author: '',
-			title: '',
-			participants: [],
-			deadline: '',
-			Dday: '',
-			content: '',
-			referenceFile: undefined,
-		},
-	},
+	initialState,
 	reducers: {
 		// standard reducer logic
 	},
@@ -80,7 +83,6 @@ const minutes = createSlice({
 			}
 		},
 		[detailMinutesById.fulfilled]: (state, action) => {
-			console.log(action.payload);
 			const response = action.payload;
 			// 기본 데이터 생성
 			const writtenDate = response?.created_at;
@@ -113,17 +115,6 @@ const minutes = createSlice({
 				Dday,
 				content,
 				referenceFile,
-			};
-		},
-		[deleteMinutesById.fulfilled]: state => {
-			state.singleMinutes = {
-				createdAt: '',
-				author: '',
-				title: '',
-				participants: [],
-				Dday: '',
-				content: '',
-				referenceFile: undefined,
 			};
 		},
 	},

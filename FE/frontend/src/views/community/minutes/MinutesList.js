@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import routes from '../../../routes';
 import Container from '../../../components/community/Container';
@@ -27,9 +27,10 @@ function MinutesList() {
 	const { communityId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	useEffect( () => {
-		dispatch(fetchMinutesByComId(communityId));
-	}, []);
+	dispatch(fetchMinutesByComId(communityId));
+	// const allMinutes = useSelector(state => state.minutes.allMinutes);
+	// console.log('LIST');
+	// console.log(allMinutes);
 
 	return (
 		<Main>
