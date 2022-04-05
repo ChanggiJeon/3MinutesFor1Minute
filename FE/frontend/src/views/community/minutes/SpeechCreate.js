@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+// styled-components
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import ReactWordcloud from 'react-wordcloud';
@@ -19,6 +20,13 @@ import InputFile from '../../../components/community/minutes/create/InputFile';
 import BtnBox from '../../../components/community/minutes/speech/BtnBox';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
+// api
+import {
+	// fetchSpeechByAI,
+	// finishLoading,
+	deleteSpeechById,
+	updateSpeechByData,
+} from '../../../store/speech';
 // 워드 클라우드 디자인 제공 라이브러리
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale.css';
@@ -112,15 +120,13 @@ const CreatePage = styled.form`
 	flex-wrap: wrap;
 	align-content: center;
 	justify-content: center;
-	margin-top: 110px;
-	height: 100%;
 	width: 100%;
 `;
 
 function SpeechCreate() {
 	// 페이지 전환 로직 로딩-완료-수정
 	const [status, setStatus] = useState('loading');
-	const { createdSpeech } = useSelector(state => state.speech);
+	const { singleSpeech } = useSelector(state => state.speech);
 	const {
 		id,
 		summary,
@@ -129,7 +135,7 @@ function SpeechCreate() {
 		loading,
 		recordFile,
 		voiceText,
-	} = createdSpeech;
+	} = singleSpeech;
 	// const audioSrc = `http://localhost:8000${recordFile}`;
 	const audioSrc = 'http://localhost:8000/record/1648986351112.wav';
 	useEffect(() => {
@@ -160,7 +166,6 @@ function SpeechCreate() {
 		handleSubmit,
 		watch,
 		setValue,
-		getValues,
 		formState: { errors },
 	} = useForm({
 		mode: 'all',
@@ -173,23 +178,71 @@ function SpeechCreate() {
 		},
 	});
 	useEffect(() => {
-		if (createdSpeech) {
+		if (singleSpeech) {
 			setValue('voiceText', voiceText);
 			setValue('summary', summary);
 		}
-	}, [createdSpeech]);
+	}, [singleSpeech]);
 	const { communityId, minutesId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
 	// ************제출 로직**************
 	function onValidSubmit(data) {
-		console.log(data);
+		const formData = new FormData();
+		if (data.upload[0]) {
+			for (let i = 0; i < fileCount; i += 1) {
+				formData.append(`reference_file${i}`, data.upload[i]);
+			}
+		}
+		formData.append('enctype', 'multipart/form-data');
+		formData.append('title', data.title);
+		formData.append('content', data.content);
+		formData.append('voice_text', data.voiceText);
+		formData.append('summary', data.summary);
+		// navigate를 위한 값
+		formData.append('comId', communityId);
+		formData.append('minId', minutesId);
+		formData.append('spcId', id);
+		try {
+			dispatch(updateSpeechByData(formData)).then(res => {
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: '스피치가 작성되었습니다.',
+					showConfirmButton: false,
+					timer: 1500,
+				});
+				navigate(`/community/${communityId}/minutes/${minutesId}`);
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	}
+
+	// 작성 취소
+	const cancel = () => {
+		const requestData = {
+			communityId,
+			minutesId,
+			speechId: id,
+		};
+		dispatch(deleteSpeechById(requestData));
+		Swal.fire({
+			position: 'top-end',
+			icon: 'success',
+			title: '스피치가 삭제되었습니다.',
+			showConfirmButton: false,
+			timer: 1500,
+		});
+		navigate(`/community/${communityId}/minutes/${minutesId}`);
+	};
 
 	// 업로드 된 파일 표시하기 위한 변수
 	const uploadedFiles = watch('upload');
 	const fileList = uploadedFiles ? Object.values(uploadedFiles) : [];
 	const fileCount = fileList?.length;
+
 	return (
 		<>
 			{/* 로딩 페이지 */}
@@ -223,9 +276,7 @@ function SpeechCreate() {
 							<TextLabel htmlFor='voiceText'>
 								<textarea
 									style={{ height: '100%' }}
-									{...register('voiceText', {
-										required: '내용을 입력해주세요.',
-									})}
+									{...register('voiceText')}
 									cols='10'
 									rows='10'
 									placeholder='내용 없음'
@@ -254,9 +305,7 @@ function SpeechCreate() {
 						<TextLabel htmlFor='summary'>
 							<textarea
 								style={{ height: '50px' }}
-								{...register('summary', {
-									required: '내용을 입력해주세요.',
-								})}
+								{...register('summary')}
 								cols='10'
 								rows='10'
 								placeholder='내용 없음'
@@ -268,9 +317,7 @@ function SpeechCreate() {
 						<TextLabel htmlFor='content'>
 							<textarea
 								style={{ height: '200px' }}
-								{...register('content', {
-									required: '내용을 입력해주세요.',
-								})}
+								{...register('content')}
 								cols='10'
 								rows='10'
 								placeholder='내용 없음'
@@ -297,7 +344,8 @@ function SpeechCreate() {
 						<TextUpload>{fileCount}개의 파일 업로드</TextUpload>
 						<Br style={{ margin: '20px' }} />
 						<Buttons>
-							<SubmitBtn type='submit'>제출</SubmitBtn>
+							<CanceltBtn onClick={cancel}>작성 취소</CanceltBtn>
+							<SubmitBtn type='submit'>작성 완료</SubmitBtn>
 						</Buttons>
 					</SpeechInfoContainer>
 				</SpeechMain>

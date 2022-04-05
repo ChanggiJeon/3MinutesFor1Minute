@@ -89,7 +89,6 @@ function MinutesCreate() {
 	function onValidSubmit(data) {
 		const formData = new FormData();
 		const dataLenth = data.upload.length;
-		const referenceFile = [];
 		if (data.upload[0]) {
 			for (let i = 0; i < dataLenth; i += 1) {
 				formData.append(`reference_file${i}`, data.upload[i]);

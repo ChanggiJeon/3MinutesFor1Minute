@@ -107,7 +107,7 @@ function MinutesDetail() {
 					<TextSubTitle>스피치</TextSubTitle>
 				</HeaderBox>
 				<DivLine />
-				<SpeechBox>speech</SpeechBox>
+				<SpeechBox>{/* <SpeechList /> */}</SpeechBox>
 				<BtnBox>
 					<SpeechCreateBtn
 						onClick={() =>
