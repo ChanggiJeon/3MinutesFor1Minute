@@ -16,9 +16,12 @@ class Minute(models.Model):
         return self.title
 
 
+def minute_file_path(instance, filename):
+    return f'minute_file/minute_file_{instance.pk}/{filename}'
+
 class MinuteFile(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
-    reference_file = models.FileField(upload_to='minute/', null=True, blank=True)
+    reference_file = models.FileField(upload_to=minute_file_path, null=True, blank=True)
 
 
 class Participant(models.Model):
@@ -30,8 +33,9 @@ class Participant(models.Model):
 class Speech(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
     participant = models.OneToOneField(Participant, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
-    title = models.TextField(blank=True)
+    voice_text = models.TextField(blank=True)
     summary = models.TextField(blank=True)
     cloud_keyword = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,10 +45,13 @@ class Speech(models.Model):
     def __str__(self):
         return self.title
 
+def speech_file_path(instance, filename):
+    return f'speech_file/speech_file_{instance.pk}/{filename}'
+
 
 class SpeechFile(models.Model):
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
-    reference_file = models.FileField(upload_to='speech/', null=True, blank=True)
+    reference_file = models.FileField(upload_to=speech_file_path, null=True, blank=True)
 
 
 class SpeechComment(models.Model):

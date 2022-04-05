@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 import {
 	apiGetBoardDetail,
 	apiPutBoardDetail,
@@ -55,6 +57,9 @@ const CForm = styled(NForm)`
 
 function PostDetail() {
 	const { communityId, postId } = useParams();
+
+  const { nickname } = useSelector((state) => state.member)
+  const { username, id } = useSelector((state) => state.user)
 	const [post, setPost] = useState({});
 	const [targetComment, setTargetComment] = useState({});
 	const [isPostUpdating, setPostUpdating] = useState(false);
@@ -78,14 +83,12 @@ function PostDetail() {
 
 	const getPost = async () => {
 		try {
-			// console.log(communityId, postId)
 			await apiGetBoardDetail({ communityId, postId }).then(res => {
 				setPost(res.data);
 				setValue('title', res.data?.title);
 				setValue('content', res.data?.content);
 				setValue('isNotice', res.data?.isNotice);
 				setValue('upload', res.data?.upload);
-				// console.log(res.data);
 			});
 		} catch (e) {
 			// error
@@ -269,13 +272,13 @@ function PostDetail() {
 			</Header>
 			<Detail>
 				<p>제목 : {post?.title}</p>
-				<p>작성자 : {post?.member}</p>
-				<p>작성시간 : {post?.created_at}</p>
+				<p>작성자 : {post?.member?.nickname}</p>
+				<p>작성시간 : {dayjs(post?.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
 				<p>내용 : {post?.content}</p>
-				<p>첨부파일 {post?.upload}</p>
+				{/* <p>첨부파일 {post?.upload}</p> */}
 
 				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
-				{true ? (
+				{ post?.member?.nickname === nickname ? (
 					<Btns>
 						<SmallBtn type='button' onClick={() => setPostUpdating(true)}>
 							수정
@@ -317,9 +320,9 @@ function PostDetail() {
 							) : (
 								// 댓글 update false
 								<>
-									{comment.member} - {comment.content}
+									{comment?.member?.nickname} - {comment?.content}
 									{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
-									{true ? (
+									{ comment?.member?.nickname === nickname ? (
 										<>
 											<SmallBtn
 												type='button'
