@@ -46,5 +46,5 @@ class CommunityDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Community
-        fields = ('id', 'name', 'intro', 'private_code', 'is_private', 'member_set', )
-        read_only_fields = ('id', 'member_set', )
+        fields = '__all__'
+        read_only_fields = ('id', 'created_at', 'member_set', )

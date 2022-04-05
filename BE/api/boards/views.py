@@ -32,11 +32,12 @@ def board_create(request, community_pk):
     if serializer.is_valid(raise_exception=True):
         serializer.save(member=me, community=community)
         board = get_object_or_404(Board, pk=serializer.data['id'])
-
         for key, value in request.data.items():
             if 'reference_file' in key:
                 new_file = BoardFile(board=board, reference_file=value)
                 new_file.save()
+
+        serializer = BoardSerializer(board)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
