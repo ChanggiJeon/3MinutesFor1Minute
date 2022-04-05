@@ -9,7 +9,7 @@ def image_path(instance, filename):
 
 
 def profile_image_path(instance, filename):
-    return f'member/{instance.pk}/{filename}'
+    return f'member/{instance.user.pk}/{filename}'
 
 
 class Community(models.Model):
