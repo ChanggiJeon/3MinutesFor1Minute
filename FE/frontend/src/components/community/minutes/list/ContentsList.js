@@ -23,6 +23,7 @@ const Divider = styled(DivLine)`
 
 function ContentsList() {
 	const minutesList = useSelector(state => state.minutes.allMinutes);
+	let cnt = minutesList.length+1;
 	return (
 		<ListBox>
 			<NumBox>번호</NumBox>
@@ -32,8 +33,9 @@ function ContentsList() {
 			<DeadlineBox>D-day</DeadlineBox>
 			<Divider />
 			{minutesList[0] ? (
-				minutesList.map(minutes => (
+				[...minutesList].reverse().map(minutes => (
 					<MinutesItem
+						no={cnt-=1} 
 						key={minutes.id}
 						minId={minutes.id}
 						title={minutes.title}
