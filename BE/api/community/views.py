@@ -29,7 +29,7 @@ def make_random_code():
 
 @api_view(['GET'])
 def community_list(request):
-    members = get_list_or_404(Member, user=request.user)
+    members = Member.objects.filter(user=request.user)
     communities = [member.community for member in members]
     serializer = CommunitySearchSerializer(communities, many=True)
     return Response(serializer.data)
@@ -132,26 +132,25 @@ def uniquecheck_member_nickname(request, community_pk, nickname):
 
 @swagger_auto_schema(method='PUT', request_body=CommunitySerializer)
 @api_view(['GET', 'PUT', 'DELETE'])
-def community_detail_update_or_delete(request, community_pk):
+def community_detail_update_delete(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
 
     if request.method == 'GET':
         serializer = CommunityDetailSerializer(community)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data)
 
-    if not community.member_set.filter(is_admin=True, user_id=request.user.id):
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    elif community.member_set.filter(is_admin=True, user=request.user):
+        if request.method == 'PUT':
+            serializer = CommunitySerializer(community, data=request.data)
 
-    if request.method == 'PUT':
-        serializer = CommunitySerializer(instance=community, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-    elif request.method == 'DELETE':
-        community.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        elif request.method == 'DELETE':
+            community.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -219,44 +218,37 @@ def invite_user(request, community_pk, user_pk):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# 멤버 조회 / 수정 / 삭제
-@api_view(['GET'])
-def member_detail(request, community_pk, member_pk):
-    commnuity = get_object_or_404(Community, pk=community_pk)
-
-    if not commnuity.member_set.filter(user_id=request.user.pk):
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    member = get_object_or_404(Member, pk=member_pk)
-    serializer = MemberSerializer(member)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
+# 멤버 수정, 삭제
 @swagger_auto_schema(method='PUT', request_body=MemberSerializer)
 @api_view(['PUT'])
 def member_update(request, community_pk, member_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    member = community.member_set.get(id=member_pk)
+    me = community.member_set.get(pk=member_pk)
 
-    if member.user != request.user:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    if request.user == me.user:
+        members = get_list_or_404(Member, community=community)
+        nicknames = [member.nickname for member in members]
 
-    serializer = MemberSerializer(instance=member, data=request.data)
+        if request.data['nickname'] in nicknames:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = MemberSerializer(me, data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['DELETE'])
 def member_delete(request, community_pk, member_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    member = get_object_or_404(Member, pk=member_pk)
+    me = community.member_set.get(pk=member_pk)
 
-    if community.member_set.filter(user_id=request.user.id):
-        reporter = community.member_set.get(user_id=request.user.id)
+    if request.user == me.user:
+        me.delete()
 
-        if reporter.is_admin == True or member_pk == reporter.id:
-            member.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        if me.is_admin == True:
+            community.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
