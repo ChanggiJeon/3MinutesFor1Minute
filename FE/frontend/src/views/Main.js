@@ -22,7 +22,6 @@ const MainSubTitle = styled(TextSubTitle)`
 const CommunityContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
 	justify-content: center;
 
 	a {
@@ -38,6 +37,7 @@ const Contents = styled.div`
 	min-height: 200px;
 	border: 1px solid black;
 	border-radius: 5px;
+	line-height: 1.5;
 `;
 
 const CommunityImgContainer = styled.div`
@@ -140,7 +140,11 @@ function Main() {
 						<Link to={`/community/${e.id}`} key={e.id}>
 							<Contents>
 								<CommunityImgContainer>
-									{e.image ? <img src={e.image} alt='' /> : <RiCommunityLine />}
+									{e.image ? (
+										<img src={`${process.env.REACT_APP_API_URL}${e.image}`} alt='' />
+									) : (
+										<RiCommunityLine />
+									)}
 								</CommunityImgContainer>
 								<CommunityName>{e.name}</CommunityName>
 								<div>{e.intro}</div>

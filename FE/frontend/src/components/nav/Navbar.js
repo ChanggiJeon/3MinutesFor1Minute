@@ -22,11 +22,12 @@ const Navigation = styled.nav`
 `;
 
 const ProfileContainer = styled.div`
-	font-size: 30px;
+	font-size: 40px;
 
 	img {
-		width: 30px;
-		height: 30px;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
 		object-fit: cover;
 	}
 `;
@@ -53,7 +54,11 @@ function Navbar() {
 			<NavItem>
 				<Link to={`/profile/${id}`}>
 					<ProfileContainer>
-						{profileImage ? <img src={profileImage} alt='' /> : <FaUserCircle />}
+						{profileImage ? (
+							<img src={`${process.env.REACT_APP_API_URL}${profileImage}`} alt='' />
+						) : (
+							<FaUserCircle />
+						)}
 					</ProfileContainer>
 				</Link>
 			</NavItem>

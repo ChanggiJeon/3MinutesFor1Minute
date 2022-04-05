@@ -42,7 +42,7 @@ function CreateCommunity() {
 		} catch (e) {
 			Swal.fire({
 				icon: 'error',
-				text: '이미 사용 중인 커뮤니티 이름입니다.',
+				text: '사용할 수 없는 커뮤니티 이름입니다.',
 			});
 		}
 	};
@@ -86,6 +86,10 @@ function CreateCommunity() {
 						minLength: {
 							value: 5,
 							message: '이름을 5자 이상 입력하세요.',
+						},
+						pattern: {
+							value: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,}$/,
+							message: '특수문자, 공백은 사용할 수 없습니다.',
 						},
 					})}
 					type='name'
