@@ -26,6 +26,7 @@ import routes from '../../routes';
 import TextSubTitle from '../../components/common/TextSubTitle';
 import TextTitle from '../../components/common/TextTitle';
 import UpdateCommunity from '../../components/community/admin/UpdateCommunity';
+import UpdateImage from '../../components/community/admin/UpdateImage';
 
 const Divider = styled.div`
 	display: grid;
@@ -65,6 +66,7 @@ const TableContainer = styled.div`
 		width: 18px;
 		height: 18px;
 		object-fit: cover;
+		border-radius: 50%;
 	}
 
 	a {
@@ -116,6 +118,7 @@ function Admin() {
 		mode: 'all',
 	});
 	const [isUpdateMode, setUpdateMode] = useState(false);
+	const [isImageMode, setImageMode] = useState(false);
 
 	const onValidSubmit = async () => {
 		const { keyword } = getValues();
@@ -271,6 +274,12 @@ function Admin() {
 						</button>
 					</AdminContents>
 					<AdminContents>
+						<TextSubTitle>커뮤니티 이미지 변경</TextSubTitle>
+						<button type='button' onClick={() => setImageMode(true)}>
+							변경
+						</button>
+					</AdminContents>
+					<AdminContents>
 						<TextSubTitle>커뮤니티 삭제</TextSubTitle>
 						<button type='button' onClick={handleDeleteCommunity}>
 							삭제
@@ -295,7 +304,10 @@ function Admin() {
 								<td>
 									<Link to={`/community/${communityId}/member/${e.id}`}>
 										{e.profile_image ? (
-											<img src={e.profile_image} alt='' />
+											<img
+												src={`${process.env.REACT_APP_API_URL}${e.profile_image}`}
+												alt=''
+											/>
 										) : (
 											<FaUserCircle />
 										)}
@@ -334,6 +346,7 @@ function Admin() {
 				</Table>
 			</TableContainer>
 			{isUpdateMode && <UpdateCommunity setMode={setUpdateMode} />}
+			{isImageMode && <UpdateImage setMode={setImageMode} />}
 		</Main>
 	);
 }
