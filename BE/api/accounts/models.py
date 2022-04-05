@@ -5,7 +5,7 @@ from imagekit.processors import ResizeToFill
 
 
 def profile_image_path(instance, filename):
-    return f'user_{instance.pk}/{filename}'
+    return f'user/{instance.pk}/{filename}'
 
 
 class User(AbstractUser):
@@ -14,7 +14,7 @@ class User(AbstractUser):
         upload_to=profile_image_path,
         processors=[ResizeToFill(125, 125)],
         format='JPEG',
-        options={'quality': 80},
+        options={'quality': 100},
         null=True,
         blank=True,
     )

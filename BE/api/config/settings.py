@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'boards',
     'community',
     'minutes',
+    'notifications',
 
     # 2nd party
     'corsheaders',

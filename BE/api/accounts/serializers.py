@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(min_length=5, max_length=16)
     password = serializers.CharField(min_length=8, max_length=20, write_only=True)
     password_confirm = password
-    email = serializers.CharField()
+    email = serializers.EmailField()
     name = serializers.CharField(max_length=16, required=False)
 
     def validate(self, data):
@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'password', 'password_confirm', 'email', 'name', )
+        fields = ('id', 'username', 'password', 'password_confirm', 'email', 'name', 'profile_image', )
         read_only_fields = ('id', )
 
 
@@ -28,7 +28,7 @@ class AuthenticateSerializer(UserSerializer):
 
 
 class UserUpdateSerializer(UserSerializer):
-    password = serializers.CharField(min_length=8, max_length=20, write_only=True)
+    password = serializers.CharField(min_length=8, max_length=20, write_only=True, required=False)
     new_password = password
     new_password_confirm = password
 
