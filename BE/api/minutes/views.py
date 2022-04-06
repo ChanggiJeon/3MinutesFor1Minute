@@ -170,8 +170,9 @@ def minute_update(request, community_pk, minute_pk):
     minute = get_object_or_404(Minute, pk=minute_pk, community=community)
     me = get_object_or_404(Member, user=request.user, community=community)
     assignee = minute.participant_set.get(is_assignee=True)
+    old_deadline = minute.deadline
 
-    if minute.deadline != request.data['deadline'] and datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
+    if 'deadline' in request.data and old_deadline != request.data['deadline'] and datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif me == assignee.member or me.is_admin:
@@ -192,7 +193,7 @@ def minute_update(request, community_pk, minute_pk):
                     new_file = MinuteFile(minute=minute, filename=str(value), reference_file=value)
                     new_file.save()
 
-            if 'deadline' in request.data and request.data['deadline'] != minute.deadline:
+            if 'deadline' in request.data and old_deadline != request.data['deadline']:
                 notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
 
                 if not notifications:
@@ -211,7 +212,7 @@ def minute_update(request, community_pk, minute_pk):
                         user=participant.member.user,
                         minute=minute,
                         content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
-                        is_activate=False
+                        is_activate=True
                     )
 
                     notification_alarm.save()
