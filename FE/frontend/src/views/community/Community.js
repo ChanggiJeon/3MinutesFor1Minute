@@ -169,7 +169,7 @@ function Community() {
 				<PostContainer>
 					<PostCategory>최근 공지</PostCategory>
 					{recentNotice.map(e => (
-						<PostContent key={e.id} to={`/community/${communityId}/posts/${e.id}`}>
+						<PostContent to={`/community/${communityId}/posts/${e.id}`} key={e.id}>
 							{e.title.length > 20 ? `${e.title.slice(0, 20)}...` : e.title}
 						</PostContent>
 					))}
@@ -177,7 +177,7 @@ function Community() {
 				<PostContainer>
 					<PostCategory>최근 게시물</PostCategory>
 					{recentPost.map(e => (
-						<PostContent key={e.id} to={`/community/${communityId}/posts/${e.id}`}>
+						<PostContent to={`/community/${communityId}/posts/${e.id}`} key={e.id}>
 							{e.title.length > 20 ? `${e.title.slice(0, 20)}...` : e.title}
 						</PostContent>
 					))}
