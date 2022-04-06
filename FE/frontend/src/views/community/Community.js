@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { RiCommunityLine } from 'react-icons/ri';
 import { FaUserCircle } from 'react-icons/fa';
 import Main from '../../components/community/MainStart';
@@ -11,6 +11,12 @@ import MainBox from '../../components/community/main/MainBox';
 import SubBox from '../../components/community/main/SubBox';
 import { fetchMinutesByComId } from '../../store/minutes';
 import routes from '../../routes';
+import { apiGetBoards } from '../../api/board';
+import EmptyBtn from '../../components/auth/EmptyBtn';
+
+const CommunitySubBox = styled(SubBox)`
+	position: relative;
+`;
 
 const TitleContainer = styled.div`
 	display: flex;
@@ -40,6 +46,23 @@ const ImageContainer = styled.div`
 	}
 `;
 
+const PostContainer = styled.div`
+	padding: 10px;
+`;
+
+const PostCategory = styled.div`
+	font-size: 20px;
+	margin-bottom: 10px;
+`;
+
+const PostContent = styled(Link)`
+	text-decoration: none;
+	color: ${props => props.theme.accentColor};
+	display: block;
+	margin-bottom: 5px;
+	font-size: 16px;
+`;
+
 const MembersContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
@@ -52,6 +75,13 @@ const MemberContent = styled.div`
 	align-items: center;
 	justify-content: center;
 	padding: 10px;
+	margin: 5px;
+`;
+
+const More = styled(EmptyBtn)`
+	position: absolute;
+	top: 25px;
+	right: 25px;
 `;
 
 function Community() {
@@ -64,10 +94,25 @@ function Community() {
 		image,
 		member_set: memberSet,
 	} = useSelector(state => state.community);
+	const [recentNotice, setRecentNotice] = useState([]);
+	const [recentPost, setRecentPost] = useState([]);
+	const location = useLocation();
+
+	const getPosts = async () => {
+		try {
+			const { data } = await apiGetBoards({ communityId });
+
+			setRecentNotice(data.filter(e => e.is_notice).slice(0, 2));
+			setRecentPost(data.filter(e => !e.is_notice).slice(0, 2));
+		} catch (e) {
+			// error
+		}
+	};
 
 	useEffect(() => {
 		dispatch(fetchMinutesByComId(communityId));
-	}, []);
+		getPosts();
+	}, [location]);
 
 	return (
 		<Main>
@@ -88,12 +133,34 @@ function Community() {
 				<TextSubTitle>회의록</TextSubTitle>
 				<DivLine />
 			</MainBox>
-			<SubBox>
+			<CommunitySubBox>
+				<More type='button' onClick={() => navigate(routes.posts)}>
+					...더보기
+				</More>
 				<TextSubTitle>게시글</TextSubTitle>
 				<DivLine />
-			</SubBox>
-			<SubBox onClick={() => navigate(routes.members)}>
+				<PostContainer>
+					<PostCategory>최근 공지</PostCategory>
+					{recentNotice.map(e => (
+						<PostContent to={`/community/${communityId}/posts/${e.id}`}>
+							{e.title.length > 20 ? `${e.title.slice(0, 20)}...` : e.title}
+						</PostContent>
+					))}
+				</PostContainer>
+				<PostContainer>
+					<PostCategory>최근 게시물</PostCategory>
+					{recentPost.map(e => (
+						<PostContent to={`/community/${communityId}/posts/${e.id}`}>
+							{e.title.length > 20 ? `${e.title.slice(0, 20)}...` : e.title}
+						</PostContent>
+					))}
+				</PostContainer>
+			</CommunitySubBox>
+			<CommunitySubBox>
 				<TextSubTitle>회원 목록</TextSubTitle>
+				<More type='button' onClick={() => navigate(routes.members)}>
+					...더보기
+				</More>
 				<DivLine />
 				{memberSet && (
 					<MembersContainer>
@@ -114,11 +181,11 @@ function Community() {
 						))}
 					</MembersContainer>
 				)}
-			</SubBox>
-			<SubBox>
+			</CommunitySubBox>
+			<CommunitySubBox>
 				<TextSubTitle>일정 관리</TextSubTitle>
 				<DivLine />
-			</SubBox>
+			</CommunitySubBox>
 		</Main>
 	);
 }
