@@ -151,7 +151,7 @@ pip install -r requirements.txt
     - content
     - conclusion
     - is_closed (기본 False)
-    - deadline
+    - deadline (현재 시간보다 이후에만)
     - reference_file1, reference_file2, ... (필수 X)
     - member_ids = [ids, ..., ] (회의에 참석할 멤버들 id를 리스트로 전송)
   - 회의록 상세 정보 (스피치까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/
@@ -161,7 +161,7 @@ pip install -r requirements.txt
     - content
     - conclusion
     - is_closed (기본 False)
-    - deadline
+    - deadline (현재 시간보다 이후에만)
     - reference_file1, reference_file2, ... (필수 X)
       - 수정하면 기존 파일 다 날아가고 새로운 파일만 등록
   - 회의록 파일 다운로드 [GET] : <int : community_pk>/minutes/<int : minute_pk>/download/<int : reference_file_pk>/
@@ -169,12 +169,12 @@ pip install -r requirements.txt
 
 
 - 스피치 (Speech)
-  - 스피치 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/create/
+  - 스피치 작성 (마감 시간이 남았을때만) [POST] : <int : community_pk>/minutes/<int : minute_pk>/create/
     - record_file (테스트 X)
     - reference_file1, reference_file2, ... (필수 X)
   - 스피치 상세 정보 (댓글까지 출력) [GET] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/
-  - 스피치 삭제 [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/delete/
-  - 스피치 수정 (수정할 부분만) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/update/
+  - 스피치 삭제 (마감 시간이 남았을때만) [DELETE] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/delete/
+  - 스피치 수정 (마감 시간이 남았을때만, 수정할 부분만) [PUT] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/update/
     - content
     - title
     - summary

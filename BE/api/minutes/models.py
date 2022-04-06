@@ -38,7 +38,7 @@ class Participant(models.Model):
 class Speech(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
     participant = models.OneToOneField(Participant, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, blank=True)
     content = models.TextField(blank=True)
     voice_text = models.TextField(blank=True)
     summary = models.TextField(blank=True)
