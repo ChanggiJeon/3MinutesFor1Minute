@@ -100,7 +100,7 @@ import mimetypes
 @api_view(['GET'])
 def board_file_download(request, community_pk, board_pk, reference_file_pk):
     reference_file = get_object_or_404(BoardFile, pk=reference_file_pk)
-    file_name = str(reference_file.reference_file)[7:]
+    file_name = reference_file.filename
     file_path = str(MEDIA_ROOT) + '/' + str(reference_file.reference_file)
     fl = open(file_path, 'rb')
     mime_types, _ = mimetypes.guess_type(file_path)
