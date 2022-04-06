@@ -306,7 +306,7 @@ function Admin() {
 						{members.map(e => (
 							<tr key={e.id}>
 								<td>
-									<Link to={`/community/${communityId}/member/${e.id}`}>
+									<Link to={`/community/${communityId}/member/${e.nickname}`}>
 										{e.profile_image ? (
 											<img
 												src={`${process.env.REACT_APP_MEDIA_URL}${e.profile_image}`}

@@ -93,9 +93,9 @@ function Posts() {
 							{posts
 								// .reverse()
 								.slice(offset, offset + limit)
-                .filter(post => post.is_notice === false)
+								.filter(post => post.is_notice === false)
 								.map(post => (
-                  <tr key={post.id}>
+									<tr key={post.id}>
 										<td>{post.id}</td>
 										<td>
 											<SLink

@@ -15,6 +15,7 @@ import BtnBox from '../../../components/community/minutes/speech/BtnBox';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
 import GrayMdBtn from '../../../components/common/GrayMdBtn';
+import HeaderBox from '../../../components/community/HeaderBox';
 // api
 import { deleteSpeechById, readSingleSpeechById } from '../../../store/speech';
 // 워드 클라우드 디자인 제공 라이브러리
@@ -90,6 +91,7 @@ const TextUpload = styled(TextContent)`
 `;
 const Buttons = styled(BtnBox)`
 	justify-content: end;
+	width: 60%;
 `;
 const CreatePage = styled.div`
 	display: flex;
@@ -198,7 +200,22 @@ function SpeechDetail() {
 				</LeftContainer>
 				<RightContainer>
 					<SpeechInfoContainer>
-						<TextSubTitle>스피치 정보</TextSubTitle>
+						<HeaderBox>
+							<TextSubTitle>스피치 정보</TextSubTitle>
+							<Buttons>
+								<UpdateBtn onClick={updateSpeech}>수정</UpdateBtn>
+								<DeleteBtn onClick={deleteSpeech}>삭제</DeleteBtn>
+								<BackSpaceBtn
+									onClick={() => {
+										navigate(
+											`/community/${params.communityId}/minutes/${params.minutesId}`
+										);
+									}}
+								>
+									돌아가기
+								</BackSpaceBtn>
+							</Buttons>
+						</HeaderBox>
 						<DivLine />
 						<TextBox>
 							최근 수정일: {dayjs(updatedAt).format('YYYY-MM-DD HH:MM')}
@@ -211,19 +228,6 @@ function SpeechDetail() {
 						<SummaryBox>{content}</SummaryBox>
 						<TextUpload>첨부 파일 </TextUpload>
 						<Br style={{ margin: '20px' }} />
-						<Buttons>
-							<UpdateBtn onClick={updateSpeech}>스피치 수정</UpdateBtn>
-							<DeleteBtn onClick={deleteSpeech}>스피치 삭제</DeleteBtn>
-							<BackSpaceBtn
-								onClick={() => {
-									navigate(
-										`/community/${params.communityId}/minutes/${params.minutesId}`
-									);
-								}}
-							>
-								돌아가기
-							</BackSpaceBtn>
-						</Buttons>
 					</SpeechInfoContainer>
 				</RightContainer>
 			</SpeechMain>

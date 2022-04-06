@@ -76,7 +76,7 @@ def minute_create(request, community_pk):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        if request.data['deadline'] <= datetime.datetime.now():
+        if datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = MinuteSerializer(data=request.data)
@@ -170,7 +170,7 @@ def minute_update(request, community_pk, minute_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     assignee = minute.participant_set.get(is_assignee=True)
 
-    if minute.deadline != request.data['deadline'] and request.data['deadline'] <= datetime.datetime.now():
+    if minute.deadline != request.data['deadline'] and datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif me == assignee.member or me.is_admin:
@@ -257,7 +257,7 @@ def speech_create(request, community_pk, minute_pk):
     participant = me.participant_set.get(minute=minute)
     serializer = SpeechSerializer(data=request.data)
 
-    if minute.is_closed or minute.deadline <= datetime.datetime.now():
+    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif serializer.is_valid(raise_exception=True):
@@ -304,7 +304,7 @@ def speech_delete(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed or minute.deadline <= datetime.datetime.now():
+    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
@@ -322,7 +322,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed or minute.deadline <= datetime.datetime.now() or not request.data['title']:
+    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now() or not request.data['title']:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
