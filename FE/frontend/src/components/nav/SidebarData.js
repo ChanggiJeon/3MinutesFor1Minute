@@ -17,7 +17,7 @@ function sidebarData() {
 		{
 			name: 'Profile',
 			title: nickname,
-			path: `/community/${communityId}/member/${id}`,
+			path: `/community/${communityId}/member/${nickname}`,
 			icon: <FaAddressCard />,
 		},
 		{

@@ -21,8 +21,8 @@ import SubmitButton from '../../auth/SubmitButton';
 import Title from '../../auth/Title';
 
 function UpdateMember({ toggleMode, getMember }) {
-	const { nickname, bio } = useSelector(state => state.member);
-	const { communityId, memberId } = useParams();
+	const { id, nickname, bio } = useSelector(state => state.member);
+	const { communityId, memberNickname } = useParams();
 	const {
 		register,
 		handleSubmit,
@@ -38,6 +38,7 @@ function UpdateMember({ toggleMode, getMember }) {
 		},
 	});
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [nicknameCheck, setNicknameCheck] = useState(true);
 
 	const handleNicknameCheck = async () => {
@@ -72,7 +73,7 @@ function UpdateMember({ toggleMode, getMember }) {
 		try {
 			await apiPutMember({
 				communityId,
-				memberId,
+				memberId: id,
 				nickname: newNickname,
 				bio: newBio,
 			});
@@ -87,7 +88,11 @@ function UpdateMember({ toggleMode, getMember }) {
 				})
 			);
 			toggleMode('info');
-			getMember();
+			if (nickname !== newNickname) {
+				navigate(`/community/${communityId}/member/${newNickname}`);
+			} else {
+				getMember();
+			}
 		} catch (e) {
 			// error
 			Swal.fire({
