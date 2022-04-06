@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaLock, FaUser } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 import { IoWarningOutline } from 'react-icons/io5';
 import { MdOutlineLock } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
@@ -63,6 +64,10 @@ function Login() {
 			navigate(routes.main);
 		} catch (e) {
 			if (e.response.status === 401) {
+				Swal.fire({
+					icon: 'error',
+					text: '계정정보가 유효하지 않습니다.',
+				});
 				setError('result', { message: '계정정보가 유효하지 않습니다.' });
 			}
 		}

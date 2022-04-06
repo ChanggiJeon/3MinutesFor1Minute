@@ -36,6 +36,7 @@ const ImageContainer = styled.div`
 		width: 30px;
 		height: 30px;
 		object-fit: cover;
+		border-radius: 50%;
 	}
 `;
 
@@ -58,7 +59,11 @@ function Community() {
 			<TitleContainer>
 				<div>
 					<ImageContainer>
-						{image ? <img src={image} alt='' /> : <RiCommunityLine />}
+						{image ? (
+							<img src={`${process.env.REACT_APP_API_URL}${image}`} alt='' />
+						) : (
+							<RiCommunityLine />
+						)}
 					</ImageContainer>
 					<TextSubTitle>{name}</TextSubTitle>
 				</div>

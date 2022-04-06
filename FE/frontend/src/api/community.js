@@ -33,6 +33,16 @@ export const apiPutCommunityInfo = ({ communityId, name, intro, isPrivate }) =>
 		},
 	});
 
+export const apiUpdateCommunityImage = ({ communityId, formData }) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/community/${communityId}/`,
+		data: formData,
+		headers: {
+			...setToken(),
+		},
+	});
+
 export const apiGetMyMemberProfile = ({ communityId }) =>
 	axios({
 		method: 'get',
@@ -64,10 +74,20 @@ export const apiPutMember = ({ communityId, memberId, nickname, bio }) =>
 		},
 	});
 
+export const apiUpdateMemberProfile = ({ communityId, memberId, formData }) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/update/`,
+		data: formData,
+		headers: {
+			...setToken(),
+		},
+	});
+
 export const apiWithdrawMember = ({ communityId, memberId }) =>
 	axios({
 		method: 'delete',
-		url: `${BASE_URL}/community/${communityId}/member/${memberId}/withDraw/`,
+		url: `${BASE_URL}/community/${communityId}/member/${memberId}/withdraw/`,
 		headers: {
 			...setToken(),
 		},

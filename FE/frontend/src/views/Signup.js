@@ -30,8 +30,10 @@ function Signup() {
 		formState: { errors, isValid },
 		getValues,
 		setError,
+		setValue,
 		clearErrors,
 		watch,
+		getFieldState,
 	} = useForm({
 		mode: 'all',
 	});
@@ -53,45 +55,60 @@ function Signup() {
 	const handleIdCheck = async () => {
 		const { id } = getValues();
 
-		try {
-			await apiUniqueCheckId({ id }).then(res => {
-				if (res.status === 200) {
-					setIdCheck(true);
-				}
-			});
-		} catch (e) {
-			if (e.response.status === 400) {
-				setError('id', {
-					message: '이미 사용 중인 아이디 입니다.',
+		if (id) {
+			try {
+				await apiUniqueCheckId({ id }).then(res => {
+					if (res.status === 200) {
+						setIdCheck(true);
+					}
 				});
+			} catch (e) {
+				if (e.response.status === 400) {
+					setError('id', {
+						message: '이미 사용 중인 아이디 입니다.',
+					});
+				}
 			}
+		} else {
+			Swal.fire({
+				icon: 'error',
+				text: '아이디를 입력하세요.',
+			});
 		}
 	};
 
 	const handleEmailCheck = async () => {
 		const { email } = getValues();
 
-		try {
-			setEmailConfirmLoading(true);
+		if (!getFieldState('email').invalid) {
+			try {
+				setEmailConfirmLoading(true);
 
-			const response = await apiUniqueCheckEmail({ email });
+				const response = await apiUniqueCheckEmail({ email });
 
-			if (response.status === 200) {
-				setEmailCheck(true);
-				setEmailCertCode(response.data.code);
-				Swal.fire({
-					icon: 'success',
-					text: '이메일로 인증코드가 발송되었습니다.',
-				});
+				if (response.status === 200) {
+					setEmailCheck(true);
+					setValue('emailConfirmCode', null);
+					setEmailCertCode(response.data.code);
+					Swal.fire({
+						icon: 'success',
+						text: '이메일로 인증코드가 발송되었습니다.',
+					});
+				}
+			} catch (e) {
+				if (e.response.status === 400) {
+					setError('email', {
+						message: '이미 사용 중인 이메일 입니다.',
+					});
+				}
+			} finally {
+				setEmailConfirmLoading(false);
 			}
-		} catch (e) {
-			if (e.response.status === 400) {
-				setError('email', {
-					message: '이미 사용 중인 이메일 입니다.',
-				});
-			}
-		} finally {
-			setEmailConfirmLoading(false);
+		} else {
+			Swal.fire({
+				icon: 'error',
+				text: '이메일을 형식이 올바르지 않습니다.',
+			});
 		}
 	};
 
@@ -213,7 +230,7 @@ function Signup() {
 									message: '8자 이상 입력하세요.',
 								},
 								pattern: {
-									value: /^(?=.+[a-z])(?=.+[A-Z])((?=.+[0-9])(?=.+[!@#$%^&*])).{8,}$/,
+									value: /((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,})/,
 									message: '영문 대문자, 소문자, 숫자, 특수문자를 사용하세요.',
 								},
 							})}
@@ -275,14 +292,17 @@ function Signup() {
 							placeholder='이메일'
 							maxLength='25'
 							onInput={() => clearErrors('result')}
-							onChange={() => setEmailCheck(false)}
+							onChange={() => {
+								setEmailCheck(false);
+								setEmailConfirm(false);
+							}}
 						/>
 						<SubmitButton
 							type='button'
 							onClick={handleEmailCheck}
 							disabled={emailConfirmLoading}
 						>
-							{emailConfirmLoading ? '로딩중' : '인증하기'}
+							{emailConfirmLoading ? '발송완료' : '인증하기'}
 						</SubmitButton>
 					</Label>
 					{ErrorAndCheck(errors?.email?.message, emailCheck)}
@@ -296,8 +316,13 @@ function Signup() {
 								maxLength='10'
 								onInput={() => clearErrors('result')}
 								onChange={() => setEmailConfirm(false)}
+								disabled={emailConfirm}
 							/>
-							<SubmitButton type='button' onClick={handleEmailConfirm}>
+							<SubmitButton
+								type='button'
+								onClick={handleEmailConfirm}
+								disabled={emailConfirm}
+							>
 								코드확인
 							</SubmitButton>
 						</Label>

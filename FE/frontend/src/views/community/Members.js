@@ -19,6 +19,7 @@ const TableContainer = styled.div`
 		width: 18px;
 		height: 18px;
 		object-fit: cover;
+		border-radius: 50%;
 	}
 
 	a {
@@ -60,7 +61,10 @@ function Members() {
 								<td>
 									<Link to={`/community/${communityId}/member/${e.id}`}>
 										{e.profile_image ? (
-											<img src={e.profile_image} alt='' />
+											<img
+												src={`${process.env.REACT_APP_API_URL}${e.profile_image}`}
+												alt=''
+											/>
 										) : (
 											<FaUserCircle />
 										)}

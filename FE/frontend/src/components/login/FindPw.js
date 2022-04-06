@@ -37,6 +37,7 @@ function FindPw() {
 			});
 		} catch (e) {
 			setError('result', { message: '존재하지 않는 회원 정보 입니다.' });
+			return;
 		} finally {
 			setLoading(false);
 		}

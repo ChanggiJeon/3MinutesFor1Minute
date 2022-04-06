@@ -26,6 +26,7 @@ import routes from '../../routes';
 import TextSubTitle from '../../components/common/TextSubTitle';
 import TextTitle from '../../components/common/TextTitle';
 import UpdateCommunity from '../../components/community/admin/UpdateCommunity';
+import UpdateImage from '../../components/community/admin/UpdateImage';
 
 const Divider = styled.div`
 	display: grid;
@@ -65,6 +66,7 @@ const TableContainer = styled.div`
 		width: 18px;
 		height: 18px;
 		object-fit: cover;
+		border-radius: 50%;
 	}
 
 	a {
@@ -94,12 +96,16 @@ const ResultList = styled.div`
 
 	button {
 		width: 100%;
-		height: 30px;
+		padding: 5px;
 
 		&:hover {
 			background-color: ${props => props.theme.confirmColor}33;
 		}
 	}
+`;
+
+const ResultBtn = styled(EmptyBtn)`
+	font-size: 18px;
 `;
 
 function Admin() {
@@ -116,6 +122,7 @@ function Admin() {
 		mode: 'all',
 	});
 	const [isUpdateMode, setUpdateMode] = useState(false);
+	const [isImageMode, setImageMode] = useState(false);
 
 	const onValidSubmit = async () => {
 		const { keyword } = getValues();
@@ -210,8 +217,8 @@ function Admin() {
 			// error
 			if (e.response.status === 500) {
 				Swal.fire({
-					icon: 'info',
-					text: '멤버가 남아있으면 삭제가 불가능 합니다.',
+					icon: 'error',
+					text: '커뮤니티 삭제에 오류가 발생했습니다.',
 				});
 			}
 		}
@@ -234,9 +241,9 @@ function Admin() {
 			<ResultWrapper>
 				<ResultList>
 					{result?.map(e => (
-						<EmptyBtn key={e.id} onClick={() => handleInvite(e)}>
-							{e?.name} - {e?.username} - {e?.email}
-						</EmptyBtn>
+						<ResultBtn key={e.id} onClick={() => handleInvite(e)}>
+							{e?.name} - {e?.username}
+						</ResultBtn>
 					))}
 				</ResultList>
 			</ResultWrapper>
@@ -271,6 +278,12 @@ function Admin() {
 						</button>
 					</AdminContents>
 					<AdminContents>
+						<TextSubTitle>커뮤니티 이미지 변경</TextSubTitle>
+						<button type='button' onClick={() => setImageMode(true)}>
+							변경
+						</button>
+					</AdminContents>
+					<AdminContents>
 						<TextSubTitle>커뮤니티 삭제</TextSubTitle>
 						<button type='button' onClick={handleDeleteCommunity}>
 							삭제
@@ -295,7 +308,10 @@ function Admin() {
 								<td>
 									<Link to={`/community/${communityId}/member/${e.id}`}>
 										{e.profile_image ? (
-											<img src={e.profile_image} alt='' />
+											<img
+												src={`${process.env.REACT_APP_API_URL}${e.profile_image}`}
+												alt=''
+											/>
 										) : (
 											<FaUserCircle />
 										)}
@@ -334,6 +350,7 @@ function Admin() {
 				</Table>
 			</TableContainer>
 			{isUpdateMode && <UpdateCommunity setMode={setUpdateMode} />}
+			{isImageMode && <UpdateImage setMode={setImageMode} />}
 		</Main>
 	);
 }
