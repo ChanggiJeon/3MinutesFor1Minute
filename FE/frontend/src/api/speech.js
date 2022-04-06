@@ -64,3 +64,39 @@ export async function deleteSpeech(comId, minId, spcId) {
 		return err.response.status;
 	}
 }
+
+// comment API
+
+export const apiCreateComment = ({ communityId, minuteId, speechId, content }) => 
+	axios({
+		method: 'post',
+		url: `${BASE_URL}/${communityId}/minutes/${minuteId}/speech/${speechId}/comment/create/`,
+		data: {
+		content,
+		},
+		headers: {
+		...setToken(),
+		}
+	});
+
+  
+export const apiPutComment = ({ communityId, minuteId, speechId, commentId, content }) => 
+	axios({
+	method: 'put',
+	url: `${BASE_URL}/${communityId}/minutes/${minuteId}/speech/${speechId}/comment/${commentId}/update/`,
+	data: {
+		content,
+	},
+	headers: {
+		...setToken(),
+	}
+	});
+
+export const apiDeleteComment = ({ communityId, minuteId, speechId, commentId }) => 
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/${communityId}/minutes/${minuteId}/speech/${speechId}/comment/${commentId}/delete/`,
+		headers: {
+		...setToken(),
+		}
+	});

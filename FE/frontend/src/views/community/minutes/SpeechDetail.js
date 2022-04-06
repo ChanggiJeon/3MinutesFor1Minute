@@ -16,6 +16,7 @@ import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
 import GrayMdBtn from '../../../components/common/GrayMdBtn';
 import HeaderBox from '../../../components/community/HeaderBox';
+import SpeechComment from './SpeechComments'
 // api
 import { deleteSpeechById, readSingleSpeechById } from '../../../store/speech';
 // 워드 클라우드 디자인 제공 라이브러리
@@ -229,6 +230,8 @@ function SpeechDetail() {
 						<TextUpload>첨부 파일 </TextUpload>
 						<Br style={{ margin: '20px' }} />
 					</SpeechInfoContainer>
+					<SpeechComment
+					/>
 				</RightContainer>
 			</SpeechMain>
 		</CreatePage>
