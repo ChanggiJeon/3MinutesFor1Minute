@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.community_list),
+    path('<int:community_pk>/self/', views.self),
     path('<int:community_pk>/profile/<nickname>/', views.profile),
     # 커뮤니티 생성
     path('create/', views.community_create),
