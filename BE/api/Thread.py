@@ -4,8 +4,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
 django.setup()
 from django.shortcuts import get_list_or_404
-from minutes.models import Minute, Participant
 from notifications.models import Notification
+from minutes.models import Minute, Participant
 import concurrent.futures
 
 
@@ -21,7 +21,7 @@ def activate_notification():
         minutes = get_list_or_404(Minute, is_closed=False)
 
         for minute in minutes:
-            if (minute.deadline - datetime.datetime.now()).second <= 0:
+            if (minute.deadline - datetime.datetime.now()).seconds <= 0:
                 minute.is_closed = True
                 minute.save()
                 participants = get_list_or_404(Participant, minute=minute)
@@ -30,7 +30,7 @@ def activate_notification():
                     notification = Notification(
                         user=participant.member.user,
                         minute=minute,
-                        content=f'{minute.title}이 마감되었습니다.',
+                        content=f'{minute.title} 회의가 마감되었습니다.',
                         is_activate=True
                     )
 
