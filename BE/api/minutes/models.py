@@ -2,6 +2,10 @@ from django.db import models
 from community.models import Community, Member
 
 
+def record_file_path(instance, filename):
+    return f'recordfile/{instance.minute.pk}/{filename}'
+
+
 def minute_file_path(instance, filename):
     return f'minutefile/{instance.minute.pk}/{filename}'
 
@@ -26,6 +30,7 @@ class Minute(models.Model):
 
 class MinuteFile(models.Model):
     minute = models.ForeignKey(Minute, on_delete=models.CASCADE)
+    filename = models.CharField(max_length=100, blank=True)
     reference_file = models.FileField(upload_to=minute_file_path, null=True, blank=True)
 
 
@@ -45,7 +50,7 @@ class Speech(models.Model):
     cloud_keyword = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    record_file = models.FileField(upload_to='record/', null=True, blank=True)
+    record_file = models.FileField(upload_to=record_file_path, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -53,6 +58,7 @@ class Speech(models.Model):
 
 class SpeechFile(models.Model):
     speech = models.ForeignKey(Speech, on_delete=models.CASCADE)
+    filename = models.CharField(max_length=100, blank=True)
     reference_file = models.FileField(upload_to=speech_file_path, null=True, blank=True)
 
 
