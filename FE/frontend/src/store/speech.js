@@ -36,6 +36,7 @@ const initialState = {
 		author: '',
 		title: '',
 		summary: '',
+		speechComments: [],
 		referenceFile: [],
 		wordCloudList: [],
 		recordFile: '',
@@ -52,6 +53,7 @@ function polishData(data) {
 	polished.id = data.id;
 	polished.title = data.title;
 	polished.summary = data.summary;
+	polished.speechComments = data.speech_comments;
 	polished.recordFile = data.record_file;
 	polished.voiceText = data.voice_text;
 	polished.updatedAt = data.updated_at;
@@ -78,6 +80,7 @@ function polishData(data) {
 		});
 	});
 	polished.wordCloudList = wordCloudList;
+	console.log(polished.speechComments)
 	return polished;
 }
 
