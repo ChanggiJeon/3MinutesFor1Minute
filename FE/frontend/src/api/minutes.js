@@ -94,3 +94,18 @@ export async function updateMinutes(comId, minId, data) {
 		return err.response.data;
 	}
 }
+
+export async function downloadFile(comId, minId, fileId) {
+	try {
+		const response = await axios({
+			method: 'get',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/download/${fileId}/`,
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.data;
+	} catch (err) {
+		return err.response.data;
+	}
+}
