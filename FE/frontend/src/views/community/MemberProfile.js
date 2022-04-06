@@ -45,8 +45,8 @@ const BioContainer = styled.div`
 `;
 
 function MemberProfile() {
-	const { id } = useSelector(state => state.member);
-	const { communityId, memberId } = useParams();
+	const { id, nickname } = useSelector(state => state.member);
+	const { communityId, memberNickname } = useParams();
 	const navigate = useNavigate();
 	const [updateMode, setUpdateMode] = useState('');
 	const [member, setMember] = useState({});
@@ -58,16 +58,13 @@ function MemberProfile() {
 	};
 
 	useEffect(() => {
-		if (parseInt(memberId, 10) !== id) {
-			navigate(`/community/${communityId}`);
-		}
-		if (memberId) {
+		if (memberNickname) {
 			getMember();
 		}
-	}, [memberId, communityId]);
+	}, [memberNickname, communityId]);
 
 	useEffect(() => {
-		if (parseInt(memberId, 10) === id) {
+		if (nickname === memberNickname) {
 			dispatch(updateMemberData({ ...member }));
 		}
 	}, [member]);
@@ -90,7 +87,7 @@ function MemberProfile() {
 				cancelButtonText: '취소',
 			});
 			if (res.isConfirmed) {
-				await apiWithdrawMember({ communityId, memberId });
+				await apiWithdrawMember({ communityId, memberId: id });
 				await Swal.fire({
 					icon: 'success',
 					text: '커뮤니티에서 탈퇴되었습니다.',
@@ -102,7 +99,7 @@ function MemberProfile() {
 		}
 	};
 
-	const updateBtns = id === parseInt(memberId, 10) && (
+	const updateBtns = memberNickname === nickname && (
 		<Container>
 			<SubmitButton type='button' onClick={() => toggleMode('info')}>
 				멤버 정보 변경
@@ -133,7 +130,7 @@ function MemberProfile() {
 					<ProfileImgContainer>
 						{member.profile_image ? (
 							<img
-								src={`${process.env.REACT_APP_API_URL}${member.profile_image}`}
+								src={`${process.env.REACT_APP_MEDIA_URL}${member.profile_image}`}
 								alt=''
 							/>
 						) : (
