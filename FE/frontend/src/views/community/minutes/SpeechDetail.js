@@ -333,7 +333,7 @@ function SpeechDetail() {
 						<SpeechComment/>
 						{speechComments.map(comment => (
 							<CommentList>
-								<p key={comment.id}>
+								<div key={comment.id}>
 									{/* 댓글 update true */}
 									{isCommentUpdating && comment === targetComment ? (
 										<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
@@ -386,7 +386,7 @@ function SpeechDetail() {
 											) : null}
 										</>
 									)}
-								</p>
+								</div>
 							</CommentList>)
 					  	)}
 					</CommentContainer>
