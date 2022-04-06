@@ -10,7 +10,6 @@ const Minutes = styled.li`
 	align-items: center;
 	justify-content: center;
 	width: 95%;
-	height: 40px;
 	cursor: pointer;
 `;
 const Divider = styled(DivLine)`
@@ -18,12 +17,15 @@ const Divider = styled(DivLine)`
 	margin: 15px 0;
 `;
 const Title = styled(TextSubTitle)`
+	padding: 0;
 	width: 60%;
 `;
 const Author = styled(TextSubTitle)`
+	padding: 0;
 	width: 15%;
 `;
 const Deadline = styled(TextSubTitle)`
+	padding: 0;
 	width: 10%;
 `;
 

@@ -13,7 +13,6 @@ export const apiCreateBoard = ({ communityId, title, content, isNotice, upload }
     },
     headers: {
       ...setToken(),
-      'Content-Type': 'multipart/form-data',
     }
   });
 
