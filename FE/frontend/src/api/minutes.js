@@ -16,6 +16,21 @@ export async function getAllMinutes(communityId) {
 	}
 }
 
+export async function getMainpageMinutes(communityId) {
+	try {
+		const response = await axios({
+			method: 'get',
+			url: `${BASE_URL}/${communityId}/minutes/main/`,
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.data;
+	} catch (err) {
+		return err.response.data;
+	}
+}
+
 export async function createMinutes(communityId, data) {
 	try {
 		const response = await axios({
@@ -76,7 +91,6 @@ export async function updateMinutes(comId, minId, data) {
 		});
 		return response.data;
 	} catch (err) {
-		console.log(err.response.data);
 		return err.response.data;
 	}
 }
