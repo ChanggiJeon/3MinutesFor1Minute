@@ -33,6 +33,7 @@ COPY ./ ./
 RUN conda env create -f tmp.yml
 RUN echo "conda activate ai" >> ~/.bashrc
 ENV PATH /opt/conda/envs/nenv/bin:$PATH
+RUN echo "source activate ai" >> ~/.bashrc
 RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 RUN pip install gunicorn
