@@ -134,7 +134,7 @@ def minute_create(request, community_pk):
 
             for key, value in request.data.items():
                 if 'reference_file' in key:
-                    new_file = MinuteFile(minute=minute, reference_file=value)
+                    new_file = MinuteFile(minute=minute, filename=str(value), reference_file=value)
                     new_file.save()
 
             serializer = MinuteSerializer(minute)
@@ -213,7 +213,7 @@ def minute_update(request, community_pk, minute_pk):
 
             for key, value in request.data.items():
                 if 'reference_file' in key:
-                    new_file = MinuteFile(minute=minute, reference_file=value)
+                    new_file = MinuteFile(minute=minute, filename=str(value), reference_file=value)
                     new_file.save()
 
             serializer = MinuteSerializer(minute)
@@ -268,10 +268,10 @@ def speech_create(request, community_pk, minute_pk):
     community = get_object_or_404(Community, pk=community_pk)
     minute = get_object_or_404(Minute, pk=minute_pk, community=community)
     me = get_object_or_404(Member, user=request.user, community=community)
-    participant = me.participant_set.get(minute=minute)
+    participant = get_object_or_404(Participant, member=me, minute=minute)
     serializer = SpeechSerializer(data=request.data)
 
-    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now():
+    if minute.is_closed or minute.deadline < datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif serializer.is_valid(raise_exception=True):
@@ -280,14 +280,13 @@ def speech_create(request, community_pk, minute_pk):
 
         for key, value in request.data.items():
             if 'reference_file' in key:
-                new_file = SpeechFile(speech=speech, reference_file=value)
+                new_file = SpeechFile(speech=speech, filename=str(value), reference_file=value)
                 new_file.save()
 
         try: 
             file = speech.record_file
-            file_path = str(MEDIA_ROOT) + '\\record\\'
-            # file_name = str(file)[7:]
-            file_name = '1648986351112.wav'
+            file_path = str(MEDIA_ROOT) + f'\\recordfile\\{minute.pk}\\'
+            file_name = str(file).split('/')[-1]
             voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
         except:
@@ -318,7 +317,7 @@ def speech_delete(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now():
+    if minute.is_closed or minute.deadline < datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
@@ -336,7 +335,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now() or not request.data['title']:
+    if minute.is_closed or minute.deadline < datetime.datetime.now() or not request.data['title']:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
@@ -354,7 +353,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
 
             for key, value in request.data.items():
                 if 'reference_file' in key:
-                    new_file = SpeechFile(speech=speech, reference_file=value)
+                    new_file = SpeechFile(speech=speech, filename=str(value), reference_file=value)
                     new_file.save()
 
             serializer = SpeechSerializer(speech)
