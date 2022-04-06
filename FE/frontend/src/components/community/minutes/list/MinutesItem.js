@@ -28,7 +28,7 @@ const SmOpneIcon = styled(OpenIcon)`
 	font-size: 20px;
 `;
 
-function MinutesItem({ minId, title, date, deadline, author, isClosed }) {
+function MinutesItem({ no, minId, title, date, deadline, author, isClosed }) {
 	// 디데이 구하는 공식
 	const today = new Date();
 	const deadLine = new Date(deadline);
@@ -44,7 +44,7 @@ function MinutesItem({ minId, title, date, deadline, author, isClosed }) {
 				navigate(`/community/${communityId}/minutes/${minId}`);
 			}}
 		>
-			<NumBox>0</NumBox>
+			<NumBox>{no}</NumBox>
 			<Title>
 				{title} {isClosed ? <SmCloseIcon /> : <SmOpneIcon />}
 			</Title>
