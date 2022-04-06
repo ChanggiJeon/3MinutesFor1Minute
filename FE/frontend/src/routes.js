@@ -11,6 +11,7 @@ const routes = {
 	memberProfile: 'member/:memberId',
 	// minutes
 	minutesList: 'minutes',
+	minutesCalender: 'calender',
 	minutesDetail: 'minutes/:minutesId',
 	minutesCreate: 'minutes/minutesCreate',
 	minutesUpdate: 'minutes/:minutesId/update',
