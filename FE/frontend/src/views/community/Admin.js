@@ -1,5 +1,6 @@
+import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -109,8 +110,10 @@ const ResultBtn = styled(EmptyBtn)`
 `;
 
 function Admin() {
+	const { is_admin: isAdmin } = useSelector(state => state.member);
 	const { communityId } = useParams();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [members, setMembers] = useState([]);
 	const [result, setResult] = useState([]);
 	const {
@@ -233,7 +236,12 @@ function Admin() {
 		}
 	};
 
-	useEffect(() => getMembers(), [communityId]);
+	useEffect(() => {
+		if (!isAdmin) {
+			navigate(`/community/${communityId}`);
+		}
+		getMembers();
+	}, [communityId, location, isAdmin]);
 
 	const searchResults = (
 		<ResultContainer>

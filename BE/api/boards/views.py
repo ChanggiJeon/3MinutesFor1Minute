@@ -32,9 +32,10 @@ def board_create(request, community_pk):
     if serializer.is_valid(raise_exception=True):
         serializer.save(member=me, community=community)
         board = get_object_or_404(Board, pk=serializer.data['id'])
+
         for key, value in request.data.items():
             if 'reference_file' in key:
-                new_file = BoardFile(board=board, reference_file=value)
+                new_file = BoardFile(board=board, filename=str(value), reference_file=value)
                 new_file.save()
 
         serializer = BoardSerializer(board)
@@ -83,8 +84,9 @@ def board_update(request, community_pk, board_pk):
 
             for key, value in request.data.items():
                 if 'reference_file' in key:
-                    new_file = BoardFile(board=board, reference_file=value)
+                    new_file = BoardFile(board=board, filename=str(value), reference_file=value)
                     new_file.save()
+
             serializer = BoardSerializer(board)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -98,7 +100,7 @@ import mimetypes
 @api_view(['GET'])
 def board_file_download(request, community_pk, board_pk, reference_file_pk):
     reference_file = get_object_or_404(BoardFile, pk=reference_file_pk)
-    file_name = str(reference_file.reference_file)[7:]
+    file_name = reference_file.filename
     file_path = str(MEDIA_ROOT) + '/' + str(reference_file.reference_file)
     fl = open(file_path, 'rb')
     mime_types, _ = mimetypes.guess_type(file_path)

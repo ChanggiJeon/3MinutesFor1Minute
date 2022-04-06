@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaUserTag } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {
@@ -20,6 +21,7 @@ import Title from '../auth/Title';
 import TextSubTitle from '../common/TextSubTitle';
 
 function JoinCommunity({ target, setMode, getList }) {
+	const { name } = useSelector(state => state.user);
 	const {
 		register,
 		handleSubmit,
@@ -29,6 +31,9 @@ function JoinCommunity({ target, setMode, getList }) {
 		clearErrors,
 	} = useForm({
 		mode: 'all',
+		defaultValues: {
+			nickname: name,
+		},
 	});
 	const [nicknameCheck, setNicknameCheck] = useState(false);
 	const navigate = useNavigate();
