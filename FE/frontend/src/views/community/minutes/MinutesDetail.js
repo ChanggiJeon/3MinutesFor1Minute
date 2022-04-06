@@ -134,6 +134,8 @@ function MinutesDetail() {
 					const data = {
 						communityId: params.communityId,
 						minutesId: params.minutesId,
+						conclusion: text,
+						is_closed: true,
 					};
 					dispatch(endMinutesById(data));
 					Swal.fire('회의가 종료되었습니다.', '', 'success');
