@@ -3,7 +3,8 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
 django.setup()
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_list_or_404, get_object_or_404
+from minutes.models import Minute
 from notifications.models import Notification
 import concurrent.futures
 
@@ -15,7 +16,12 @@ def activate_notification():
         for notification in notifications:
             diff = notification.minute.deadline - datetime.datetime.now()
 
-            if diff.seconds <= 3600:
+            if diff.seconds <= 0:
+                minute = get_object_or_404(Minute, pk=notification.minute.pk)
+                minute.is_closed = True
+                minute.save()
+
+            elif diff.seconds <= 3600:
                 notification.is_activate = True
                 notification.save()
 
