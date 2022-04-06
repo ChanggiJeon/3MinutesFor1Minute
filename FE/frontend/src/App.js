@@ -15,6 +15,7 @@ import Records from './views/community/minutes/Records';
 import Error404 from './views/Error404';
 import Members from './views/community/Members';
 import MinutesList from './views/community/minutes/MinutesList';
+import MinutesCalender from './views/community/minutes/MinutesCalender';
 import MinutesDetail from './views/community/minutes/MinutesDetail';
 import SpeechCreate from './views/community/minutes/SpeechCreate';
 import Admin from './views/community/Admin';
@@ -45,6 +46,7 @@ function App() {
 							<Route path={`${routes.posts}/:postId`} element={<PostDetail />} />
 							<Route path={routes.postCreate} element={<PostCreate />} />
 							<Route path={routes.minutesList} element={<MinutesList />} />
+							<Route path={routes.minutesCalender} element={<MinutesCalender />} />
 							<Route path={routes.minutesDetail} element={<MinutesDetail />} />
 							<Route path={routes.minutesCreate} element={<MinutesCreate />} />
 							<Route path={routes.minutesUpdate} element={<MinutesUpdate />} />
