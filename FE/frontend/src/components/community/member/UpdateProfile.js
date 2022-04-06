@@ -22,7 +22,8 @@ import SubmitButton from '../../auth/SubmitButton';
 import Title from '../../auth/Title';
 
 function UpdateProfile({ toggleMode, getMember }) {
-	const { communityId, memberId } = useParams();
+	const { id, nickname, bio } = useSelector(state => state.member);
+	const { communityId } = useParams();
 	const {
 		register,
 		handleSubmit,
@@ -40,11 +41,13 @@ function UpdateProfile({ toggleMode, getMember }) {
 
 		formData.append('profile_image', profileImage[0]);
 		formData.append('enctype', 'multipart/form-data');
+		formData.append('nickname', nickname);
+		formData.append('bio', bio);
 
 		try {
 			await apiUpdateMemberProfile({
 				communityId,
-				memberId,
+				memberId: id,
 				formData,
 			});
 			await Swal.fire({
