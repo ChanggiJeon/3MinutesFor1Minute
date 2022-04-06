@@ -40,6 +40,10 @@ def signup(request):
     if serializers.is_valid(raise_exception=True):
         user = serializers.save()
         user.set_password(request.data.get('password'))
+
+        if not user.name:
+            user.name = username
+
         user.save()
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
