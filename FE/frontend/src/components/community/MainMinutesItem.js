@@ -14,19 +14,36 @@ const Minutes = styled.li`
 `;
 const Divider = styled(DivLine)`
 	height: 1.5px;
-	margin: 15px 0;
+	margin: 20px 0;
 `;
 const Title = styled(TextSubTitle)`
 	padding: 0;
 	width: 60%;
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 0 10px;
 `;
 const Author = styled(TextSubTitle)`
+	display: block;
 	padding: 0;
 	width: 15%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 `;
 const Deadline = styled(TextSubTitle)`
+	display: block;
 	padding: 0;
 	width: 10%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 `;
 
 function MainMinutesItem({ minId, title, deadline, author }) {
@@ -48,6 +65,7 @@ function MainMinutesItem({ minId, title, deadline, author }) {
 			<Title>{title}</Title>
 			<Author>{author}</Author>
 			<Deadline>{Dday}</Deadline>
+			<br />
 			<Divider />
 		</Minutes>
 	);

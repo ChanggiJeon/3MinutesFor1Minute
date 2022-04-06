@@ -82,7 +82,7 @@ const initialState = {
 		deadline: '',
 		Dday: '',
 		content: '',
-		referenceFile: undefined,
+		referenceFile: [],
 		isClosed: false,
 	},
 };
