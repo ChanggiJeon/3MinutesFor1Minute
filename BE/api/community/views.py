@@ -215,6 +215,8 @@ def find_user(request, keyword):
 @api_view(['POST'])
 def invite_user(request, community_pk, user_pk):
     community = get_object_or_404(Community, pk=community_pk)
+    User = get_user_model()
+    invited_user = get_object_or_404(User, pk=user_pk)
 
     if community.member_set.filter(pk=user_pk):
         return Response({'error: 이미 가입한 사용자입니다.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -222,7 +224,7 @@ def invite_user(request, community_pk, user_pk):
     serializer = MemberSerializer(data=request.data)
 
     if serializer.is_valid(raise_exception=True):
-        serializer.save(user=request.user, community=community, nickname=request.user.name)
+        serializer.save(user=invited_user, community=community, nickname=invited_user.name)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
