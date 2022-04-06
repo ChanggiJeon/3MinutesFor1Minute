@@ -120,15 +120,25 @@ function MinutesCreate() {
 		formData.append('comId', communityId);
 		try {
 			dispatch(createMinutesByData(formData)).then(res => {
-				Swal.fire({
-					position: 'top-end',
-					icon: 'success',
-					title: '회의록이 등록되었습니다..',
-					showConfirmButton: false,
-					timer: 1500,
-				});
-				const { community, id } = res.payload;
-				navigate(`/community/${community}/minutes/${id}`);
+				if (res.payload === 400) {
+					Swal.fire({
+						position: 'top-end',
+						icon: 'error',
+						title: '생성 실패! 날짜를 확인해주세요!',
+						showConfirmButton: false,
+						timer: 1500,
+					});
+				} else {
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: '회의록이 등록되었습니다..',
+						showConfirmButton: false,
+						timer: 1500,
+					});
+					const { community, id } = res.payload;
+					navigate(`/community/${community}/minutes/${id}`);
+				}
 			});
 		} catch (error) {
 			Swal.fire({
