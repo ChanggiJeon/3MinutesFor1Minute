@@ -28,6 +28,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
 
 class SpeechCommentSerializer(serializers.ModelSerializer):
+    member = CustomMemberSerializer(read_only=True)
 
     class Meta:
         model = SpeechComment
