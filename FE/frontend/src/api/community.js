@@ -46,7 +46,7 @@ export const apiUpdateCommunityImage = ({ communityId, formData }) =>
 export const apiGetMyMemberProfile = ({ communityId }) =>
 	axios({
 		method: 'get',
-		url: `${BASE_URL}/community/${communityId}/profile/`,
+		url: `${BASE_URL}/community/${communityId}/self/`,
 		headers: {
 			...setToken(),
 		},
