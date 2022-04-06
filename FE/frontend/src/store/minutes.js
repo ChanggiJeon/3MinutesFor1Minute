@@ -17,6 +17,12 @@ export const fetchMinutesByComId = createAsyncThunk(
 	}
 );
 
+export const endMinutesById = createAsyncThunk(`${name}/END_MINUTES`, data => {
+	const { communityId, minutesId, ...request } = data;
+	const response = updateMinutes(communityId, minutesId, request);
+	return response;
+});
+
 export const createMinutesByData = createAsyncThunk(
 	`${name}/CREATE_MINUTES`,
 	async data => {
@@ -67,6 +73,7 @@ const initialState = {
 		Dday: '',
 		content: '',
 		referenceFile: undefined,
+		isClosed: false,
 	},
 };
 
@@ -93,6 +100,7 @@ const minutes = createSlice({
 			const referenceFile = response?.minutefile_set;
 			const speeches = response?.minute_speeches;
 			const { title, deadline, content, conclusion } = response;
+			const isClosed = response.is_closed;
 			// 작성일자 데이터 가공
 			const createdAt = `${writtenDate.substr(2, 2)}.
 			${writtenDate.substr(5, 2)}. ${writtenDate.substr(8, 2)}.
@@ -115,7 +123,11 @@ const minutes = createSlice({
 				Dday,
 				content,
 				referenceFile,
+				isClosed,
 			};
+		},
+		[endMinutesById.fulfilled]: state => {
+			state.singleMinutes.isClosed = true;
 		},
 	},
 });

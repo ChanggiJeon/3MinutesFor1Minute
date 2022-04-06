@@ -10,8 +10,6 @@ import Container from '../../../components/community/Container';
 import Main from '../../../components/community/MainCenter';
 import TextSubTitle from '../../../components/common/TextSubTitle';
 import DivLine from '../../../components/community/main/DivLine';
-import Loading from '../../../components/community/minutes/speech/Loading';
-import LoadingComplete from '../../../components/community/minutes/speech/LoadingComplete';
 import AreaLabel from '../../../components/auth/AreaLabel';
 import Label from '../../../components/auth/Label';
 import TextContent from '../../../components/common/TextContent';
@@ -109,26 +107,20 @@ const Buttons = styled(BtnBox)`
 	justify-content: end;
 `;
 
-// 보여줄 컴포넌트 선택 로딩-완료-수정
-const LoadingPage = styled(Main)`
-	display: ${props => (props.status === 'loading' ? 'flex' : 'none')};
-`;
-const CompletePage = styled(Main)`
-	display: ${props => (props.status === 'completed' ? 'flex' : 'none')};
-`;
 const CreatePage = styled.form`
-	display: ${props => (props.status === 'create' ? 'block' : 'none')};
+	display: flex;
 	flex-wrap: wrap;
 	align-content: center;
 	justify-content: center;
 	width: 100%;
 `;
 
-function SpeechCreate() {
+function SpeechUpdate() {
 	const params = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	useEffect(() => {
+		console.log('@@@@@@@@@');
 		dispatch(readSingleSpeechById(params));
 	}, []);
 	// 페이지 전환 로직 로딩-완료-수정
@@ -224,7 +216,9 @@ function SpeechCreate() {
 
 	// 작성 취소
 	const cancel = () => {
-		navigate(`/community/${params.communityId}/minutes/${params.minutesId}`);
+		navigate(
+			`/community/${params.communityId}/minutes/${params.minutesId}/speech/${params.speechId}`
+		);
 	};
 
 	// 업로드 된 파일 표시하기 위한 변수
@@ -332,4 +326,4 @@ function SpeechCreate() {
 	);
 }
 
-export default SpeechCreate;
+export default SpeechUpdate;
