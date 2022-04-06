@@ -62,9 +62,6 @@ function MinutesList() {
 		});
 	}, [currentPage, location]);
 
-	const temp = useSelector(state => state.minutes.allMinutes);
-	// console.log(temp)
-
 	let cnt = posts.length - offset + 1;
 
 	return (

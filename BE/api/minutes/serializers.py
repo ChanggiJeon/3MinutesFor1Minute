@@ -78,7 +78,7 @@ class MinuteListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Minute
         fields = ('id', 'title', 'is_closed', 'deadline', 'created_at', 'assignee', )
-        read_only_fields = ('id', 'created_at', )
+        read_only_fields = ('id', 'is_closed', 'created_at', 'assignee', )
 
 
 class MinuteSerializer(serializers.ModelSerializer):

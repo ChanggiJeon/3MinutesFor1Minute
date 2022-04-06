@@ -7,12 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=8, max_length=20, write_only=True)
     password_confirm = password
     email = serializers.EmailField()
-    name = serializers.CharField(max_length=16, required=False)
-
-    def validate(self, data):
-        if not data.get('name'):
-            data['name'] = data['username']
-        return data
 
     class Meta:
         model = get_user_model()

@@ -95,8 +95,8 @@ pip install -r requirements.txt
      - 커뮤니티 검색 (커뮤니티 이름) [GET] : community/search/name/<str : keyword>/
      - 닉네임 중복 체크 [GET] : community/uniquecheck/<int : community_pk>/nickname/<str : nickname>/
   3. 가입 승인
-     - 가입 허용 대기자 조회 [GET]:  community/<int : community_pk>/waitinglist/
-     - 가입 승인 [PUT]: conmmunity/<int : community_pk>/waitinglist/<int : member_pk>/approval/
+     - 가입 허용 대기자 조회 [GET] :  community/<int : community_pk>/waitinglist/
+     - 가입 승인 [PUT] : conmmunity/<int : community_pk>/waitinglist/<int : member_pk>/approval/
   4. 커뮤니티 상세관리
      - 커뮤니티 상세 조회, 수정, 삭제 [GET, PUT, DELETE] : community/<int : community_pk>/
        1. GET
@@ -109,7 +109,7 @@ pip install -r requirements.txt
      - 커뮤니티 멤버 조회 [GET] : community/<int : community_pk>/member/
      - 커뮤니티 멤버 삭제 [DELETE] : community/<int : community_pk>/member/<int : member_pk>/
   6. 커뮤니티 멤버 초대
-     - 커뮤니티 멤버 초대 [GET] : community/invite/<int : community_pk>/<int : user_pk>/
+     - 커뮤니티 멤버 초대 [POST] : community/invite/<int : community_pk>/<int : user_pk>/
      - 유저 검색 [GET] : community/invite/search/<str : keyword>/
   7. 커뮤니티 멤버 개인 정보 수정, 탈퇴
      - 커뮤니티 멤버 개인 수정 [PUT] : community/<int : community_pk>/member/<int : member_pk>/update/
@@ -164,6 +164,7 @@ pip install -r requirements.txt
     - deadline (현재 시간보다 이후에만)
     - reference_file1, reference_file2, ... (필수 X)
       - 수정하면 기존 파일 다 날아가고 새로운 파일만 등록
+  - 회의록 종료 [PUT] : <int : community_pk>/minutes/<int : minute_pk>/close/
   - 회의록 파일 다운로드 [GET] : <int : community_pk>/minutes/<int : minute_pk>/download/<int : reference_file_pk>/
 
 
@@ -181,7 +182,7 @@ pip install -r requirements.txt
     - cloud_keyword
     - reference_file1, reference_file2, ... (필수 X)
       - 수정하면 기존 파일 다 날아가고 새로운 파일만 등록
-  - 스피치 파일 다운로드 :  <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/download/<int : reference_file_pk>/
+  - 스피치 파일 다운로드 [GET] :  <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/download/<int : reference_file_pk>/
   - 댓글 작성 [POST] : <int : community_pk>/minutes/<int : minute_pk>/speech/<int : speech_pk>/comment/create/
     - content
   - 댓글 수정 [PUT] : <int : community_pk>/minutes/<int : minute_pk>/comment/speech/<int : speech_pk>/<int : comment_pk>/update/
@@ -195,3 +196,4 @@ pip install -r requirements.txt
   - 안 읽은 알람 개수 조회 [GET] : notifications/new/
   - 알람 상세 정보 [GET] : notifications/<int : notification_pk>/
   - 알람 삭제 [DELETE] : notifications/<int : notification_pk>/delete/
+

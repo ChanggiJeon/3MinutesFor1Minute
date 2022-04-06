@@ -177,18 +177,7 @@ def minute_update(request, community_pk, minute_pk):
         serializer = MinuteSerializer(minute, data=request.data)
         participants = get_list_or_404(Participant, minute=minute)
 
-        if 'is_closed' in request.data and request.data['is_closed']:
-            for participant in participants:
-                notification = Notification(
-                    user=participant.member.user,
-                    minute=minute,
-                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
-                    is_activate=True
-                )
-
-                notification.save()
-
-        elif 'deadline' in request.data and request.data['deadline'] != minute.deadline:
+        if 'deadline' in request.data and request.data['deadline'] != minute.deadline:
             notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
 
             if not notifications:
@@ -229,6 +218,31 @@ def minute_update(request, community_pk, minute_pk):
 
             serializer = MinuteSerializer(minute)
             return Response(serializer.data)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['PUT'])
+def minute_close(request, community_pk, minute_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+    me = get_object_or_404(Member, user=request.user, community=community)
+    assignee = minute.participant_set.get(is_assignee=True)
+
+    if me == assignee.member or me.is_admin:
+        minute.is_closed = True
+        minute.save()
+        participants = get_list_or_404(Participant, minute=minute)
+
+        for participant in participants:
+            notification = Notification(
+                user=participant.member.user,
+                minute=minute,
+                content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                is_activate=True
+            )
+
+            notification.save()
+        return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
