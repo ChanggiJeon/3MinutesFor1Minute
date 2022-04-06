@@ -139,11 +139,11 @@ const CommentName = styled.div`
 `;
 
 const SmallBtn = styled(SubmitButton)`
-  display: inline-block;
-  width: 40%;
-  margin: 5px;
-  padding: 0px;
-  font-size: 15px;
+	display: inline-block;
+	width: 40%;
+	margin: 5px;
+	padding: 0px;
+	font-size: 15px;
 `;
 
 const CForm = styled(NForm)`
@@ -223,6 +223,7 @@ function SpeechDetail() {
   // comment관련
   const [targetComment, setTargetComment] = useState({});
   const [isCommentUpdating, setCommentUpdating] = useState(false);
+  const { nickname } = useSelector(state => state.member);
 	const { communityId, minutesId, speechId } = useParams();
 	const {
 		register: cRegister,
@@ -381,7 +382,7 @@ function SpeechDetail() {
 												{comment?.member?.nickname} - {comment?.content}
 											</CommentName>
 											{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
-											{true ? (
+											{comment?.member?.nickname === nickname ? (
 												<CommentBtn>
 													<SmallBtn
 														type='button'
