@@ -61,10 +61,10 @@ class SpeechSerializer(serializers.ModelSerializer):
 
 
 class CustomSpeechSerializer(SpeechSerializer):
-
+    speechfile_set = SpeechFileSerializer(many=True, read_only=True)
     class Meta:
         model = Speech
-        fields = ('title', 'content', 'voice_text', 'summary', 'cloud_keyword', )
+        fields = ('title', 'content', 'voice_text', 'summary', 'cloud_keyword', 'speechfile_set',)
 
 
 class MinuteListSerializer(serializers.ModelSerializer):
