@@ -100,6 +100,7 @@ export async function downloadFile(comId, minId, fileId) {
 		const response = await axios({
 			method: 'get',
 			url: `${BASE_URL}/${comId}/minutes/${minId}/download/${fileId}/`,
+			responseType: 'blob',
 			headers: {
 				...setToken(),
 			},
@@ -107,5 +108,20 @@ export async function downloadFile(comId, minId, fileId) {
 		return response.data;
 	} catch (err) {
 		return err.response.data;
+	}
+}
+
+export async function closeMinutes(comId, minId) {
+	try {
+		const response = await axios({
+			method: 'put',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/close/`,
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.data;
+	} catch (error) {
+		return error.response.data;
 	}
 }

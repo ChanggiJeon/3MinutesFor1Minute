@@ -134,10 +134,6 @@ function MinutesDetail() {
 					const data = {
 						communityId: params.communityId,
 						minutesId: params.minutesId,
-						title: singleMinutes.title,
-						content: singleMinutes.content,
-						deadline: singleMinutes.deadline,
-						is_closed: true,
 					};
 					dispatch(endMinutesById(data));
 					Swal.fire('회의가 종료되었습니다.', '', 'success');
@@ -147,14 +143,17 @@ function MinutesDetail() {
 			});
 		}
 	};
+	// 첨부파일 다운로드
 	const downloadFile = ({ fileId, fileName }) => {
 		const res = download(params.communityId, params.minutesId, fileId);
-		const url = window.URL.createObjectURL(new Blob([res.data]));
-		const link = document.createElement('a');
-		link.href = url;
-		link.setAttribute('download', `${fileName}`);
-		document.body.appendChild(link);
-		link.click();
+		res.then(blob => {
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', `${fileName}`);
+			document.body.appendChild(link);
+			link.click();
+		});
 	};
 
 	return (
