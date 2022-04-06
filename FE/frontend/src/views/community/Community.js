@@ -9,7 +9,8 @@ import TextSubTitle from '../../components/common/TextSubTitle';
 import DivLine from '../../components/community/main/DivLine';
 import MainBox from '../../components/community/main/MainBox';
 import SubBox from '../../components/community/main/SubBox';
-import { fetchMinutesByComId } from '../../store/minutes';
+import MainMinutesItem from '../../components/community/MainMinutesItem';
+import { fetchMainpageMinutesByComId } from '../../store/minutes';
 import routes from '../../routes';
 
 const TitleContainer = styled.div`
@@ -23,7 +24,6 @@ const TitleContainer = styled.div`
 		align-items: center;
 	}
 `;
-
 const ImageContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -39,19 +39,25 @@ const ImageContainer = styled.div`
 		border-radius: 50%;
 	}
 `;
-
 const MembersContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	overflow: hidden;
 `;
-
 const MemberContent = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	padding: 10px;
+`;
+const ListBox = styled.ul`
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 85%;
+	padding: 10px;
+	margin-top: 10px;
 `;
 
 function Community() {
@@ -67,8 +73,13 @@ function Community() {
 	} = useSelector(state => state.community);
 
 	useEffect(() => {
-		dispatch(fetchMinutesByComId(communityId));
+		dispatch(fetchMainpageMinutesByComId(communityId));
 	}, []);
+
+	const mainpageMinutesList = useSelector(
+		state => state.minutes.mainpageMinutes
+	);
+	console.log(mainpageMinutesList);
 
 	return (
 		<Main>
@@ -88,6 +99,21 @@ function Community() {
 			<MainBox>
 				<TextSubTitle>회의록</TextSubTitle>
 				<DivLine />
+				<ListBox>
+					{mainpageMinutesList[0] ? (
+						mainpageMinutesList.map(minutes => (
+							<MainMinutesItem
+								key={minutes.id}
+								minId={minutes.id}
+								title={minutes.title}
+								deadline={minutes.deadline}
+								author={minutes.assignee.member.nickname}
+							/>
+						))
+					) : (
+						<TextSubTitle>처리할 회의가 없습니다.</TextSubTitle>
+					)}
+				</ListBox>
 			</MainBox>
 			<SubBox>
 				<TextSubTitle>게시글</TextSubTitle>

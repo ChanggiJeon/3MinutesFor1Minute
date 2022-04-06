@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
 	getAllMinutes,
+	getMainpageMinutes,
 	createMinutes,
 	detailMinutes,
 	deleteMinutes,
@@ -13,6 +14,14 @@ export const fetchMinutesByComId = createAsyncThunk(
 	`${name}/GET_ALL_MINUTES`,
 	async comId => {
 		const response = await getAllMinutes(comId);
+		return response;
+	}
+);
+
+export const fetchMainpageMinutesByComId = createAsyncThunk(
+	`${name}/GET_MAINPAGE_MINUTES`,
+	async comId => {
+		const response = await getMainpageMinutes(comId);
 		return response;
 	}
 );
@@ -63,6 +72,7 @@ export const updateMinutesByData = createAsyncThunk(
 );
 const initialState = {
 	allMinutes: [],
+	mainpageMinutes: [],
 	singleMinutes: {
 		createdAt: '',
 		author: '',
@@ -87,6 +97,11 @@ const minutes = createSlice({
 		[fetchMinutesByComId.fulfilled]: (state, action) => {
 			if (action.payload[0]) {
 				state.allMinutes = action.payload;
+			}
+		},
+		[fetchMainpageMinutesByComId.fulfilled]: (state, action) => {
+			if (action.payload[0]) {
+				state.mainpageMinutes = action.payload;
 			}
 		},
 		[detailMinutesById.fulfilled]: (state, action) => {

@@ -14,6 +14,7 @@ import TextContent from '../../../components/common/TextContent';
 import BtnBox from '../../../components/community/minutes/speech/BtnBox';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
+import GrayMdBtn from '../../../components/common/GrayMdBtn';
 // api
 import { deleteSpeechById, readSingleSpeechById } from '../../../store/speech';
 // 워드 클라우드 디자인 제공 라이브러리
@@ -32,7 +33,7 @@ const LeftContainer = styled(Container)`
 `;
 const WordCloudContainer = styled(Container)`
 	align-content: flex-start;
-	height: 400px;
+	height: 350px;
 	width: 95%;
 `;
 const SpeechRecognitionContainer = styled(Container)`
@@ -46,7 +47,7 @@ const RightContainer = styled(Container)`
 	background-color: ${props => props.theme.backgroundColor};
 	margin-left: 20px;
 	padding: 0;
-	width: 50%;
+	width: 55%;
 `;
 const SpeechInfoContainer = styled(Container)`
 	align-content: flex-start;
@@ -73,6 +74,10 @@ const DeleteBtn = styled(RedMdBtn)`
 	padding: 8px 20px;
 	margin-right: 10px;
 `;
+const BackSpaceBtn = styled(GrayMdBtn)`
+	padding: 8px 20px;
+	margin-right: 10px;
+`;
 const Br = styled.div`
 	width: 100%;
 	margin-top: 10px;
@@ -86,7 +91,7 @@ const TextUpload = styled(TextContent)`
 const Buttons = styled(BtnBox)`
 	justify-content: end;
 `;
-const CreatePage = styled.form`
+const CreatePage = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	align-content: center;
@@ -108,8 +113,6 @@ function SpeechDetail() {
 		dispatch(readSingleSpeechById(params));
 	}, []);
 	const { singleSpeech } = useSelector(state => state.speech);
-	console.log('singleSpeech');
-	console.log(singleSpeech);
 	const {
 		author,
 		title,
@@ -142,8 +145,8 @@ function SpeechDetail() {
 	};
 
 	// 삭제
-	const deleteSpeech = () => {
-		Swal.fire({
+	const deleteSpeech = async () => {
+		await Swal.fire({
 			title: '삭제하시겠습니까?',
 			text: '해당 스피치와 관련된 모든 데이터가 사라집니다.',
 			icon: 'warning',
@@ -211,6 +214,15 @@ function SpeechDetail() {
 						<Buttons>
 							<UpdateBtn onClick={updateSpeech}>스피치 수정</UpdateBtn>
 							<DeleteBtn onClick={deleteSpeech}>스피치 삭제</DeleteBtn>
+							<BackSpaceBtn
+								onClick={() => {
+									navigate(
+										`/community/${params.communityId}/minutes/${params.minutesId}`
+									);
+								}}
+							>
+								돌아가기
+							</BackSpaceBtn>
 						</Buttons>
 					</SpeechInfoContainer>
 				</RightContainer>

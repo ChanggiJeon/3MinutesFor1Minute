@@ -120,7 +120,6 @@ function SpeechUpdate() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	useEffect(() => {
-		console.log('@@@@@@@@@');
 		dispatch(readSingleSpeechById(params));
 	}, []);
 	// 페이지 전환 로직 로딩-완료-수정
@@ -317,8 +316,8 @@ function SpeechUpdate() {
 					<TextUpload>{fileCount}개의 파일 업로드</TextUpload>
 					<Br style={{ margin: '20px' }} />
 					<Buttons>
-						<CanceltBtn onClick={cancel}>작성 취소</CanceltBtn>
 						<SubmitBtn type='submit'>작성 완료</SubmitBtn>
+						<CanceltBtn onClick={cancel}>작성 취소</CanceltBtn>
 					</Buttons>
 				</SpeechInfoContainer>
 			</SpeechMain>
