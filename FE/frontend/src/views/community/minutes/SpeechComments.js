@@ -4,21 +4,29 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import routes from '../../../routes';
-import { apiCreateComment, apiPutComment, apiDeleteComment} from '../../../api/speech';
+import {
+	apiCreateComment,
+} from '../../../api/speech';
 import Label from '../../../components/auth/Label';
 import SmallBtn from '../../../components/community/board/list/SmallBtn';
 import NForm from '../../../components/community/board/list/NForm';
 
 const CLabel = styled(Label)`
-    input {
-        width: 100%;
-        font-size: 15px;
-    }
-`
+	input {
+		width: 100%;
+		font-size: 15px;
+	}
+`;
 
 const CForm = styled(NForm)`
-    padding: 0px;
-`
+  	padding: 0px;
+	width: 90%;
+  	justify-content:center;
+`;
+
+const SubmitBtn = styled(SmallBtn)`
+  width: 50px;
+`;
 
 function SpeechComment() {
 	const {
@@ -30,22 +38,24 @@ function SpeechComment() {
 		mode: 'all',
 	});
 
-	const { communityId, minuteId, speechId } = useParams();
+	const { communityId, minutesId, speechId } = useParams();
 
-	const onValidSubmit = async (data) => {
+	const onValidSubmit = async data => {
 		try {
+			console.log(data)
 			await apiCreateComment({
 				communityId,
-				minuteId,
-                speechId,
+				minutesId,
+				speechId,
 				content: data.content,
-			}).then(res => {});
-            
+			}).then(res => {
+        	console.log(res)
+      });
 			await Swal.fire({
-                icon: 'success',
+				icon: 'success',
 				text: '댓글이 성공적으로 작성되었습니다.',
 			});
-            window.location.reload(true)
+			window.location.reload(true);
 		} catch (e) {
 			// error
 			await Swal.fire({
@@ -65,7 +75,9 @@ function SpeechComment() {
 					type='content'
 					placeholder='댓글을 입력하세요'
 				/>
-			<SmallBtn type='submit' disabled={!isValid}>등록</SmallBtn>
+				<SubmitBtn type='submit' disabled={!isValid}>
+					등록
+				</SubmitBtn>
 			</CLabel>
 		</CForm>
 	);

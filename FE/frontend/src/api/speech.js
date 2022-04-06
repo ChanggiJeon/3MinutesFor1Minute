@@ -67,10 +67,10 @@ export async function deleteSpeech(comId, minId, spcId) {
 
 // comment API
 
-export const apiCreateComment = ({ communityId, minuteId, speechId, content }) => 
+export const apiCreateComment = ({ communityId, minutesId, speechId, content }) => 
 	axios({
 		method: 'post',
-		url: `${BASE_URL}/${communityId}/minutes/${minuteId}/speech/${speechId}/comment/create/`,
+		url: `${BASE_URL}/${communityId}/minutes/${minutesId}/speech/${speechId}/comment/create/`,
 		data: {
 		content,
 		},
@@ -80,10 +80,10 @@ export const apiCreateComment = ({ communityId, minuteId, speechId, content }) =
 	});
 
   
-export const apiPutComment = ({ communityId, minuteId, speechId, commentId, content }) => 
+export const apiPutComment = ({ communityId, minutesId, speechId, commentId, content }) => 
 	axios({
 	method: 'put',
-	url: `${BASE_URL}/${communityId}/minutes/${minuteId}/speech/${speechId}/comment/${commentId}/update/`,
+	url: `${BASE_URL}/${communityId}/minutes/${minutesId}/speech/${speechId}/comment/${commentId}/update/`,
 	data: {
 		content,
 	},
@@ -92,10 +92,10 @@ export const apiPutComment = ({ communityId, minuteId, speechId, commentId, cont
 	}
 	});
 
-export const apiDeleteComment = ({ communityId, minuteId, speechId, commentId }) => 
+export const apiDeleteComment = ({ communityId, minutesId, speechId, commentId }) => 
 	axios({
 		method: 'delete',
-		url: `${BASE_URL}/${communityId}/minutes/${minuteId}/speech/${speechId}/comment/${commentId}/delete/`,
+		url: `${BASE_URL}/${communityId}/minutes/${minutesId}/speech/${speechId}/comment/${commentId}/delete/`,
 		headers: {
 		...setToken(),
 		}
