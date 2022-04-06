@@ -28,8 +28,8 @@ export const fetchMainpageMinutesByComId = createAsyncThunk(
 );
 
 export const endMinutesById = createAsyncThunk(`${name}/END_MINUTES`, data => {
-	const { communityId, minutesId } = data;
-	const response = closeMinutes(communityId, minutesId);
+	const { communityId, minutesId, ...request } = data;
+	const response = closeMinutes(communityId, minutesId, request);
 	return response;
 });
 

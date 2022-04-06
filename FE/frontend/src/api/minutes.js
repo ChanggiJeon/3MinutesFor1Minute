@@ -111,11 +111,12 @@ export async function downloadFile(comId, minId, fileId) {
 	}
 }
 
-export async function closeMinutes(comId, minId) {
+export async function closeMinutes(comId, minId, data) {
 	try {
 		const response = await axios({
 			method: 'put',
 			url: `${BASE_URL}/${comId}/minutes/${minId}/close/`,
+			data,
 			headers: {
 				...setToken(),
 			},
