@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 // styled-components
 import styled from 'styled-components';
@@ -16,8 +17,17 @@ import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
 import GrayMdBtn from '../../../components/common/GrayMdBtn';
 import HeaderBox from '../../../components/community/HeaderBox';
+import SpeechComment from './SpeechComments'
+import NForm from '../../../components/community/board/list/NForm';
+import Label from '../../../components/auth/Label';
+import SubmitButton from '../../../components/auth/SubmitButton';
+
 // api
 import { deleteSpeechById, readSingleSpeechById } from '../../../store/speech';
+import {
+	apiDeleteComment,
+	apiPutComment,
+} from '../../../api/speech';
 // 워드 클라우드 디자인 제공 라이브러리
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale.css';
@@ -49,6 +59,13 @@ const RightContainer = styled(Container)`
 	margin-left: 20px;
 	padding: 0;
 	width: 55%;
+`;
+const CommentContainer = styled(Container)`
+  	display: flex;
+    justify-content: center;
+	align-content: flex-start;
+	width: 95%;
+  	margin: 15px 0px;
 `;
 const SpeechInfoContainer = styled(Container)`
 	align-content: flex-start;
@@ -105,7 +122,39 @@ const AudioBox = styled.div`
 	justify-content: center;
 	width: 100%;
 `;
+const CommentList = styled.div`
+	display: flex;
+	justify-content: space-between;
+	width: 90%;
+	align-items: center;
+	margin-top 3px;
+`;
+const CommentBtn = styled.div`
+	display: flex;
+	flex-direction: row;
+`;
 
+const CommentName = styled.div`
+
+`;
+
+const SmallBtn = styled(SubmitButton)`
+	display: inline-block;
+	width: 40%;
+	margin: 5px;
+	padding: 0px;
+	font-size: 15px;
+`;
+
+const CForm = styled(NForm)`
+	padding: 0px;
+`;
+const CLabel = styled(Label)`
+	input {
+		width: 100%;
+		font-size: 15px;
+	}
+`;
 function SpeechDetail() {
 	// 초기 데이터 세팅
 	const params = useParams();
@@ -120,6 +169,7 @@ function SpeechDetail() {
 		title,
 		summary,
 		content,
+		speechComments,
 		wordCloudList,
 		recordFile,
 		voiceText,
@@ -138,6 +188,7 @@ function SpeechDetail() {
 		// fontWeight: 'bold, 400px, 700px',
 		padding: 3,
 	};
+
 	const minSize = [100, 100];
 	// 수정페이지 이동
 	const updateSpeech = () => {
@@ -169,6 +220,74 @@ function SpeechDetail() {
 		});
 	};
 
+  // comment관련
+  const [targetComment, setTargetComment] = useState({});
+  const [isCommentUpdating, setCommentUpdating] = useState(false);
+  const { nickname } = useSelector(state => state.member);
+	const { communityId, minutesId, speechId } = useParams();
+	const {
+		register: cRegister,
+		handleSubmit: cHandleSubmit,
+		getValues: cGetValues,
+		setValue: cSetValue,
+	} = useForm({
+		mode: 'all',
+	});
+
+  const onValidSubmitComment = async () => {
+		const { content } = cGetValues();
+		try {
+			await apiPutComment({
+				communityId,
+				minutesId,
+        speechId,
+				commentId: targetComment.id,
+				content,
+			});
+			await Swal.fire({
+        icon: 'success',
+				text: '수정을 완료하였습니다.',
+			});
+      window.location.reload(true);
+			setCommentUpdating(false);
+		} catch (e) {
+			// error
+			await Swal.fire({
+				icon: 'error',
+				text: '수정을 실패하였습니다.',
+			});
+		}
+	};
+  const handleDeleteComment = async commentId => {
+		await Swal.fire({
+			title: '정말 삭제하시겠습니까?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#dd3333',
+			cancelButtonText: '취소',
+			confirmButtonText: '삭제',
+		}).then(result => {
+			if (result.isConfirmed) {
+				deleteComment(commentId);
+			}
+		});
+	};
+  const deleteComment = async commentId => {
+		try {
+			await apiDeleteComment({ communityId, minutesId, speechId, commentId });
+			await Swal.fire({
+				icon: 'success',
+				text: '댓글이 삭제되었습니다.',
+			});
+			window.location.reload(true);
+		} catch (e) {
+			// error
+			await Swal.fire({
+				icon: 'error',
+				text: '삭제 실패, 새로 고침 후, 다시 시도하세요.',
+			});
+		}
+	};
 	return (
 		<CreatePage>
 			<SpeechMain>
@@ -229,6 +348,65 @@ function SpeechDetail() {
 						<TextUpload>첨부 파일 </TextUpload>
 						<Br style={{ margin: '20px' }} />
 					</SpeechInfoContainer>
+					<CommentContainer>
+						<SpeechComment/>
+						{speechComments.map(comment => (
+							<CommentList>
+									{/* 댓글 update true */}
+									{isCommentUpdating && comment === targetComment ? (
+										<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
+											<CLabel htmlFor='content'>
+												<input
+													{...cRegister('content', {
+														required: true,
+													})}
+													type='content'
+													placeholder='내용 없음'
+												/>
+												<SmallBtn type='submit'>수정</SmallBtn>
+												<SmallBtn
+													type='button'
+													onClick={() => {
+														setCommentUpdating(false);
+														setTargetComment({});
+													}}
+												>
+													취소
+												</SmallBtn>
+											</CLabel>
+										</CForm>
+									) : (
+										// 댓글 update false
+										<>
+											<CommentName>
+												{comment?.member?.nickname} - {comment?.content}
+											</CommentName>
+											{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
+											{comment?.member?.nickname === nickname ? (
+												<CommentBtn>
+													<SmallBtn
+														type='button'
+														onClick={() => {
+															setCommentUpdating(true);
+															setTargetComment(comment);
+															cSetValue('content', comment.content);
+														}}
+													>
+														수정
+													</SmallBtn>
+													<SmallBtn
+														type='button'
+														onClick={() => handleDeleteComment(comment.id)}
+													>
+														삭제
+													</SmallBtn>
+												</CommentBtn>
+											) : null}
+										</>
+									)}
+							</CommentList>)
+					  	)}
+					</CommentContainer>
 				</RightContainer>
 			</SpeechMain>
 		</CreatePage>
