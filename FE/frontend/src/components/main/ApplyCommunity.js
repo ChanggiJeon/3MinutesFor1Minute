@@ -43,7 +43,7 @@ const ResultBtn = styled(EmptyBtn)`
 	font-size: 18px;
 `;
 
-function ApplyCommunity() {
+function ApplyCommunity({ setMode, getList }) {
 	const {
 		register,
 		handleSubmit,
@@ -149,7 +149,11 @@ function ApplyCommunity() {
 		</Form>
 	);
 
-	return target?.id ? <JoinCommunity target={target} /> : applyContents;
+	return target?.id ? (
+		<JoinCommunity setMode={setMode} getList={getList} target={target} />
+	) : (
+		applyContents
+	);
 }
 
 export default ApplyCommunity;
