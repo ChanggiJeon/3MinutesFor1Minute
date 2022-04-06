@@ -19,7 +19,7 @@ import SubmitButton from '../auth/SubmitButton';
 import Title from '../auth/Title';
 import TextSubTitle from '../common/TextSubTitle';
 
-function JoinCommunity({ target }) {
+function JoinCommunity({ target, setMode, getList }) {
 	const {
 		register,
 		handleSubmit,
@@ -67,9 +67,10 @@ function JoinCommunity({ target }) {
 			});
 			await Swal.fire({
 				icon: 'success',
-				text: `${target.name} 커뮤니티에 가입되었습니다.`,
+				text: `${target.name} 커뮤니티에 가입 요청을 보냈습니다.`,
 			});
-			navigate(`${routes.community}/${target.id}`);
+			setMode(false);
+			getList();
 		} catch (e) {
 			const { data, status } = e.response;
 

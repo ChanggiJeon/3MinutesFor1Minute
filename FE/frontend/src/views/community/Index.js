@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import {
 	apiGetCommunityInfo,
 	apiGetMyMemberProfile,
@@ -33,6 +34,13 @@ function ComIndex() {
 	const getMyMember = async () => {
 		try {
 			const response = await apiGetMyMemberProfile({ communityId });
+			if (!response.data.is_active) {
+				Swal.fire({
+					icon: 'info',
+					text: '가입 신청이 승인되지 않았습니다. 관리자에게 문의하세요.',
+				});
+				navigate(routes.main);
+			}
 			dispatch(getMemberData(response.data));
 		} catch (e) {
 			navigate(routes.main);
