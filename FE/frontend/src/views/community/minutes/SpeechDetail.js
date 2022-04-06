@@ -20,7 +20,7 @@ import HeaderBox from '../../../components/community/HeaderBox';
 import SpeechComment from './SpeechComments'
 import NForm from '../../../components/community/board/list/NForm';
 import Label from '../../../components/auth/Label';
-import SmallBtn from '../../../components/community/board/list/SmallBtn';
+import SubmitButton from '../../../components/auth/SubmitButton';
 
 // api
 import { deleteSpeechById, readSingleSpeechById } from '../../../store/speech';
@@ -123,11 +123,29 @@ const AudioBox = styled.div`
 	width: 100%;
 `;
 const CommentList = styled.div`
-  display: flex;
-  justify-content: center;
-	width: 100%;
-  margin-top: px;
+	display: flex;
+	justify-content: space-between;
+	width: 90%;
+	align-items: center;
+	margin-top 3px;
 `;
+const CommentBtn = styled.div`
+	display: flex;
+	flex-direction: row;
+`;
+
+const CommentName = styled.div`
+
+`;
+
+const SmallBtn = styled(SubmitButton)`
+	display: inline-block;
+	width: 40%;
+	margin: 5px;
+	padding: 0px;
+	font-size: 15px;
+`;
+
 const CForm = styled(NForm)`
 	padding: 0px;
 `;
@@ -334,7 +352,6 @@ function SpeechDetail() {
 						<SpeechComment/>
 						{speechComments.map(comment => (
 							<CommentList>
-								<div key={comment.id}>
 									{/* 댓글 update true */}
 									{isCommentUpdating && comment === targetComment ? (
 										<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
@@ -361,12 +378,12 @@ function SpeechDetail() {
 									) : (
 										// 댓글 update false
 										<>
-											<div>
-                        {comment?.member?.nickname} - {comment?.content}
-                      </div>
+											<CommentName>
+												{comment?.member?.nickname} - {comment?.content}
+											</CommentName>
 											{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
 											{comment?.member?.nickname === nickname ? (
-												<div>
+												<CommentBtn>
 													<SmallBtn
 														type='button'
 														onClick={() => {
@@ -383,11 +400,10 @@ function SpeechDetail() {
 													>
 														삭제
 													</SmallBtn>
-												</div>
+												</CommentBtn>
 											) : null}
 										</>
 									)}
-								</div>
 							</CommentList>)
 					  	)}
 					</CommentContainer>
