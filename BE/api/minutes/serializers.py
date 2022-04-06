@@ -19,7 +19,7 @@ class SpeechFileSerializer(serializers.ModelSerializer):
         
 
 class ParticipantSerializer(serializers.ModelSerializer):
-    member = CustomMemberSerializer()
+    member = CustomMemberSerializer(read_only=True)
 
     class Meta:
         model = Participant
@@ -45,7 +45,7 @@ class SpeechListSerializer(serializers.ModelSerializer):
 
 
 class SpeechSerializer(serializers.ModelSerializer):
-    participant = ParticipantSerializer()
+    participant = ParticipantSerializer(read_only=True)
     speechfile_set = SpeechFileSerializer(many=True, read_only=True)
     speech_comments = serializers.SerializerMethodField('sc_filter')
 
@@ -64,8 +64,7 @@ class CustomSpeechSerializer(SpeechSerializer):
 
     class Meta:
         model = Speech
-        fields = '__all__'
-        read_only_fields = ('participant', 'minute', 'voice_text', 'summary', 'cloud_keyword', )
+        fields = ('title', 'content', 'voice_text', 'summary', 'cloud_keyword', )
 
 
 class MinuteListSerializer(serializers.ModelSerializer):
