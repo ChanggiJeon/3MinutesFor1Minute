@@ -16,7 +16,6 @@ export const apiCreateBoard = ({ communityId, title, content, isNotice, upload }
     }
   });
 
-
 export const apiCreateComment = ({ communityId, postId, content }) => 
   axios({
     method: 'post',
@@ -29,6 +28,28 @@ export const apiCreateComment = ({ communityId, postId, content }) =>
     }
   });
 
+  
+export const apiPutComment = ({ communityId, postId, commentId, content }) => 
+axios({
+  method: 'put',
+  url: `${BASE_URL}/${communityId}/boards/${postId}/comment/${commentId}/update/`,
+  data: {
+    content,
+  },
+  headers: {
+    ...setToken(),
+  }
+});
+
+export const apiDeleteComment = ({ communityId, postId, commentId }) => 
+  axios({
+    method: 'delete',
+    url: `${BASE_URL}/${communityId}/boards/${postId}/comment/${commentId}/delete/`,
+    headers: {
+      ...setToken(),
+    }
+  });
+  
 export const apiGetBoards = ({ communityId }) =>
   axios({
     method: 'get',
@@ -62,18 +83,6 @@ export const apiPutBoardDetail = ({ communityId, postId, title, content, isNotic
     }
   });
 
-export const apiPutComment = ({ communityId, postId, commentId, content }) => 
-  axios({
-    method: 'put',
-    url: `${BASE_URL}/${communityId}/boards/${postId}/comment/${commentId}/update/`,
-    data: {
-      content,
-    },
-    headers: {
-      ...setToken(),
-    }
-  });
-
 export const apiDeleteBoardDetail = ({ communityId, postId }) =>
   axios({
     method: 'delete',
@@ -81,13 +90,4 @@ export const apiDeleteBoardDetail = ({ communityId, postId }) =>
     headers: {
       ...setToken(),
     },
-  });
-
-export const apiDeleteComment = ({ communityId, postId, commentId }) => 
-  axios({
-    method: 'delete',
-    url: `${BASE_URL}/${communityId}/boards/${postId}/comment/${commentId}/delete/`,
-    headers: {
-      ...setToken(),
-    }
   });
