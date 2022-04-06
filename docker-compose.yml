@@ -9,7 +9,6 @@ services:
     volumes:
       - /app/node_modules
       - ./FE/frontend:/app
-      - ./BE/api/media/:/usr/shar/nginx/html/media
     stdin_open: true
 
   nginx:
@@ -18,6 +17,7 @@ services:
       context: ./nginx
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
+      - ./BE/api/media/:/usr/shar/nginx/html/media
     ports:
       - "80:80"
       - "443:443"
