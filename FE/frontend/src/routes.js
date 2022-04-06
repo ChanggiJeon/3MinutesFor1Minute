@@ -18,6 +18,7 @@ const routes = {
 	// speech
 	speechCreate: 'minutes/:minutesId/speechCreate',
 	speechDetail: 'minutes/:minutesId/speech/:speechId',
+	speechUpdate: 'minutes/:minutesId/speech/:speechId/update',
 	// posts
 	posts: 'posts',
 	postCreate: 'posts/postcreate',
