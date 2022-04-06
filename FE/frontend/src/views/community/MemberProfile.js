@@ -45,7 +45,7 @@ const BioContainer = styled.div`
 `;
 
 function MemberProfile() {
-	const { id, nickname } = useSelector(state => state.member);
+	const { id, nickname, is_admin: isAdmin } = useSelector(state => state.member);
 	const { communityId, memberNickname } = useParams();
 	const navigate = useNavigate();
 	const [updateMode, setUpdateMode] = useState('');
@@ -90,6 +90,18 @@ function MemberProfile() {
 				cancelButtonText: '취소',
 			});
 			if (res.isConfirmed) {
+				if (isAdmin) {
+					const checkAdmin = await Swal.fire({
+						icon: 'warning',
+						text: '관리자가 탈퇴하면 커뮤니티가 삭제됩니다. 계속 진행하시겠습니까?',
+						showCancelButton: true,
+						confirmButtonText: '탈퇴',
+						cancelButtonText: '취소',
+					});
+					if (!checkAdmin.isConfirmed) {
+						throw Error();
+					}
+				}
 				await apiWithdrawMember({ communityId, memberId: id });
 				await Swal.fire({
 					icon: 'success',

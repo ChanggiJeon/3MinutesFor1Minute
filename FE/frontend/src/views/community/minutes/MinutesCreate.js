@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -20,6 +21,9 @@ import InputFile from '../../../components/community/minutes/create/InputFile';
 import LabelFile from '../../../components/community/minutes/create/LabelFile';
 import HeaderBox from '../../../components/community/HeaderBox';
 import BtnBox from '../../../components/community/BtnBox';
+import EmptyBtn from '../../../components/auth/EmptyBtn';
+import SetMember from '../../../components/community/minutes/create/SetMember';
+import Modal from '../../../components/modal/Modal';
 
 const CreateForm = styled(Form)`
 	flex-direction: row;
@@ -70,6 +74,10 @@ const TextUpload = styled(TextContent)`
 	font-size: 16px;
 `;
 
+const MemberBtn = styled(EmptyBtn)`
+	font-size: 20px;
+`;
+
 function MinutesCreate() {
 	// useForm 설정
 	const {
@@ -84,6 +92,13 @@ function MinutesCreate() {
 	const { communityId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const [members, setMembers] = useState([]);
+	const [isAddMode, setAddMode] = useState(false);
+	const memberModal = isAddMode && (
+		<Modal setMode={setAddMode}>
+			<SetMember setMode={setAddMode} members={members} setMembers={setMembers} />
+		</Modal>
+	);
 	// form 제출 로직
 	function onValidSubmit(data) {
 		const formData = new FormData();
@@ -96,7 +111,10 @@ function MinutesCreate() {
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('title', data.title);
 		formData.append('content', data.content);
-		formData.append('member_ids', []);
+		formData.append(
+			'member_ids',
+			members.map(e => e.id)
+		);
 		formData.append('deadline', data.Dday);
 		// navigate를 위한 값
 		formData.append('comId', communityId);
@@ -164,7 +182,14 @@ function MinutesCreate() {
 					</InputLabel>
 					<ErrorMsg>{errors?.title?.message}</ErrorMsg>
 					<Br />
-					<TextContent>회의 대상자 : Member랑 연계필요</TextContent>
+					<TextContent>
+						<MemberBtn type='button' onClick={() => setAddMode(true)}>
+							회의 대상자 :{' '}
+							{members.length > 0
+								? members.map(e => e.nickname).join(', ')
+								: '클릭하여 추가하기'}
+						</MemberBtn>
+					</TextContent>
 					<Br />
 					<TextContent>
 						회의 종료일 :{' '}
@@ -209,6 +234,7 @@ function MinutesCreate() {
 					))}
 				</CreateForm>
 			</ContentBox>
+			{memberModal}
 		</CreateContainer>
 	);
 }
