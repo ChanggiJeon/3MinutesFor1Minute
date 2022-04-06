@@ -9,6 +9,7 @@ services:
     volumes:
       - /app/node_modules
       - ./FE/frontend:/app
+      - ./BE/api/media/:/usr/shar/nginx/html/media
     stdin_open: true
 
   nginx:
@@ -32,6 +33,8 @@ services:
       - ./BE/api/.env
     volumes:
       - ./BE/api:/backend
+      - ./BE/api/media/:/usr/shar/nginx/html/media
     command: chmod +x backend/wsgi-entrypoint.sh
     entrypoint:
-      /backend/wsgi-entrypoint.sh
+      - /backend/wsgi-entrypoint.sh
+      - python /backend/Thread.py
