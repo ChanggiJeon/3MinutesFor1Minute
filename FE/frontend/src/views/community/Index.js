@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import {
@@ -30,6 +30,7 @@ function ComIndex() {
 	const { communityId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const location = useLocation();
 
 	const getMyMember = async () => {
 		try {
@@ -64,7 +65,7 @@ function ComIndex() {
 			getCommunityInfo();
 			getMyMember();
 		}
-	}, [isLoggedIn, communityId]);
+	}, [isLoggedIn, communityId, location]);
 
 	return (
 		<Container>
