@@ -73,15 +73,30 @@ function Posts() {
 							{posts
 								.reverse()
 								.slice(offset, offset + limit)
+								.filter(post => post.is_notice === true)
 								.map(post => (
 									<tr key={post.id}>
-										{post.is_notice ? (
-											<td>
-												<AiFillNotification />
-											</td>
-										) : (
-											<td>{post.id}</td>
-										)}
+										<td>
+											<AiFillNotification />
+										</td>
+										<td>
+											<SLink
+												to={`${routes.community}/${communityId}/${routes.posts}/${post.id}`}
+											>
+												{post.title}
+											</SLink>
+										</td>
+										<td>{dayjs(post.created_at).format('YYYY-MM-DD')}</td>
+										<td>{post.member.nickname}</td>
+									</tr>
+								))}
+							{posts
+								// .reverse()
+								.slice(offset, offset + limit)
+                .filter(post => post.is_notice === false)
+								.map(post => (
+                  <tr key={post.id}>
+										<td>{post.id}</td>
 										<td>
 											<SLink
 												to={`${routes.community}/${communityId}/${routes.posts}/${post.id}`}
