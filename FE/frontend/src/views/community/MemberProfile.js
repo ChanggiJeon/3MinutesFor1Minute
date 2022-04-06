@@ -53,7 +53,10 @@ function MemberProfile() {
 	const dispatch = useDispatch();
 
 	const getMember = async () => {
-		const response = await apiGetMyMemberProfile({ communityId });
+		const response = await apiGetMemberProfile({
+			communityId,
+			nickname: memberNickname,
+		});
 		setMember(response.data);
 	};
 
