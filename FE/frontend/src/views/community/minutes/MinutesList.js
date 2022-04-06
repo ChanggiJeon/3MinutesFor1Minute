@@ -12,7 +12,6 @@ import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import { fetchMinutesByComId } from '../../../store/minutes';
 import HeaderBox from '../../../components/community/HeaderBox';
 import MinutesPagination from './MinutesPagination';
-
 import MinutesItem from '../../../components/community/minutes/list/MinutesItem';
 import NumBox from '../../../components/community/minutes/list/textBox/NumBox';
 import TitleBox from '../../../components/community/minutes/list/textBox/TitleBox';

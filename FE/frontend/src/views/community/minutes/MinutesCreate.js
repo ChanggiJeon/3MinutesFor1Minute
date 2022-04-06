@@ -18,8 +18,6 @@ import ContentBox from '../../../components/community/minutes/create/ContentBox'
 import DateTime from '../../../components/community/minutes/create/DateTime';
 import InputFile from '../../../components/community/minutes/create/InputFile';
 import LabelFile from '../../../components/community/minutes/create/LabelFile';
-import OpenIcon from '../../../components/community/minutes/create/OpenIcon';
-import CloseIcon from '../../../components/community/minutes/create/CloseIcon';
 import HeaderBox from '../../../components/community/HeaderBox';
 import BtnBox from '../../../components/community/BtnBox';
 
