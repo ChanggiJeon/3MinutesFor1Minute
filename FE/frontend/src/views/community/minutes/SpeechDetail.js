@@ -205,6 +205,7 @@ function SpeechDetail() {
   // comment관련
   const [targetComment, setTargetComment] = useState({});
   const [isCommentUpdating, setCommentUpdating] = useState(false);
+  const { nickname } = useSelector(state => state.member);
 	const { communityId, minutesId, speechId } = useParams();
 	const {
 		register: cRegister,
@@ -364,7 +365,7 @@ function SpeechDetail() {
                         {comment?.member?.nickname} - {comment?.content}
                       </div>
 											{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
-											{true ? (
+											{comment?.member?.nickname === nickname ? (
 												<div>
 													<SmallBtn
 														type='button'
