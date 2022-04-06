@@ -12,7 +12,6 @@ export async function getSingleSpeech(comId, minId, spcId) {
 		});
 		return response.data;
 	} catch (err) {
-		console.log(err);
 		return err.response.data;
 	}
 }
@@ -43,8 +42,6 @@ export async function updateSpeech(comId, minId, spcId, data) {
 				'Content-Type': 'multipart/form-data',
 			},
 		});
-		console.log('response.data');
-		console.log(response.data);
 		return response.data;
 	} catch (err) {
 		return err.response.data;

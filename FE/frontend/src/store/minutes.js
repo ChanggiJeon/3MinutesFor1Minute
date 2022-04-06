@@ -6,6 +6,7 @@ import {
 	detailMinutes,
 	deleteMinutes,
 	updateMinutes,
+	closeMinutes,
 } from '../api/minutes';
 
 const name = 'minutes';
@@ -27,8 +28,8 @@ export const fetchMainpageMinutesByComId = createAsyncThunk(
 );
 
 export const endMinutesById = createAsyncThunk(`${name}/END_MINUTES`, data => {
-	const { communityId, minutesId, ...request } = data;
-	const response = updateMinutes(communityId, minutesId, request);
+	const { communityId, minutesId } = data;
+	const response = closeMinutes(communityId, minutesId);
 	return response;
 });
 
