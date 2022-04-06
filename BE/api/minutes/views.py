@@ -10,6 +10,7 @@ from .serializers import (
     MinuteListSerializer,
     MinuteSerializer,
     CustomMinuteSerializer,
+    MinuteCloseSerializer,
     SpeechSerializer,
     CustomSpeechSerializer,
     SpeechCommentSerializer
@@ -177,33 +178,8 @@ def minute_update(request, community_pk, minute_pk):
         serializer = MinuteSerializer(minute, data=request.data)
         participants = get_list_or_404(Participant, minute=minute)
 
-        if 'deadline' in request.data and request.data['deadline'] != minute.deadline:
-            notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
-
-            if not notifications:
-                for participant in participants:
-                    notification_deadline = Notification(
-                        user=participant.member.user,
-                        minute=minute,
-                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
-                        is_activate=False
-                    )
-
-                    notification_deadline.save()
-
-            for participant in participants:
-                notification_alarm = Notification(
-                    user=participant.member.user,
-                    minute=minute,
-                    content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
-                    is_activate=False
-                )
-
-                notification_alarm.save()
-
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            minute = get_object_or_404(Minute, pk=serializer.data['id'])
 
             if minute.minutefile_set.all():
                 past_files = minute.minutefile_set.all()
@@ -216,11 +192,35 @@ def minute_update(request, community_pk, minute_pk):
                     new_file = MinuteFile(minute=minute, filename=str(value), reference_file=value)
                     new_file.save()
 
+            if 'deadline' in request.data and request.data['deadline'] != minute.deadline:
+                notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
+
+                if not notifications:
+                    for participant in participants:
+                        notification_deadline = Notification(
+                            user=participant.member.user,
+                            minute=minute,
+                            content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                            is_activate=False
+                        )
+
+                        notification_deadline.save()
+
+                for participant in participants:
+                    notification_alarm = Notification(
+                        user=participant.member.user,
+                        minute=minute,
+                        content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
+                        is_activate=False
+                    )
+
+                    notification_alarm.save()
             serializer = MinuteSerializer(minute)
             return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+@swagger_auto_schema(method='PUT', request_body=MinuteCloseSerializer)
 @api_view(['PUT'])
 def minute_close(request, community_pk, minute_pk):
     community = get_object_or_404(Community, pk=community_pk)
@@ -229,20 +229,24 @@ def minute_close(request, community_pk, minute_pk):
     assignee = minute.participant_set.get(is_assignee=True)
 
     if me == assignee.member or me.is_admin:
-        minute.is_closed = True
-        minute.save()
-        participants = get_list_or_404(Participant, minute=minute)
+        serializer = MinuteCloseSerializer(minute, data=request.data)
 
-        for participant in participants:
-            notification = Notification(
-                user=participant.member.user,
-                minute=minute,
-                content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
-                is_activate=True
-            )
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
 
-            notification.save()
-        return Response(status=status.HTTP_200_OK)
+            participants = get_list_or_404(Participant, minute=minute)
+
+            for participant in participants:
+                notification = Notification(
+                    user=participant.member.user,
+                    minute=minute,
+                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                    is_activate=True
+                )
+
+                notification.save()
+            serializer = MinuteSerializer(minute)
+            return Response(serializer.data)
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -285,9 +289,8 @@ def speech_create(request, community_pk, minute_pk):
 
         try: 
             file = speech.record_file
-            # file_path = str(MEDIA_ROOT) + f'\\recordfile\\{minute.pk}\\'
-            # file_name = str(file).split('/')[-1]
-            
+            file_path = str(MEDIA_ROOT) + f'\\recordfile\\{minute.pk}\\'
+            file_name = str(file).split('/')[-1]
             voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
         except:

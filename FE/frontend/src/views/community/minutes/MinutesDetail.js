@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {
 	detailMinutesById,
@@ -76,6 +76,7 @@ function MinutesDetail() {
 	const params = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const location = useLocation();
 	// 리덕스에서 데이터 받아오기
 	useEffect(() => {
 		dispatch(detailMinutesById(params));
@@ -138,6 +139,7 @@ function MinutesDetail() {
 						is_closed: true,
 					};
 					dispatch(endMinutesById(data));
+					window.location.reload();
 					Swal.fire('회의가 종료되었습니다.', '', 'success');
 				} else if (result.isDenied) {
 					Swal.fire('취소되었습니다.', '', 'info');
@@ -198,7 +200,7 @@ function MinutesDetail() {
 								downloadFile({ fileId: file.id, fileName: file.reference_file })
 							}
 						>
-							{file.reference_file}
+							{file.filename}
 						</FileItem>
 					))
 				) : (

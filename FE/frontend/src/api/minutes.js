@@ -44,7 +44,7 @@ export async function createMinutes(communityId, data) {
 		});
 		return response.data;
 	} catch (err) {
-		return err.response.data;
+		return err.response.status;
 	}
 }
 
