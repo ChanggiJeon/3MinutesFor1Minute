@@ -10,7 +10,10 @@ import { fetchMinutesByComId } from '../../../store/minutes';
 
 export const StyleWrapper = styled.div`
   .fc {
-	margin : 20px
+	margin : 20px;
+  }
+  .fc-toolbar{
+	  padding-left : 45%;
   }
   .fc-event-main-frame .fc-daygrid-dot-event{
 	flex-direction: row-reverse;
@@ -62,9 +65,6 @@ function MinutesCalender() {
 				<FullCalendar
 					plugins={[dayGridPlugin]}
 					initialView="dayGridMonth"
-					headerToolbar={{
-						center: 'dayGridMonth',
-					}}
 					events={events}
 					eventColor='#537791'
 					nowIndicator
