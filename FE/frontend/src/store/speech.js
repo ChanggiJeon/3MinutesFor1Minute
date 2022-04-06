@@ -55,6 +55,8 @@ function polishData(data) {
 	polished.recordFile = data.record_file;
 	polished.voiceText = data.voice_text;
 	polished.updatedAt = data.updated_at;
+	polished.author = data.participant.member.nickname;
+	polished.content = data.content;
 	// 워드 클라우드 데이터 가공 WORD[{text: string, value: number,}]
 	const text = data.cloud_keyword.slice(1, -1);
 	const arr = text.split(', ');

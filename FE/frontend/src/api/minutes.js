@@ -76,6 +76,7 @@ export async function updateMinutes(comId, minId, data) {
 		});
 		return response.data;
 	} catch (err) {
+		console.log(err.response.data);
 		return err.response.data;
 	}
 }
