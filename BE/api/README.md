@@ -67,6 +67,7 @@ pip install -r requirements.txt
     - new_password (비밀번호 변경 시에만, 필수 X)
     - new_password_confirm (비밀번호 변경 시에만, 필수 X)
     - profile_image (이미지 변경 시에만, 필수 X)
+  - 본인 정보 [GET] : accounts/self/
   - 프로필 [GET] : accounts/profile/<str : username>/
   - 아이디 찾기 [GET] : accounts/find/username/<str : email>/<str : name>/
   - 비밀번호 찾기 [GET] : accounts/find/password/<str : username>/<str : email>/<str : name>/
@@ -76,8 +77,9 @@ pip install -r requirements.txt
 - 커뮤니티 (Community)
 
   - 본인이 가입한 커뮤니티 목록 [GET] : community/
+  - 커뮤니티 본인 정보 [GET] : community/<int : community_pk>/self/
   - 커뮤니티 본인 프로필 [GET] : community/<int : community_pk>/profile/<str : nickname>/
-
+  
   1. 커뮤니티 생성
      - 커뮤니티 생성 [POST] : community/create/
        - 커뮤니티 이름 : name
