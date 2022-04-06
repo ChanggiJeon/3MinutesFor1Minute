@@ -62,7 +62,7 @@ function Members() {
 									<Link to={`/community/${communityId}/member/${e.id}`}>
 										{e.profile_image ? (
 											<img
-												src={`${process.env.REACT_APP_API_URL}${e.profile_image}`}
+												src={`${process.env.REACT_APP_MEDIA_URL}${e.profile_image}`}
 												alt=''
 											/>
 										) : (

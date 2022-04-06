@@ -52,10 +52,10 @@ export const apiGetMyMemberProfile = ({ communityId }) =>
 		},
 	});
 
-export const apiGetMemberProfile = ({ communityId, memberId }) =>
+export const apiGetMemberProfile = ({ communityId, nickname }) =>
 	axios({
 		method: 'get',
-		url: `${BASE_URL}/community/${communityId}/member/${memberId}/detail/`,
+		url: `${BASE_URL}/community/${communityId}/profile/${nickname}/`,
 		headers: {
 			...setToken(),
 		},

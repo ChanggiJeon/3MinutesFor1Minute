@@ -8,7 +8,7 @@ const routes = {
 	community: '/community',
 	admin: 'admin',
 	members: 'members',
-	memberProfile: 'member/:memberId',
+	memberProfile: 'member/:memberNickname',
 	// minutes
 	minutesList: 'minutes',
 	minutesDetail: 'minutes/:minutesId',
