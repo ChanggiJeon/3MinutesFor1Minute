@@ -1,26 +1,35 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import NumBox from './textBox/NumBox';
-import TitleBox from './textBox/TitleBox';
-import DateBox from './textBox/DateBox';
-import AuthorBox from './textBox/AuthorBox';
-import DeadlineBox from './textBox/DeadlineBox';
+import TextSubTitle from '../common/TextSubTitle';
+import DivLine from './main/DivLine';
 
 const Minutes = styled.li`
 	list-style: none;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
-	justify-content: start;
-	width: 100%;
-	height: 50px;
+	justify-content: center;
+	width: 95%;
 	cursor: pointer;
 `;
-const Title = styled(TitleBox)`
-	justify-content: start;
-	padding-left: 10px;
+const Divider = styled(DivLine)`
+	height: 1.5px;
+	margin: 15px 0;
+`;
+const Title = styled(TextSubTitle)`
+	padding: 0;
+	width: 60%;
+`;
+const Author = styled(TextSubTitle)`
+	padding: 0;
+	width: 15%;
+`;
+const Deadline = styled(TextSubTitle)`
+	padding: 0;
+	width: 10%;
 `;
 
-function MinutesItem({ no, minId, title, date, deadline, author, isClosed }) {
+function MainMinutesItem({ minId, title, deadline, author }) {
 	// 디데이 구하는 공식
 	const today = new Date();
 	const deadLine = new Date(deadline);
@@ -36,20 +45,12 @@ function MinutesItem({ no, minId, title, date, deadline, author, isClosed }) {
 				navigate(`/community/${communityId}/minutes/${minId}`);
 			}}
 		>
-			<NumBox>{no}</NumBox>
 			<Title>{title}</Title>
-			<DateBox>
-				{date.substr(2, 2)}/{date.substr(5, 2)}/{date.substr(8, 2)}{' '}
-				{date.substr(11, 5)}
-			</DateBox>
-			<AuthorBox>{author}</AuthorBox>
-			{isClosed ? (
-				<DeadlineBox>종료</DeadlineBox>
-			) : (
-				<DeadlineBox>{Dday}</DeadlineBox>
-			)}
+			<Author>{author}</Author>
+			<Deadline>{Dday}</Deadline>
+			<Divider />
 		</Minutes>
 	);
 }
 
-export default MinutesItem;
+export default MainMinutesItem;

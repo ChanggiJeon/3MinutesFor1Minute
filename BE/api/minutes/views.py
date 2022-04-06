@@ -286,7 +286,8 @@ def speech_create(request, community_pk, minute_pk):
         try: 
             file = speech.record_file
             file_path = str(MEDIA_ROOT) + '\\record\\'
-            file_name = str(file)[7:]
+            # file_name = str(file)[7:]
+            file_name = '1648986351112.wav'
             voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
         except:

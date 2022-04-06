@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
 	getAllMinutes,
+	getMainpageMinutes,
 	createMinutes,
 	detailMinutes,
 	deleteMinutes,
@@ -16,6 +17,20 @@ export const fetchMinutesByComId = createAsyncThunk(
 		return response;
 	}
 );
+
+export const fetchMainpageMinutesByComId = createAsyncThunk(
+	`${name}/GET_MAINPAGE_MINUTES`,
+	async comId => {
+		const response = await getMainpageMinutes(comId);
+		return response;
+	}
+);
+
+export const endMinutesById = createAsyncThunk(`${name}/END_MINUTES`, data => {
+	const { communityId, minutesId, ...request } = data;
+	const response = updateMinutes(communityId, minutesId, request);
+	return response;
+});
 
 export const createMinutesByData = createAsyncThunk(
 	`${name}/CREATE_MINUTES`,
@@ -40,8 +55,9 @@ export const deleteMinutesById = createAsyncThunk(
 	`${name}/DELETE_MINUTES`,
 	async data => {
 		const { communityId, minutesId } = data;
-		const response = await deleteMinutes(communityId, minutesId);
-		return response;
+		const res = await deleteMinutes(communityId, minutesId);
+		fetchMinutesByComId(communityId);
+		return res;
 	}
 );
 
@@ -54,22 +70,26 @@ export const updateMinutesByData = createAsyncThunk(
 		return response;
 	}
 );
+const initialState = {
+	allMinutes: [],
+	mainpageMinutes: [],
+	singleMinutes: {
+		createdAt: '',
+		author: '',
+		title: '',
+		participants: [],
+		speeches: [],
+		deadline: '',
+		Dday: '',
+		content: '',
+		referenceFile: undefined,
+		isClosed: false,
+	},
+};
 
 const minutes = createSlice({
 	name,
-	initialState: {
-		allMinutes: [],
-		singleMinutes: {
-			createdAt: '',
-			author: '',
-			title: '',
-			participants: [],
-			deadline: '',
-			Dday: '',
-			content: '',
-			referenceFile: undefined,
-		},
-	},
+	initialState,
 	reducers: {
 		// standard reducer logic
 	},
@@ -77,6 +97,11 @@ const minutes = createSlice({
 		[fetchMinutesByComId.fulfilled]: (state, action) => {
 			if (action.payload[0]) {
 				state.allMinutes = action.payload;
+			}
+		},
+		[fetchMainpageMinutesByComId.fulfilled]: (state, action) => {
+			if (action.payload[0]) {
+				state.mainpageMinutes = action.payload;
 			}
 		},
 		[detailMinutesById.fulfilled]: (state, action) => {
@@ -87,8 +112,10 @@ const minutes = createSlice({
 				member => member.is_assignee
 			)[0]?.member?.nickname;
 			const tmpParticipants = response?.minute_participants;
-			const referenceFile = response?.reference_file;
-			const { title, deadline, content } = response;
+			const referenceFile = response?.minutefile_set;
+			const speeches = response?.minute_speeches;
+			const { title, deadline, content, conclusion } = response;
+			const isClosed = response.is_closed;
 			// 작성일자 데이터 가공
 			const createdAt = `${writtenDate.substr(2, 2)}.
 			${writtenDate.substr(5, 2)}. ${writtenDate.substr(8, 2)}.
@@ -102,25 +129,20 @@ const minutes = createSlice({
 			// state 변경
 			state.singleMinutes = {
 				createdAt,
+				conclusion,
 				author,
 				title,
 				participants,
+				speeches,
 				deadline,
 				Dday,
 				content,
 				referenceFile,
+				isClosed,
 			};
 		},
-		[deleteMinutesById.fulfilled]: state => {
-			state.singleMinutes = {
-				createdAt: '',
-				author: '',
-				title: '',
-				participants: [],
-				Dday: '',
-				content: '',
-				referenceFile: undefined,
-			};
+		[endMinutesById.fulfilled]: state => {
+			state.singleMinutes.isClosed = true;
 		},
 	},
 });
