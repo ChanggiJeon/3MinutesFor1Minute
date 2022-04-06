@@ -21,6 +21,7 @@ class Board(models.Model):
 
 class BoardFile(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    filename = models.CharField(max_length=100, blank=True)
     reference_file = models.FileField(upload_to=file_path, null=True, blank=True)
 
 

@@ -36,11 +36,11 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.accounts_user:~1 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.accounts_user:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `accounts_user` DISABLE KEYS */;
 INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `name`, `profile_image`) VALUES
-	(1, 'pbkdf2_sha256$320000$6DaC7kk6tAtI9odQgyNsl1$vgofLJN1qiEphw8v07FQozuLqs7/JtS5KbSHo0NCpWY=', NULL, 1, 'admin', '', '', 'admin@admin.com', 1, 1, '2022-04-05 11:06:54.015033', 'admin', ''),
-	(2, 'pbkdf2_sha256$320000$E32GsX9LDeGAT5xXvgbybX$38bOPrgX0snvAzH8DG0tKOIYzzoVQ5AwRQFOsxflP4I=', NULL, 1, 'ssafy', '', '', 'ssafy@ssafy.com', 1, 1, '2022-04-05 11:08:09.878455', 'ssafy', '');
+	(1, 'pbkdf2_sha256$320000$NBbljEMCYzXt7I9AkU85Gb$GZM9WXd5mAQAMhRKT0wIiOzyIqNgu/xJCfsc7Gg6IHI=', NULL, 1, 'admin', '', '', 'admin@admin.com', 1, 1, '2022-04-06 21:04:13.733080', 'admin1', ''),
+	(2, 'pbkdf2_sha256$320000$HzE2G2WtNC8i3mkclEChjP$OZYYlK/nEphX/xhIfXlV8YQFPTOZZ4yBdsi1axbcl6U=', NULL, 1, 'ssafy', '', '', 'ssafy@ssafy.com', 1, 1, '2022-04-06 21:04:37.749934', 'ssafy1', '');
 /*!40000 ALTER TABLE `accounts_user` ENABLE KEYS */;
 
 -- 테이블 myproject.accounts_user_groups 구조 내보내기
@@ -234,6 +234,7 @@ CREATE TABLE IF NOT EXISTS `boards_boardcomment` (
 -- 테이블 myproject.boards_boardfile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `boards_boardfile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(100) NOT NULL,
   `reference_file` varchar(100) DEFAULT NULL,
   `board_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -348,29 +349,29 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
 -- 테이블 데이터 myproject.django_migrations:~23 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
-	(1, 'contenttypes', '0001_initial', '2022-04-05 11:06:11.665411'),
-	(2, 'contenttypes', '0002_remove_content_type_name', '2022-04-05 11:06:11.716249'),
-	(3, 'auth', '0001_initial', '2022-04-05 11:06:11.887521'),
-	(4, 'auth', '0002_alter_permission_name_max_length', '2022-04-05 11:06:11.924926'),
-	(5, 'auth', '0003_alter_user_email_max_length', '2022-04-05 11:06:11.932890'),
-	(6, 'auth', '0004_alter_user_username_opts', '2022-04-05 11:06:11.940868'),
-	(7, 'auth', '0005_alter_user_last_login_null', '2022-04-05 11:06:11.947849'),
-	(8, 'auth', '0006_require_contenttypes_0002', '2022-04-05 11:06:11.951838'),
-	(9, 'auth', '0007_alter_validators_add_error_messages', '2022-04-05 11:06:11.957822'),
-	(10, 'auth', '0008_alter_user_username_max_length', '2022-04-05 11:06:11.964803'),
-	(11, 'auth', '0009_alter_user_last_name_max_length', '2022-04-05 11:06:11.971783'),
-	(12, 'auth', '0010_alter_group_name_max_length', '2022-04-05 11:06:11.993745'),
-	(13, 'auth', '0011_update_proxy_permissions', '2022-04-05 11:06:12.000727'),
-	(14, 'auth', '0012_alter_user_first_name_max_length', '2022-04-05 11:06:12.006711'),
-	(15, 'accounts', '0001_initial', '2022-04-05 11:06:12.249463'),
-	(16, 'admin', '0001_initial', '2022-04-05 11:06:12.334349'),
-	(17, 'admin', '0002_logentry_remove_auto_add', '2022-04-05 11:06:12.346320'),
-	(18, 'admin', '0003_logentry_add_action_flag_choices', '2022-04-05 11:06:12.355291'),
-	(19, 'community', '0001_initial', '2022-04-05 11:06:12.452453'),
-	(20, 'boards', '0001_initial', '2022-04-05 11:06:12.686799'),
-	(21, 'minutes', '0001_initial', '2022-04-05 11:06:13.174997'),
-	(22, 'notifications', '0001_initial', '2022-04-05 11:06:13.268985'),
-	(23, 'sessions', '0001_initial', '2022-04-05 11:06:13.308552');
+	(1, 'contenttypes', '0001_initial', '2022-04-06 21:02:42.029174'),
+	(2, 'contenttypes', '0002_remove_content_type_name', '2022-04-06 21:02:42.091005'),
+	(3, 'auth', '0001_initial', '2022-04-06 21:02:42.270831'),
+	(4, 'auth', '0002_alter_permission_name_max_length', '2022-04-06 21:02:42.310726'),
+	(5, 'auth', '0003_alter_user_email_max_length', '2022-04-06 21:02:42.317675'),
+	(6, 'auth', '0004_alter_user_username_opts', '2022-04-06 21:02:42.324658'),
+	(7, 'auth', '0005_alter_user_last_login_null', '2022-04-06 21:02:42.330642'),
+	(8, 'auth', '0006_require_contenttypes_0002', '2022-04-06 21:02:42.333634'),
+	(9, 'auth', '0007_alter_validators_add_error_messages', '2022-04-06 21:02:42.339647'),
+	(10, 'auth', '0008_alter_user_username_max_length', '2022-04-06 21:02:42.346625'),
+	(11, 'auth', '0009_alter_user_last_name_max_length', '2022-04-06 21:02:42.354578'),
+	(12, 'auth', '0010_alter_group_name_max_length', '2022-04-06 21:02:42.376113'),
+	(13, 'auth', '0011_update_proxy_permissions', '2022-04-06 21:02:42.381099'),
+	(14, 'auth', '0012_alter_user_first_name_max_length', '2022-04-06 21:02:42.387083'),
+	(15, 'accounts', '0001_initial', '2022-04-06 21:02:42.593581'),
+	(16, 'admin', '0001_initial', '2022-04-06 21:02:42.688920'),
+	(17, 'admin', '0002_logentry_remove_auto_add', '2022-04-06 21:02:42.697897'),
+	(18, 'admin', '0003_logentry_add_action_flag_choices', '2022-04-06 21:02:42.706871'),
+	(19, 'community', '0001_initial', '2022-04-06 21:02:42.801709'),
+	(20, 'boards', '0001_initial', '2022-04-06 21:02:43.041551'),
+	(21, 'minutes', '0001_initial', '2022-04-06 21:02:43.525350'),
+	(22, 'notifications', '0001_initial', '2022-04-06 21:02:43.615121'),
+	(23, 'sessions', '0001_initial', '2022-04-06 21:02:43.652086');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- 테이블 myproject.django_session 구조 내보내기
@@ -409,6 +410,7 @@ CREATE TABLE IF NOT EXISTS `minutes_minute` (
 -- 테이블 myproject.minutes_minutefile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_minutefile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(100) NOT NULL,
   `reference_file` varchar(100) DEFAULT NULL,
   `minute_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -483,6 +485,7 @@ CREATE TABLE IF NOT EXISTS `minutes_speechcomment` (
 -- 테이블 myproject.minutes_speechfile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_speechfile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(100) NOT NULL,
   `reference_file` varchar(100) DEFAULT NULL,
   `speech_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
