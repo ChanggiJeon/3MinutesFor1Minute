@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 import routes from '../../../routes';
 import { updateMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
@@ -88,7 +89,6 @@ function MinutesUpdate() {
 	});
 	// form 제출 로직
 	function onValidSubmit(data) {
-		console.log('data', data);
 		const formData = new FormData();
 		if (data.upload[0]) {
 			formData.append(`reference_file`, data.upload[0]);
@@ -103,6 +103,13 @@ function MinutesUpdate() {
 		formData.append('minId', minutesId);
 		try {
 			dispatch(updateMinutesByData(formData)).then(res => {
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: '수정 완료',
+					showConfirmButton: false,
+					timer: 1500,
+				});
 				const { community, id } = res.payload;
 				navigate(`/community/${community}/minutes/${id}`);
 			});
@@ -123,13 +130,13 @@ function MinutesUpdate() {
 			</CompleteBtn>
 			<CancelBtn
 				onClick={() =>
-					navigate(`${routes.community}/${communityId}/${routes.minutesList}`)
+					navigate(`${routes.community}/${communityId}/minutes/${minutesId}`)
 				}
 			>
 				수정 취소
 			</CancelBtn>
 			<DivLine />
-			{/* 폼바디 */}
+			{/* Form Body */}
 			<ContentBox>
 				<CreateForm id='createForm' onSubmit={handleSubmit(onValidSubmit)}>
 					{/* 제목 */}

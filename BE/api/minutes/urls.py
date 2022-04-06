@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:minute_pk>/', views.minute_detail),
     path('<int:minute_pk>/delete/', views.minute_delete),
     path('<int:minute_pk>/update/', views.minute_update),
+    path('<int:minute_pk>/close/', views.minute_close),
     # minute 파일 다운로드
     path('<int:minute_pk>/download/<int:reference_file_pk>/', views.minute_file_download),
     path('<int:minute_pk>/speech/create/', views.speech_create),

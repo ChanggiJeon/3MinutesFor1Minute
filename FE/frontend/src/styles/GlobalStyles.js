@@ -47,6 +47,23 @@ const GlobalStyles = createGlobalStyle`
     scrollbar-width: 10px;
   }
 
+	@keyframes bigger {
+		from {
+			transform: scale(1.5);
+		}
+		to {
+			transform: scale(1);
+		}
+	}
+	
+	@keyframes spin {
+		from {
+			transform: rotate(0);
+		}
+		to {
+			transform: rotate(360deg);
+		}
+	}
 `;
 
 export default GlobalStyles;
