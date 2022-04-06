@@ -94,7 +94,7 @@ function Profile() {
 				<Form>
 					<ProfileImgContainer>
 						{profileImage ? (
-							<img src={`${process.env.REACT_APP_API_URL}${profileImage}`} alt='' />
+							<img src={`${process.env.REACT_APP_MEDIA_URL}${profileImage}`} alt='' />
 						) : (
 							<FaUserCircle />
 						)}

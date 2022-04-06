@@ -11,7 +11,8 @@ urlpatterns = [
     path('uniquecheck/email/<email>/', views.unique_check_email),
     path('delete/', views.delete),
     path('update/', views.update),
-    path('profile/', views.profile),
+    path('self/', views.self),
+    path('profile/<username>/', views.profile),
     path('find/username/<email>/<name>/', views.find_username),
     path('find/password/<username>/<email>/<name>/', views.find_password),
 ]
