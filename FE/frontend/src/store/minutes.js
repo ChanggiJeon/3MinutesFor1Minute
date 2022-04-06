@@ -6,6 +6,7 @@ import {
 	detailMinutes,
 	deleteMinutes,
 	updateMinutes,
+	closeMinutes,
 } from '../api/minutes';
 
 const name = 'minutes';
@@ -27,8 +28,8 @@ export const fetchMainpageMinutesByComId = createAsyncThunk(
 );
 
 export const endMinutesById = createAsyncThunk(`${name}/END_MINUTES`, data => {
-	const { communityId, minutesId, ...request } = data;
-	const response = updateMinutes(communityId, minutesId, request);
+	const { communityId, minutesId } = data;
+	const response = closeMinutes(communityId, minutesId);
 	return response;
 });
 
@@ -82,7 +83,7 @@ const initialState = {
 		deadline: '',
 		Dday: '',
 		content: '',
-		referenceFile: undefined,
+		referenceFile: [],
 		isClosed: false,
 	},
 };
@@ -121,7 +122,7 @@ const minutes = createSlice({
 			${writtenDate.substr(5, 2)}. ${writtenDate.substr(8, 2)}.
 			${writtenDate.substr(11, 2)}시 ${writtenDate.substr(14, 2)}분`;
 			// 참여자 데이터 가공
-			const participants = tmpParticipants.map(user => user.member.nickname);
+			const participants = tmpParticipants.filter(user => user.member.nickname!==author).map(user => user.member.nickname);
 			// 종료일 데이터 가공
 			const Dday = `${deadline.substr(2, 2)}.
 			${deadline.substr(5, 2)}. ${deadline.substr(8, 2)}.

@@ -8,6 +8,7 @@ import {
 	deleteMinutesById,
 	endMinutesById,
 } from '../../../store/minutes';
+import { downloadFile as download } from '../../../api/minutes';
 import routes from '../../../routes';
 import Container from '../../../components/community/Container';
 import Main from '../../../components/community/MainStart';
@@ -26,7 +27,6 @@ const ContentsContainer = styled(Container)`
 	border-radius: 15px;
 	margin-top: 15px;
 	width: 50%;
-	height: 600px;
 	overflow-y: scroll;
 `;
 const SpeechContainer = styled(Container)`
@@ -48,6 +48,9 @@ const TopBtnBox = styled(BtnBox)`
 const UpdateBtn = styled(BlueMdBtn)`
 	margin-right: 10px;
 `;
+const FileBtn = styled(BlueMdBtn)`
+	margin-right: 10px;
+`;
 const DeleteBtn = styled(RedMdBtn)`
 	margin-right: 10px;
 `;
@@ -63,6 +66,9 @@ const SpeechBox = styled.div`
 const SpeechCreateBtn = styled(BlueMdBtn)`
 	margin-right: 10px;
 `;
+const FileItem = styled(TextContent)`
+	cursor: pointer;
+`;
 
 function MinutesDetail() {
 	const [isDeleted, setIsDeleted] = useState(undefined);
@@ -75,7 +81,7 @@ function MinutesDetail() {
 		dispatch(detailMinutesById(params));
 	}, []);
 	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
-	const { speeches } = singleMinutes;
+	const { speeches, referenceFile } = singleMinutes;
 	// 회의록 삭제
 	const deleteMinutes = () => {
 		Swal.fire({
@@ -128,10 +134,6 @@ function MinutesDetail() {
 					const data = {
 						communityId: params.communityId,
 						minutesId: params.minutesId,
-						title: singleMinutes.title,
-						content: singleMinutes.content,
-						deadline: singleMinutes.deadline,
-						is_closed: true,
 					};
 					dispatch(endMinutesById(data));
 					Swal.fire('회의가 종료되었습니다.', '', 'success');
@@ -140,6 +142,18 @@ function MinutesDetail() {
 				}
 			});
 		}
+	};
+	// 첨부파일 다운로드
+	const downloadFile = ({ fileId, fileName }) => {
+		const res = download(params.communityId, params.minutesId, fileId);
+		res.then(blob => {
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', `${fileName}`);
+			document.body.appendChild(link);
+			link.click();
+		});
 	};
 
 	return (
@@ -173,7 +187,21 @@ function MinutesDetail() {
 				<TextContent>종료 일자 : {singleMinutes.Dday}</TextContent>
 				<TextContent>회의 내용</TextContent>
 				<ContentBox>{singleMinutes.content}</ContentBox>
-				<TextContent>첨부 파일 : {singleMinutes.referenceFile}</TextContent>
+				<TextContent>첨부 파일</TextContent>
+				{referenceFile[0] ? (
+					referenceFile.map(file => (
+						<FileItem
+							key={file.id}
+							onClick={() =>
+								downloadFile({ fileId: file.id, fileName: file.reference_file })
+							}
+						>
+							{file.reference_file}
+						</FileItem>
+					))
+				) : (
+					<TextContent>첨부파일 없음</TextContent>
+				)}
 			</ContentsContainer>
 			<SpeechContainer>
 				<HeaderBox>

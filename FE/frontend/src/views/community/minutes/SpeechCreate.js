@@ -136,8 +136,8 @@ function SpeechCreate() {
 		recordFile,
 		voiceText,
 	} = singleSpeech;
-	// const audioSrc = `http://localhost:8000${recordFile}`;
-	const audioSrc = 'http://localhost:8000/record/1648986351112.wav';
+	const audioSrc = `http://localhost:8000${recordFile}`;
+	// const audioSrc = 'http://localhost:8000/record/1648986351112.wav';
 	useEffect(() => {
 		if (!completed && loading) {
 			setStatus('loading');

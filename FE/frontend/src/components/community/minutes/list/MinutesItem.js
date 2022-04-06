@@ -18,6 +18,10 @@ const Minutes = styled.li`
 const Title = styled(TitleBox)`
 	justify-content: start;
 	padding-left: 10px;
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 `;
 
 function MinutesItem({ no, minId, title, date, deadline, author, isClosed }) {
