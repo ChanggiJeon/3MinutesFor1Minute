@@ -21,6 +21,7 @@ from AI.STT.API.google import upload_file, transcribe_gcs
 from AI.Summarization.summarize import summary as summary_def
 from AI.Wordslist.wordslist import wordslist
 from config.settings import MEDIA_ROOT
+import datetime
 
 
 def AI(file_path, file_name):
@@ -53,9 +54,14 @@ def minute_main(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     me = get_object_or_404(Member, user=request.user, community=community)
     participants = me.participant_set.filter()
-    minutes = [participant.minute for participant in participants]
-    main_minutes = sorted(minutes, key=lambda x: x.deadline)[0:3]
-    serializer = MinuteListSerializer(main_minutes, many=True)
+    minutes = []
+
+    for participant in participants:
+        if participant.minute.deadline > datetime.datetime.now():
+            minutes.append(participant.minute)
+
+    minutes_main = sorted(minutes, key=lambda x: x.deadline)[0:3]
+    serializer = MinuteListSerializer(minutes_main, many=True)
     return Response(serializer.data)
 
 
