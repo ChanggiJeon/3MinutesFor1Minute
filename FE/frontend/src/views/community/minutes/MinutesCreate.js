@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
 import routes from '../../../routes';
 import { createMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
@@ -103,11 +104,24 @@ function MinutesCreate() {
 		formData.append('comId', communityId);
 		try {
 			dispatch(createMinutesByData(formData)).then(res => {
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: '회의록이 등록되었습니다..',
+					showConfirmButton: false,
+					timer: 1500,
+				});
 				const { community, id } = res.payload;
 				navigate(`/community/${community}/minutes/${id}`);
 			});
 		} catch (error) {
-			console.log(error);
+			Swal.fire({
+				position: 'top-end',
+				icon: 'error',
+				title: '에러 발생, 관리자에게 문의바랍니다.',
+				showConfirmButton: false,
+				timer: 1500,
+			});
 		}
 	}
 	// 업로드 된 파일 표시하기 위한 변수
