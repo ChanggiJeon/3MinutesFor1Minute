@@ -28,24 +28,21 @@ function sidebarData() {
 		},
 		{
 			name: 'Minutes',
-			title: '회의록',
-			path: {
-				List: `/community/${communityId}/minutes`,
-				Calander: `/community/${communityId}/calender`,
-			},
+			title: '회의 목록',
+			path: `/community/${communityId}/minutes`,
 			icon: <FaBook />,
+		},
+		{
+			name: 'Schedule',
+			title: '회의록(달력형)',
+			path: `/community/${communityId}/calender`,
+			icon: <FaCalendarCheck />,
 		},
 		{
 			name: 'Board',
 			title: '게시판',
 			path: `/community/${communityId}/posts`,
 			icon: <FaBullhorn />,
-		},
-		{
-			name: 'Schedule',
-			title: '일정 관리',
-			path: '/',
-			icon: <FaCalendarCheck />,
 		},
 		{
 			name: 'Members',

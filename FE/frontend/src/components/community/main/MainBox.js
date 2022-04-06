@@ -6,7 +6,6 @@ const MainBox = styled.div`
 	background-color: #ffffff;
 	border-radius: 50px;
 	padding: 10px;
-	margin-top: 20px;
 `;
 
 export default MainBox;
