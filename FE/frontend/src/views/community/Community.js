@@ -52,6 +52,7 @@ const MemberContent = styled.div`
 	align-items: center;
 	justify-content: center;
 	padding: 10px;
+	margin: 5px;
 `;
 
 function Community() {
