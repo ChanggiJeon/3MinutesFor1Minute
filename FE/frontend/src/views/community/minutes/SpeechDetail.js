@@ -64,11 +64,11 @@ const SummaryBox = styled(TextContent)`
 	overflow: scroll;
 `;
 
-const SubmitBtn = styled(BlueMdBtn)`
+const UpdateBtn = styled(BlueMdBtn)`
 	padding: 8px 20px;
 	margin-right: 10px;
 `;
-const CanceltBtn = styled(RedMdBtn)`
+const DeleteBtn = styled(RedMdBtn)`
 	padding: 8px 20px;
 	margin-right: 10px;
 `;
@@ -133,18 +133,34 @@ function SpeechDetail() {
 		padding: 3,
 	};
 	const minSize = [100, 100];
+	// 수정페이지 이동
+	const updateSpeech = () => {
+		navigate(
+			`/community/${params.communityId}/minutes/${params.minutesId}/speech/${params.speechId}/update`
+		);
+	};
 
 	// 삭제
-	const cancel = () => {
-		dispatch(deleteSpeechById(params));
+	const deleteSpeech = () => {
 		Swal.fire({
-			position: 'top-end',
-			icon: 'success',
-			title: '스피치가 삭제되었습니다.',
-			showConfirmButton: false,
-			timer: 1500,
+			title: '삭제하시겠습니까?',
+			text: '해당 스피치와 관련된 모든 데이터가 사라집니다.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes',
+		}).then(result => {
+			if (result.isConfirmed) {
+				try {
+					dispatch(deleteSpeechById(params));
+					Swal.fire('완료', '스피치가 삭제되었습니다.', 'success');
+					navigate(`/community/${params.communityId}/minutes/${params.minutesId}`);
+				} catch {
+					Swal.fire('실패', '에러 발생, 관리자에게 문의바랍니다.', 'error');
+				}
+			}
 		});
-		navigate(`/community/${params.communityId}/minutes/${params.minutesId}`);
 	};
 
 	return (
@@ -191,8 +207,8 @@ function SpeechDetail() {
 						<Br style={{ margin: '20px' }} />
 					</SpeechInfoContainer>
 					<Buttons>
-						<CanceltBtn onClick={cancel}>작성 취소</CanceltBtn>
-						<SubmitBtn type='submit'>작성 완료</SubmitBtn>
+						<UpdateBtn onClick={updateSpeech}>스피치 수정</UpdateBtn>
+						<DeleteBtn onClick={deleteSpeech}>스피치 삭제</DeleteBtn>
 					</Buttons>
 				</RightContainer>
 			</SpeechMain>

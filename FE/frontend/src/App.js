@@ -50,6 +50,7 @@ function App() {
 							<Route path={routes.recordCreate} element={<Records />} />
 							<Route path={routes.speechCreate} element={<SpeechCreate />} />
 							<Route path={routes.speechDetail} element={<SpeechDetail />} />
+							<Route path={routes.speechUpdate} element={<SpeechDetail />} />
 						</Route>
 					</Route>
 					<Route path='*' element={<Error404 />} />
