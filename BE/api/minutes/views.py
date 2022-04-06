@@ -76,6 +76,9 @@ def minute_create(request, community_pk):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        if request.data['deadline'] <= datetime.datetime.now():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         serializer = MinuteSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
@@ -167,7 +170,7 @@ def minute_update(request, community_pk, minute_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     assignee = minute.participant_set.get(is_assignee=True)
 
-    if minute.is_closed:
+    if minute.deadline != request.data['deadline'] and request.data['deadline'] <= datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif me == assignee.member or me.is_admin:
@@ -246,7 +249,6 @@ def minute_file_download(request, community_pk, minute_pk, reference_file_pk):
     return response
 
 
-@swagger_auto_schema(method='POST', request_body=CustomSpeechSerializer)
 @api_view(['POST'])
 def speech_create(request, community_pk, minute_pk):
     community = get_object_or_404(Community, pk=community_pk)
@@ -255,7 +257,7 @@ def speech_create(request, community_pk, minute_pk):
     participant = me.participant_set.get(minute=minute)
     serializer = SpeechSerializer(data=request.data)
 
-    if minute.is_closed:
+    if minute.is_closed or minute.deadline <= datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif serializer.is_valid(raise_exception=True):
@@ -267,11 +269,10 @@ def speech_create(request, community_pk, minute_pk):
                 new_file = SpeechFile(speech=speech, reference_file=value)
                 new_file.save()
 
-        file = speech.record_file
-        file_path = str(MEDIA_ROOT) + '\\record\\'
-        file_name = str(file)[7:]
-
         try: 
+            file = speech.record_file
+            file_path = str(MEDIA_ROOT) + '\\record\\'
+            file_name = str(file)[7:]
             voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
         except:
@@ -302,7 +303,7 @@ def speech_delete(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed:
+    if minute.is_closed or minute.deadline <= datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
@@ -311,7 +312,7 @@ def speech_delete(request, community_pk, minute_pk, speech_pk):
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-@swagger_auto_schema(method='PUT', request_body=SpeechSerializer)
+@swagger_auto_schema(method='PUT', request_body=CustomSpeechSerializer)
 @api_view(['PUT'])
 def speech_update(request, community_pk, minute_pk, speech_pk):
     community = get_object_or_404(Community, pk=community_pk)
@@ -320,7 +321,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed:
+    if minute.is_closed or minute.deadline <= datetime.datetime.now() or not request.data['title']:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
