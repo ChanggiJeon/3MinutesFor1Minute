@@ -1,7 +1,22 @@
 import axios from 'axios';
 import { BASE_URL, setToken } from './utils';
 
-export default async function createSpeech(comId, minId, data) {
+export async function getSingleSpeech(comId, minId, spcId) {
+	try {
+		const response = await axios({
+			method: 'get',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/speech/${spcId}/`,
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.data;
+	} catch (err) {
+		console.log(err);
+		return err.response.data;
+	}
+}
+export async function createSpeech(comId, minId, data) {
 	try {
 		const response = await axios({
 			method: 'post',
@@ -12,9 +27,40 @@ export default async function createSpeech(comId, minId, data) {
 				'Content-Type': 'multipart/form-data',
 			},
 		});
-		console.log('response', response);
 		return response.data;
 	} catch (err) {
 		return err.response.data;
+	}
+}
+export async function updateSpeech(comId, minId, spcId, data) {
+	try {
+		const response = await axios({
+			method: 'put',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/speech/${spcId}/update/`,
+			data,
+			headers: {
+				...setToken(),
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+		console.log('response.data');
+		console.log(response.data);
+		return response.data;
+	} catch (err) {
+		return err.response.data;
+	}
+}
+export async function deleteSpeech(comId, minId, spcId) {
+	try {
+		const response = await axios({
+			method: 'delete',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/speech/${spcId}/delete/`,
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.status;
+	} catch (err) {
+		return err.response.status;
 	}
 }

@@ -52,7 +52,6 @@ function MinutesCalender() {
 				events.push(a)
 				return event
 			});
-			console.log(events);
 			setEvents(events);
 		});
 	}, [location]);

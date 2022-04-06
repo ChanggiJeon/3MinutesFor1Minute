@@ -23,6 +23,8 @@ import MinutesCreate from './views/community/minutes/MinutesCreate';
 import Profile from './views/Profile';
 import MinutesUpdate from './views/community/minutes/MinutesUpdate';
 import MemberProfile from './views/community/MemberProfile';
+import SpeechDetail from './views/community/minutes/SpeechDetail';
+import SpeechUpdate from './views/community/minutes/SpeechUpdate';
 
 function App() {
 	return (
@@ -50,6 +52,8 @@ function App() {
 							<Route path={routes.minutesUpdate} element={<MinutesUpdate />} />
 							<Route path={routes.recordCreate} element={<Records />} />
 							<Route path={routes.speechCreate} element={<SpeechCreate />} />
+							<Route path={routes.speechDetail} element={<SpeechDetail />} />
+							<Route path={routes.speechUpdate} element={<SpeechUpdate />} />
 						</Route>
 					</Route>
 					<Route path='*' element={<Error404 />} />

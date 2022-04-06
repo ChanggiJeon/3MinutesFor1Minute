@@ -7,7 +7,6 @@ const Main = styled.div`
 	justify-content: center;
 	height: 100%;
 	width: 100%;
-  overflow-y: scroll;
 `;
 
 export default Main;

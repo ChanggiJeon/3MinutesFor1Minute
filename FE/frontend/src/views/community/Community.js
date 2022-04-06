@@ -9,7 +9,8 @@ import TextSubTitle from '../../components/common/TextSubTitle';
 import DivLine from '../../components/community/main/DivLine';
 import MainBox from '../../components/community/main/MainBox';
 import SubBox from '../../components/community/main/SubBox';
-import { fetchMinutesByComId } from '../../store/minutes';
+import MainMinutesItem from '../../components/community/MainMinutesItem';
+import { fetchMainpageMinutesByComId } from '../../store/minutes';
 import routes from '../../routes';
 import { apiGetBoards } from '../../api/board';
 import EmptyBtn from '../../components/auth/EmptyBtn';
@@ -29,7 +30,6 @@ const TitleContainer = styled.div`
 		align-items: center;
 	}
 `;
-
 const ImageContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -68,7 +68,6 @@ const MembersContainer = styled.div`
 	flex-wrap: wrap;
 	overflow: hidden;
 `;
-
 const MemberContent = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -83,8 +82,17 @@ const More = styled(EmptyBtn)`
 	top: 25px;
 	right: 25px;
 `;
+const ListBox = styled.ul`
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 100%;
+	padding: 10px;
+	margin-top: 10px;
+`;
 
 function Community() {
+	const [date, setDate] = useState(new Date());
 	const { communityId } = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -110,9 +118,13 @@ function Community() {
 	};
 
 	useEffect(() => {
-		dispatch(fetchMinutesByComId(communityId));
+		dispatch(fetchMainpageMinutesByComId(communityId));
 		getPosts();
 	}, [location]);
+
+	const mainpageMinutesList = useSelector(
+		state => state.minutes.mainpageMinutes
+	);
 
 	return (
 		<Main>
@@ -132,6 +144,21 @@ function Community() {
 			<MainBox>
 				<TextSubTitle>회의록</TextSubTitle>
 				<DivLine />
+				<ListBox>
+					{mainpageMinutesList[0] ? (
+						mainpageMinutesList.map(minutes => (
+							<MainMinutesItem
+								key={minutes.id}
+								minId={minutes.id}
+								title={minutes.title}
+								deadline={minutes.deadline}
+								author={minutes.assignee.member.nickname}
+							/>
+						))
+					) : (
+						<TextSubTitle>처리할 회의가 없습니다.</TextSubTitle>
+					)}
+				</ListBox>
 			</MainBox>
 			<CommunitySubBox>
 				<More type='button' onClick={() => navigate(routes.posts)}>

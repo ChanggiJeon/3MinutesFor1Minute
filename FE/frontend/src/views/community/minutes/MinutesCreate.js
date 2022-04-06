@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
 import routes from '../../../routes';
 import { createMinutesByData } from '../../../store/minutes';
 import Container from '../../../components/community/Container';
@@ -17,8 +18,6 @@ import ContentBox from '../../../components/community/minutes/create/ContentBox'
 import DateTime from '../../../components/community/minutes/create/DateTime';
 import InputFile from '../../../components/community/minutes/create/InputFile';
 import LabelFile from '../../../components/community/minutes/create/LabelFile';
-import OpenIcon from '../../../components/community/minutes/create/OpenIcon';
-import CloseIcon from '../../../components/community/minutes/create/CloseIcon';
 import HeaderBox from '../../../components/community/HeaderBox';
 import BtnBox from '../../../components/community/BtnBox';
 
@@ -72,12 +71,11 @@ const TextUpload = styled(TextContent)`
 `;
 
 function MinutesCreate() {
-	// useform 설정
+	// useForm 설정
 	const {
 		register,
 		handleSubmit,
 		watch,
-		getValues,
 		formState: { errors },
 	} = useForm({
 		mode: 'onChange',
@@ -89,12 +87,11 @@ function MinutesCreate() {
 	// form 제출 로직
 	function onValidSubmit(data) {
 		const formData = new FormData();
-		const dataLenth = data.upload.length
-		const referenceFile = []
+		const dataLenth = data.upload.length;
 		if (data.upload[0]) {
-			for (let i = 0; i < dataLenth; i+=1) {
+			for (let i = 0; i < dataLenth; i += 1) {
 				formData.append(`reference_file${i}`, data.upload[i]);
-			};
+			}
 		}
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('title', data.title);
@@ -105,11 +102,24 @@ function MinutesCreate() {
 		formData.append('comId', communityId);
 		try {
 			dispatch(createMinutesByData(formData)).then(res => {
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: '회의록이 등록되었습니다..',
+					showConfirmButton: false,
+					timer: 1500,
+				});
 				const { community, id } = res.payload;
 				navigate(`/community/${community}/minutes/${id}`);
 			});
 		} catch (error) {
-			console.log(error);
+			Swal.fire({
+				position: 'top-end',
+				icon: 'error',
+				title: '에러 발생, 관리자에게 문의바랍니다.',
+				showConfirmButton: false,
+				timer: 1500,
+			});
 		}
 	}
 	// 업로드 된 파일 표시하기 위한 변수

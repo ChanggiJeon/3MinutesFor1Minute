@@ -9,6 +9,7 @@ const SideItemLinks = styled(Link)`
 	text-decoration: none;
 	color: ${props => props.theme.fontColor};
 	cursor: pointer;
+	width: 50%;
 	height: 100%;
 
 	&:hover {
