@@ -21,6 +21,8 @@ import SpeechComment from './SpeechComments';
 import NForm from '../../../components/community/board/list/NForm';
 import Label from '../../../components/auth/Label';
 import SmallBtn from '../../../components/community/board/list/SmallBtn';
+import SubmitButton from '../../../components/auth/SubmitButton';
+
 // api
 import { deleteSpeechById, readSingleSpeechById } from '../../../store/speech';
 import {
@@ -124,10 +126,18 @@ const AudioBox = styled.div`
 `;
 const CommentList = styled.div`
 	display: flex;
-	justify-content: center;
-	width: 100%;
-	margin-top: px;
+	justify-content: space-between;
+	width: 90%;
+	align-items: center;
+	margin-top 3px;
 `;
+const CommentBtn = styled.div`
+	display: flex;
+	flex-direction: row;
+`;
+
+const CommentName = styled.div``;
+
 const CForm = styled(NForm)`
 	padding: 0px;
 `;
@@ -370,60 +380,58 @@ function SpeechDetail() {
 						<SpeechComment />
 						{speechComments.map(comment => (
 							<CommentList>
-								<div key={comment.id}>
-									{/* 댓글 update true */}
-									{isCommentUpdating && comment === targetComment ? (
-										<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
-											<CLabel htmlFor='content'>
-												<input
-													{...cRegister('content', {
-														required: true,
-													})}
-													type='content'
-													placeholder='내용 없음'
-												/>
-												<SmallBtn type='submit'>수정</SmallBtn>
+								{/* 댓글 update true */}
+								{isCommentUpdating && comment === targetComment ? (
+									<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
+										<CLabel htmlFor='content'>
+											<input
+												{...cRegister('content', {
+													required: true,
+												})}
+												type='content'
+												placeholder='내용 없음'
+											/>
+											<SmallBtn type='submit'>수정</SmallBtn>
+											<SmallBtn
+												type='button'
+												onClick={() => {
+													setCommentUpdating(false);
+													setTargetComment({});
+												}}
+											>
+												취소
+											</SmallBtn>
+										</CLabel>
+									</CForm>
+								) : (
+									// 댓글 update false
+									<>
+										<CommentName>
+											{comment?.member?.nickname} - {comment?.content}
+										</CommentName>
+										{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
+										{comment?.member?.nickname === nickname ? (
+											<CommentBtn>
 												<SmallBtn
 													type='button'
 													onClick={() => {
-														setCommentUpdating(false);
-														setTargetComment({});
+														setCommentUpdating(true);
+														setTargetComment(comment);
+														cSetValue('content', comment.content);
 													}}
 												>
-													취소
+													수정
 												</SmallBtn>
-											</CLabel>
-										</CForm>
-									) : (
-										// 댓글 update false
-										<>
-											<div>
-												{comment?.member?.nickname} - {comment?.content}
-											</div>
-											{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
-											{comment?.member?.nickname === nickname ? (
-												<div>
-													<SmallBtn
-														type='button'
-														onClick={() => {
-															setCommentUpdating(true);
-															setTargetComment(comment);
-															cSetValue('content', comment.content);
-														}}
-													>
-														수정
-													</SmallBtn>
-													<SmallBtn
-														type='button'
-														onClick={() => handleDeleteComment(comment.id)}
-													>
-														삭제
-													</SmallBtn>
-												</div>
-											) : null}
-										</>
-									)}
-								</div>
+												<SmallBtn
+													type='button'
+													onClick={() => handleDeleteComment(comment.id)}
+												>
+													삭제
+												</SmallBtn>
+											</CommentBtn>
+										) : null}
+									</>
+								)}
 							</CommentList>
 						))}
 					</CommentContainer>
