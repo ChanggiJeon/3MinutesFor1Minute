@@ -54,7 +54,7 @@ export const apiUniqueCheckEmail = ({ email }) =>
 export const apiGetMyProfile = () =>
 	axios({
 		method: 'get',
-		url: `${BASE_URL}/accounts/profile/`,
+		url: `${BASE_URL}/accounts/self/`,
 		headers: {
 			...setToken(),
 		},

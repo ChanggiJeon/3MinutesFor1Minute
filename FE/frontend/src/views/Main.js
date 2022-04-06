@@ -109,7 +109,7 @@ function Main() {
 
 	const ApplyCommunityModal = isApplyMode && (
 		<Modal setMode={setApplymode}>
-			<ApplyCommunity />
+			<ApplyCommunity setMode={setApplymode} getList={getCommunityList} />
 		</Modal>
 	);
 
