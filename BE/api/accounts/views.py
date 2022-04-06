@@ -112,9 +112,17 @@ def update(request):
 
 
 @api_view(['GET'])
-def profile(request):
+def self(request):
     User = get_user_model()
     user = get_object_or_404(User, pk=request.user.pk)
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def profile(request, username):
+    User = get_user_model()
+    user = get_object_or_404(User, username=username)
     serializer = UserSerializer(user)
     return Response(serializer.data)
 

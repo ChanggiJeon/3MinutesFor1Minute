@@ -109,7 +109,7 @@ function Main() {
 
 	const ApplyCommunityModal = isApplyMode && (
 		<Modal setMode={setApplymode}>
-			<ApplyCommunity />
+			<ApplyCommunity setMode={setApplymode} getList={getCommunityList} />
 		</Modal>
 	);
 
@@ -141,7 +141,7 @@ function Main() {
 							<Contents>
 								<CommunityImgContainer>
 									{e.image ? (
-										<img src={`${process.env.REACT_APP_API_URL}${e.image}`} alt='' />
+										<img src={`${process.env.REACT_APP_MEDIA_URL}${e.image}`} alt='' />
 									) : (
 										<RiCommunityLine />
 									)}

@@ -11,7 +11,11 @@ import Form from '../../components/auth/Form';
 import FormContainer from '../../components/auth/FormContainer';
 import TextSubTitle from '../../components/common/TextSubTitle';
 import TextTitle from '../../components/common/TextTitle';
-import { apiGetMemberProfile, apiWithdrawMember } from '../../api/community';
+import {
+	apiGetMemberProfile,
+	apiGetMyMemberProfile,
+	apiWithdrawMember,
+} from '../../api/community';
 import SubmitButton from '../../components/auth/SubmitButton';
 import routes from '../../routes';
 import UpdateMember from '../../components/community/member/UpdateMember';
@@ -41,26 +45,26 @@ const BioContainer = styled.div`
 `;
 
 function MemberProfile() {
-	const { id } = useSelector(state => state.member);
-	const { communityId, memberId } = useParams();
+	const { id, nickname } = useSelector(state => state.member);
+	const { communityId, memberNickname } = useParams();
 	const navigate = useNavigate();
 	const [updateMode, setUpdateMode] = useState('');
 	const [member, setMember] = useState({});
 	const dispatch = useDispatch();
 
 	const getMember = async () => {
-		const response = await apiGetMemberProfile({ communityId, memberId });
+		const response = await apiGetMyMemberProfile({ communityId });
 		setMember(response.data);
 	};
 
 	useEffect(() => {
-		if (memberId) {
+		if (memberNickname) {
 			getMember();
 		}
-	}, [memberId, communityId]);
+	}, [memberNickname, communityId]);
 
 	useEffect(() => {
-		if (parseInt(memberId, 10) === id) {
+		if (nickname === memberNickname) {
 			dispatch(updateMemberData({ ...member }));
 		}
 	}, [member]);
@@ -83,7 +87,7 @@ function MemberProfile() {
 				cancelButtonText: '취소',
 			});
 			if (res.isConfirmed) {
-				await apiWithdrawMember({ communityId, memberId });
+				await apiWithdrawMember({ communityId, memberId: id });
 				await Swal.fire({
 					icon: 'success',
 					text: '커뮤니티에서 탈퇴되었습니다.',
@@ -95,7 +99,7 @@ function MemberProfile() {
 		}
 	};
 
-	const updateBtns = id === parseInt(memberId, 10) && (
+	const updateBtns = memberNickname === nickname && (
 		<Container>
 			<SubmitButton type='button' onClick={() => toggleMode('info')}>
 				멤버 정보 변경
@@ -126,7 +130,7 @@ function MemberProfile() {
 					<ProfileImgContainer>
 						{member.profile_image ? (
 							<img
-								src={`${process.env.REACT_APP_API_URL}${member.profile_image}`}
+								src={`${process.env.REACT_APP_MEDIA_URL}${member.profile_image}`}
 								alt=''
 							/>
 						) : (

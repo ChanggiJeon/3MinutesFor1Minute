@@ -36,9 +36,17 @@ def community_list(request):
 
 
 @api_view(['GET'])
-def profile(request, community_pk):
+def self(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     member = get_object_or_404(Member, user=request.user, community=community)
+    serializer = MemberSerializer(member)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def profile(request, community_pk, nickname):
+    community = get_object_or_404(Community, pk=community_pk)
+    member = get_object_or_404(Member, nickname=nickname, community=community)
     serializer = MemberSerializer(member)
     return Response(serializer.data)
 
@@ -223,13 +231,14 @@ def invite_user(request, community_pk, user_pk):
 @api_view(['PUT'])
 def member_update(request, community_pk, member_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    me = community.member_set.get(pk=member_pk)
+    me = get_object_or_404(Member, user=request.user, community=community)
+    member = get_object_or_404(Member, pk=member_pk, community=community)
 
-    if request.user == me.user:
+    if me == member:
         members = get_list_or_404(Member, community=community)
         nicknames = [member.nickname for member in members]
 
-        if request.data['nickname'] in nicknames:
+        if me.nickname != request.data['nickname'] and request.data['nickname'] in nicknames:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = MemberSerializer(me, data=request.data)
@@ -243,12 +252,17 @@ def member_update(request, community_pk, member_pk):
 @api_view(['DELETE'])
 def member_delete(request, community_pk, member_pk):
     community = get_object_or_404(Community, pk=community_pk)
-    me = community.member_set.get(pk=member_pk)
+    me = get_object_or_404(Member, user=request.user, community=community)
+    member = get_object_or_404(Member, pk=member_pk, community=community)
 
-    if request.user == me.user:
+    if me == member:
         me.delete()
 
-        if me.is_admin == True:
+        if me.is_admin:
             community.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    elif me.is_admin:
+        member.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_401_UNAUTHORIZED)

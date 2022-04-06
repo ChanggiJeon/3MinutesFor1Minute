@@ -3,7 +3,7 @@ from community.models import Community, Member
 
         
 def file_path(instance, filename):
-    return f'boardfile/{instance.pk}/{filename}'
+    return f'boardfile/{instance.board.pk}/{filename}'
 
 
 class Board(models.Model):
