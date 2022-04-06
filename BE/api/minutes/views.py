@@ -76,7 +76,7 @@ def minute_create(request, community_pk):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        if request.data['deadline'] <= datetime.datetime.now():
+        if datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = MinuteSerializer(data=request.data)
@@ -170,25 +170,14 @@ def minute_update(request, community_pk, minute_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     assignee = minute.participant_set.get(is_assignee=True)
 
-    if minute.deadline != request.data['deadline'] and request.data['deadline'] <= datetime.datetime.now():
+    if minute.deadline != request.data['deadline'] and datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif me == assignee.member or me.is_admin:
         serializer = MinuteSerializer(minute, data=request.data)
         participants = get_list_or_404(Participant, minute=minute)
 
-        if 'is_closed' in request.data and request.data['is_closed']:
-            for participant in participants:
-                notification = Notification(
-                    user=participant.member.user,
-                    minute=minute,
-                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
-                    is_activate=True
-                )
-
-                notification.save()
-
-        elif 'deadline' in request.data and request.data['deadline'] != minute.deadline:
+        if 'deadline' in request.data and request.data['deadline'] != minute.deadline:
             notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
 
             if not notifications:
@@ -232,6 +221,31 @@ def minute_update(request, community_pk, minute_pk):
     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+@api_view(['PUT'])
+def minute_close(request, community_pk, minute_pk):
+    community = get_object_or_404(Community, pk=community_pk)
+    minute = get_object_or_404(Minute, pk=minute_pk, community=community)
+    me = get_object_or_404(Member, user=request.user, community=community)
+    assignee = minute.participant_set.get(is_assignee=True)
+
+    if me == assignee.member or me.is_admin:
+        minute.is_closed = True
+        minute.save()
+        participants = get_list_or_404(Participant, minute=minute)
+
+        for participant in participants:
+            notification = Notification(
+                user=participant.member.user,
+                minute=minute,
+                content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                is_activate=True
+            )
+
+            notification.save()
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
 from config.settings import MEDIA_ROOT
 from django.http import HttpResponse
 import mimetypes
@@ -257,7 +271,7 @@ def speech_create(request, community_pk, minute_pk):
     participant = me.participant_set.get(minute=minute)
     serializer = SpeechSerializer(data=request.data)
 
-    if minute.is_closed or minute.deadline <= datetime.datetime.now():
+    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif serializer.is_valid(raise_exception=True):
@@ -272,7 +286,8 @@ def speech_create(request, community_pk, minute_pk):
         try: 
             file = speech.record_file
             file_path = str(MEDIA_ROOT) + '\\record\\'
-            file_name = str(file)[7:]
+            # file_name = str(file)[7:]
+            file_name = '1648986351112.wav'
             voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
         except:
@@ -303,7 +318,7 @@ def speech_delete(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed or minute.deadline <= datetime.datetime.now():
+    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
@@ -321,7 +336,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     me = get_object_or_404(Member, user=request.user, community=community)
     participant = me.participant_set.get(minute=minute)
 
-    if minute.is_closed or minute.deadline <= datetime.datetime.now() or not request.data['title']:
+    if minute.is_closed or datetime.datetime.strptime(minute.deadline, '%Y-%m-%dT%H:%M') < datetime.datetime.now() or not request.data['title']:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:

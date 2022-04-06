@@ -11,12 +11,15 @@ const routes = {
 	memberProfile: 'member/:memberNickname',
 	// minutes
 	minutesList: 'minutes',
+	minutesCalender: 'calender',
 	minutesDetail: 'minutes/:minutesId',
 	minutesCreate: 'minutes/minutesCreate',
 	minutesUpdate: 'minutes/:minutesId/update',
 	recordCreate: 'minutes/:minutesId/recordCreate',
 	// speech
 	speechCreate: 'minutes/:minutesId/speechCreate',
+	speechDetail: 'minutes/:minutesId/speech/:speechId',
+	speechUpdate: 'minutes/:minutesId/speech/:speechId/update',
 	// posts
 	posts: 'posts',
 	postCreate: 'posts/postcreate',
