@@ -1,7 +1,6 @@
 import torch
 from transformers import PreTrainedTokenizerFast
 from transformers import BartForConditionalGeneration
-from gensim.summarization.summarizer import summarize
 
 
 tokenizer = PreTrainedTokenizerFast.from_pretrained('digit82/kobart-summarization')
