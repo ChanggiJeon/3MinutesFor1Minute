@@ -17,16 +17,16 @@ import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import RedMdBtn from '../../../components/common/RedMdBtn';
 import GrayMdBtn from '../../../components/common/GrayMdBtn';
 import HeaderBox from '../../../components/community/HeaderBox';
-import SpeechComment from './SpeechComments'
+import SpeechComment from './SpeechComments';
 import NForm from '../../../components/community/board/list/NForm';
 import Label from '../../../components/auth/Label';
 import SmallBtn from '../../../components/community/board/list/SmallBtn';
-
 // api
 import { deleteSpeechById, readSingleSpeechById } from '../../../store/speech';
 import {
 	apiDeleteComment,
 	apiPutComment,
+	downloadFile as download,
 } from '../../../api/speech';
 // 워드 클라우드 디자인 제공 라이브러리
 import 'tippy.js/dist/tippy.css';
@@ -61,11 +61,11 @@ const RightContainer = styled(Container)`
 	width: 55%;
 `;
 const CommentContainer = styled(Container)`
-  	display: flex;
-    justify-content: center;
+	display: flex;
+	justify-content: center;
 	align-content: flex-start;
 	width: 95%;
-  	margin: 15px 0px;
+	margin: 15px 0px;
 `;
 const SpeechInfoContainer = styled(Container)`
 	align-content: flex-start;
@@ -123,10 +123,10 @@ const AudioBox = styled.div`
 	width: 100%;
 `;
 const CommentList = styled.div`
-  display: flex;
-  justify-content: center;
+	display: flex;
+	justify-content: center;
 	width: 100%;
-  margin-top: px;
+	margin-top: px;
 `;
 const CForm = styled(NForm)`
 	padding: 0px;
@@ -137,6 +137,10 @@ const CLabel = styled(Label)`
 		font-size: 15px;
 	}
 `;
+const FileItem = styled(TextContent)`
+	cursor: pointer;
+`;
+
 function SpeechDetail() {
 	// 초기 데이터 세팅
 	const params = useParams();
@@ -202,9 +206,10 @@ function SpeechDetail() {
 		});
 	};
 
-  // comment관련
-  const [targetComment, setTargetComment] = useState({});
-  const [isCommentUpdating, setCommentUpdating] = useState(false);
+	// comment관련
+	const [targetComment, setTargetComment] = useState({});
+	const [isCommentUpdating, setCommentUpdating] = useState(false);
+	const { nickname } = useSelector(state => state.member);
 	const { communityId, minutesId, speechId } = useParams();
 	const {
 		register: cRegister,
@@ -215,21 +220,21 @@ function SpeechDetail() {
 		mode: 'all',
 	});
 
-  const onValidSubmitComment = async () => {
+	const onValidSubmitComment = async () => {
 		const { content } = cGetValues();
 		try {
 			await apiPutComment({
 				communityId,
 				minutesId,
-        speechId,
+				speechId,
 				commentId: targetComment.id,
 				content,
 			});
 			await Swal.fire({
-        icon: 'success',
+				icon: 'success',
 				text: '수정을 완료하였습니다.',
 			});
-      window.location.reload(true);
+			window.location.reload(true);
 			setCommentUpdating(false);
 		} catch (e) {
 			// error
@@ -239,7 +244,7 @@ function SpeechDetail() {
 			});
 		}
 	};
-  const handleDeleteComment = async commentId => {
+	const handleDeleteComment = async commentId => {
 		await Swal.fire({
 			title: '정말 삭제하시겠습니까?',
 			icon: 'warning',
@@ -253,7 +258,7 @@ function SpeechDetail() {
 			}
 		});
 	};
-  const deleteComment = async commentId => {
+	const deleteComment = async commentId => {
 		try {
 			await apiDeleteComment({ communityId, minutesId, speechId, commentId });
 			await Swal.fire({
@@ -269,6 +274,24 @@ function SpeechDetail() {
 			});
 		}
 	};
+	// 첨부파일 다운로드
+	const downloadFile = ({ fileId, fileName }) => {
+		const res = download(
+			params.communityId,
+			params.minutesId,
+			params.speechId,
+			fileId
+		);
+		res.then(blob => {
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', `${fileName}`);
+			document.body.appendChild(link);
+			link.click();
+		});
+	};
+
 	return (
 		<CreatePage>
 			<SpeechMain>
@@ -326,11 +349,25 @@ function SpeechDetail() {
 						<SummaryBox>{summary}</SummaryBox>
 						<TextBox>내용</TextBox>
 						<SummaryBox>{content}</SummaryBox>
-						<TextUpload>첨부 파일 </TextUpload>
+						<TextContent>첨부 파일</TextContent>
+						{referenceFile[0] ? (
+							referenceFile.map(file => (
+								<FileItem
+									key={file.id}
+									onClick={() =>
+										downloadFile({ fileId: file.id, fileName: file.reference_file })
+									}
+								>
+									{file.filename}
+								</FileItem>
+							))
+						) : (
+							<TextContent>첨부파일 없음</TextContent>
+						)}
 						<Br style={{ margin: '20px' }} />
 					</SpeechInfoContainer>
 					<CommentContainer>
-						<SpeechComment/>
+						<SpeechComment />
 						{speechComments.map(comment => (
 							<CommentList>
 								<div key={comment.id}>
@@ -361,10 +398,10 @@ function SpeechDetail() {
 										// 댓글 update false
 										<>
 											<div>
-                        {comment?.member?.nickname} - {comment?.content}
-                      </div>
+												{comment?.member?.nickname} - {comment?.content}
+											</div>
 											{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
-											{true ? (
+											{comment?.member?.nickname === nickname ? (
 												<div>
 													<SmallBtn
 														type='button'
@@ -387,8 +424,8 @@ function SpeechDetail() {
 										</>
 									)}
 								</div>
-							</CommentList>)
-					  	)}
+							</CommentList>
+						))}
 					</CommentContainer>
 				</RightContainer>
 			</SpeechMain>

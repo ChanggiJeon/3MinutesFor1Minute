@@ -55,6 +55,7 @@ function polishData(data) {
 	polished.summary = data.summary;
 	polished.speechComments = data.speech_comments;
 	polished.recordFile = data.record_file;
+	polished.referenceFile = data.speechfile_set;
 	polished.voiceText = data.voice_text;
 	polished.updatedAt = data.updated_at;
 	polished.author = data.participant.member.nickname;
@@ -80,7 +81,6 @@ function polishData(data) {
 		});
 	});
 	polished.wordCloudList = wordCloudList;
-	console.log(polished.speechComments)
 	return polished;
 }
 
