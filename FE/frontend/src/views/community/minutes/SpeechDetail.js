@@ -61,6 +61,7 @@ const SummaryBox = styled(TextContent)`
 	margin: 7px;
 	height: 120px;
 	border: 1px solid;
+	width: 100%;
 	overflow: scroll;
 `;
 
@@ -110,10 +111,10 @@ function SpeechDetail() {
 	console.log('singleSpeech');
 	console.log(singleSpeech);
 	const {
-		id,
 		author,
 		title,
 		summary,
+		content,
 		wordCloudList,
 		recordFile,
 		voiceText,
@@ -147,7 +148,7 @@ function SpeechDetail() {
 			text: '해당 스피치와 관련된 모든 데이터가 사라집니다.',
 			icon: 'warning',
 			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
+			confirmButtonColor: '#537791',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes',
 		}).then(result => {
@@ -201,15 +202,17 @@ function SpeechDetail() {
 						</TextBox>
 						<TextBox>작성자: {author}</TextBox>
 						<TextBox>제목: {title}</TextBox>
-						<TextBox>내용 요약</TextBox>
+						<TextBox>한줄 요약</TextBox>
 						<SummaryBox>{summary}</SummaryBox>
+						<TextBox>내용</TextBox>
+						<SummaryBox>{content}</SummaryBox>
 						<TextUpload>첨부 파일 </TextUpload>
 						<Br style={{ margin: '20px' }} />
+						<Buttons>
+							<UpdateBtn onClick={updateSpeech}>스피치 수정</UpdateBtn>
+							<DeleteBtn onClick={deleteSpeech}>스피치 삭제</DeleteBtn>
+						</Buttons>
 					</SpeechInfoContainer>
-					<Buttons>
-						<UpdateBtn onClick={updateSpeech}>스피치 수정</UpdateBtn>
-						<DeleteBtn onClick={deleteSpeech}>스피치 삭제</DeleteBtn>
-					</Buttons>
 				</RightContainer>
 			</SpeechMain>
 		</CreatePage>
