@@ -46,16 +46,16 @@ export const apiUpdateCommunityImage = ({ communityId, formData }) =>
 export const apiGetMyMemberProfile = ({ communityId }) =>
 	axios({
 		method: 'get',
-		url: `${BASE_URL}/community/${communityId}/profile/`,
+		url: `${BASE_URL}/community/${communityId}/self/`,
 		headers: {
 			...setToken(),
 		},
 	});
 
-export const apiGetMemberProfile = ({ communityId, memberId }) =>
+export const apiGetMemberProfile = ({ communityId, nickname }) =>
 	axios({
 		method: 'get',
-		url: `${BASE_URL}/community/${communityId}/member/${memberId}/detail/`,
+		url: `${BASE_URL}/community/${communityId}/profile/${nickname}/`,
 		headers: {
 			...setToken(),
 		},
