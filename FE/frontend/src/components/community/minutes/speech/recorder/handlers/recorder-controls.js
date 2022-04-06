@@ -1,4 +1,4 @@
-import createSpeech from '../../../../../../api/speech';
+import { createSpeech } from '../../../../../../api/speech';
 
 export async function startRecording(setRecorderState) {
 	try {
@@ -27,6 +27,7 @@ export function resumeRecording(recorder) {
 	if (recorder.state !== 'recording') recorder.resume();
 }
 
-export function uploadRecording(comId, minId, formData) {
-	createSpeech(comId, minId, formData);
+export async function uploadRecording(comId, minId, formData) {
+	const res = await createSpeech(comId, minId, formData);
+	return res;
 }
