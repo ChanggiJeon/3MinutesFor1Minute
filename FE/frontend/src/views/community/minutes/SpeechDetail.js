@@ -20,7 +20,6 @@ import HeaderBox from '../../../components/community/HeaderBox';
 import SpeechComment from './SpeechComments';
 import NForm from '../../../components/community/board/list/NForm';
 import Label from '../../../components/auth/Label';
-import SmallBtn from '../../../components/community/board/list/SmallBtn';
 import SubmitButton from '../../../components/auth/SubmitButton';
 
 // api
@@ -133,7 +132,17 @@ const CommentBtn = styled.div`
 	flex-direction: row;
 `;
 
-const CommentName = styled.div``;
+const SmallBtn = styled(SubmitButton)`
+	display: inline-block;
+	width: 40%;
+	margin: 5px;
+	padding: 0px;
+	font-size: 15px;
+`;
+
+const CommentName = styled.div`
+
+`;
 
 const CForm = styled(NForm)`
 	padding: 0px;
