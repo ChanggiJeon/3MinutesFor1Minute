@@ -26,7 +26,37 @@ import SmallBtn from '../../components/community/board/list/SmallBtn';
 import SLink from '../../components/community/board/list/SLink';
 import Btns from '../../components/community/board/list/Btns';
 import NForm from '../../components/community/board/list/NForm';
+import BlueMdBtn from '../../components/common/BlueMdBtn';
+import RedMdBtn from '../../components/common/RedMdBtn';
+import BtnBox from '../../components/community/BtnBox';
 
+const SButton = styled(SubmitButton)`
+border: none;
+`
+const CSmallBtn = styled(SmallBtn)`
+padding: 3px;
+width: 70px;
+border: none;
+`
+const DSmallBtn = styled(SmallBtn)`
+padding: 3px;
+width: 70px;
+border: none;
+background-color: ${props => props.theme.warnColor};
+`
+const TopBtnBox = styled(BtnBox)`
+	display: ${props => (props.isAuthor ? 'flex' : 'none')};
+	width: 60%;
+`;
+const UpdateBtn = styled(BlueMdBtn)`
+	margin-right: 10px;
+`;
+const DeleteBtn = styled(RedMdBtn)`
+	margin-right: 10px;
+`;
+const CreateBtn = styled(BlueMdBtn)`
+	margin-right: 20px;
+`;
 const Detail = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -216,15 +246,13 @@ function PostDetail() {
 		<Background>
 			<Header>
 				<TextTitle>글 수정</TextTitle>
-				<BackBtn
+				<CreateBtn
 					onClick={() =>
-						navigate(
-							`${routes.community}/${communityId}${routes.postDetail}/${post.id}`
-						)
+						setPostUpdating(false)
 					}
 				>
-					◀
-				</BackBtn>
+					돌아가기
+				</CreateBtn>
 			</Header>
 			<NForm onSubmit={handleSubmit(onValidSubmitPost)}>
 				<Label htmlFor='title'>
@@ -262,13 +290,24 @@ function PostDetail() {
 		<Background>
 			<Header>
 				<TextTitle>글 상세보기</TextTitle>
-				<BackBtn
+				<CreateBtn
 					onClick={() =>
 						navigate(`${routes.community}/${communityId}/${routes.posts}`)
 					}
 				>
-					◀
-				</BackBtn>
+					목록으로
+				</CreateBtn>
+				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
+				{post?.member?.nickname === nickname ? (
+					<BtnBox>
+						<UpdateBtn type='button' onClick={() => setPostUpdating(true)}>
+							수정
+						</UpdateBtn>
+						<DeleteBtn type='button' onClick={() => handleDeletePost()}>
+							삭제
+						</DeleteBtn>
+					</BtnBox>
+				) : null}
 			</Header>
 			<Detail>
 				<p>제목 : {post?.title}</p>
@@ -277,17 +316,6 @@ function PostDetail() {
 				<p>내용 : {post?.content}</p>
 				{/* <p>첨부파일 {post?.upload}</p> */}
 
-				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
-				{post?.member?.nickname === nickname ? (
-					<Btns>
-						<SmallBtn type='button' onClick={() => setPostUpdating(true)}>
-							수정
-						</SmallBtn>
-						<SmallBtn type='button' onClick={() => handleDeletePost()}>
-							삭제
-						</SmallBtn>
-					</Btns>
-				) : null}
 
 				<p>댓글({post?.board_comments?.length})</p>
 				<CommentInput />
@@ -305,8 +333,8 @@ function PostDetail() {
 											type='content'
 											placeholder='내용 없음'
 										/>
-										<SmallBtn type='submit'>수정</SmallBtn>
-										<SmallBtn
+										<CSmallBtn type='submit'>수정</CSmallBtn>
+										<CSmallBtn
 											type='button'
 											onClick={() => {
 												setCommentUpdating(false);
@@ -314,7 +342,7 @@ function PostDetail() {
 											}}
 										>
 											취소
-										</SmallBtn>
+										</CSmallBtn>
 									</CLabel>
 								</CForm>
 							) : (
@@ -324,7 +352,7 @@ function PostDetail() {
 									{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
 									{comment?.member?.nickname === nickname ? (
 										<>
-											<SmallBtn
+											<CSmallBtn
 												type='button'
 												onClick={() => {
 													setCommentUpdating(true);
@@ -333,13 +361,13 @@ function PostDetail() {
 												}}
 											>
 												수정
-											</SmallBtn>
-											<SmallBtn
+											</CSmallBtn>
+											<DSmallBtn
 												type='button'
 												onClick={() => handleDeleteComment(comment.id)}
 											>
 												삭제
-											</SmallBtn>
+											</DSmallBtn>
 										</>
 									) : null}
 								</>
