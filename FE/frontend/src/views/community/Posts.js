@@ -1,30 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { AiFillNotification } from 'react-icons/ai';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { apiGetBoards } from '../../api/board';
 import routes from '../../routes';
 import Table from '../../components/common/Table';
 import ComMain from '../../components/community/MainStart';
-import Background from '../../components/community/board/list/Background';
-import BackBtn from '../../components/community/board/list/BackBtn';
-import WriteBtn from '../../components/community/board/list/WriteBtn';
 import SLink from '../../components/community/board/list/SLink';
 import Header from '../../components/community/board/list/Header';
 import BoardTitle from '../../components/community/board/list/BoardTitle';
 import PostPagination from './PostPagination';
+import BlueMdBtn from '../../components/common/BlueMdBtn';
 
 const TableContainer = styled.div`
-	height: 80%;
+	margin-bottom: 20px;
 `;
+const CreateBtn = styled(BlueMdBtn)`
+	margin-right: 20px;
+`;
+const Background = styled.div`
+  width: 96%;
+  padding-bottom: 15px;
+  margin: 20px;
+  background-color: inherit;
+
+`
 
 function Posts() {
 	// const posts = useSelector((state) => state.posts)
 	const { communityId } = useParams();
 	const [posts, setPosts] = useState([]);
-	const [limit, setLimit] = useState(10);
+	const [notices, setNotices] = useState([]);
+	const [limit, setLimit] = useState(5);
 	const [currentPage, setCurrentPage] = useState(1);
 	const offset = (currentPage - 1) * limit;
 	const location = useLocation();
@@ -38,7 +46,8 @@ function Posts() {
 	const getPosts = async page => {
 		try {
 			await apiGetBoards({ communityId }).then(res => {
-				setPosts(res.data);
+				setPosts(res.data.filter(post => post.is_notice === false).reverse());
+				setNotices(res.data.filter(post => post.is_notice === true));
 			});
 		} catch (e) {
 			// error
@@ -51,13 +60,13 @@ function Posts() {
 			<Background>
 				<Header>
 					<BoardTitle>글 목록</BoardTitle>
-					<WriteBtn
+					<CreateBtn
 						onClick={() =>
 							navigate(`${routes.community}/${communityId}/${routes.postCreate}`)
 						}
 					>
 						작성하기
-					</WriteBtn>
+					</CreateBtn>
 				</Header>
 				<TableContainer>
 					<Table>
@@ -70,10 +79,8 @@ function Posts() {
 							</tr>
 						</thead>
 						<tbody>
-							{posts
+							{notices
 								.reverse()
-								.slice(offset, offset + limit)
-								.filter(post => post.is_notice === true)
 								.map(post => (
 									<tr key={post.id}>
 										<td>
@@ -91,9 +98,7 @@ function Posts() {
 									</tr>
 								))}
 							{posts
-								// .reverse()
 								.slice(offset, offset + limit)
-								.filter(post => post.is_notice === false)
 								.map(post => (
 									<tr key={post.id}>
 										<td>{post.id}</td>

@@ -21,12 +21,38 @@ import ComMain from '../../components/community/MainStart';
 import Background from '../../components/community/board/list/Background';
 import Header from '../../components/community/board/list/Header';
 import TextTitle from '../../components/common/TextTitle';
-import BackBtn from '../../components/community/board/list/BackBtn';
 import SmallBtn from '../../components/community/board/list/SmallBtn';
-import SLink from '../../components/community/board/list/SLink';
-import Btns from '../../components/community/board/list/Btns';
 import NForm from '../../components/community/board/list/NForm';
+import BlueMdBtn from '../../components/common/BlueMdBtn';
+import RedMdBtn from '../../components/common/RedMdBtn';
+import BtnBox from '../../components/community/BtnBox';
 
+const SButton = styled(SubmitButton)`
+border: none;
+`
+const CSmallBtn = styled(SmallBtn)`
+padding: 3px;
+width: 70px;
+border: none;
+`
+const DSmallBtn = styled(SmallBtn)`
+padding: 3px;
+width: 70px;
+border: none;
+background-color: ${props => props.theme.warnColor};
+`
+const TopBtnBox = styled(BtnBox)`
+	display: ${props => (props.isAuthor ? 'flex' : 'none')};
+	width: 60%;
+`;
+const UpdateBtn = styled(BlueMdBtn)`
+	margin-right: 10px;
+`;
+const DeleteBtn = styled(RedMdBtn)`
+	margin-right: 10px;
+`;
+const CreateBtn = styled(BlueMdBtn)`
+`;
 const Detail = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -40,11 +66,47 @@ const Detail = styled.div`
 	}
 `;
 
+const CommentLine = styled.div`
+	padding-left: 5px;
+	margin-top: 2px;
+	width: 100%;
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+	height: 37px;
+`;
+
 const CommentList = styled.div`
 	width: 100%;
 `;
 
-const CLabel = styled(Label)`
+const DetailContent = styled.div`
+	font-size: 18px;
+	margin: 10px;
+`;
+
+const CLabel = styled.label`
+border-bottom: 1px solid black;
+	display: flex;
+	align-items: center;
+
+	input {
+		border: none;
+		background: none;
+		margin: 5px;
+		font-size: 20px;
+
+		:focus {
+			outline: none;
+		}
+	}
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus,
+	input:-webkit-autofill:active {
+		transition: background-color 9999s;
+		-webkit-text-fill-color: inherit;
+	}
 	input {
 		width: 100%;
 		font-size: 15px;
@@ -53,6 +115,7 @@ const CLabel = styled(Label)`
 
 const CForm = styled(NForm)`
 	padding: 0px;
+	width: 100%;
 `;
 
 function PostDetail() {
@@ -177,12 +240,19 @@ function PostDetail() {
 				text: '수정을 완료하였습니다.',
 			});
 			setPostUpdating(false);
-		} catch (e) {
+		} catch (error) {
 			// error
-			await Swal.fire({
-				icon: 'error',
-				text: '수정을 실패하였습니다.',
-			});
+			if(error.response.status === 400){
+				await Swal.fire({
+					icon: 'error',
+					text: '공지는 최대 5개까지 작성할 수 있습니다.',
+				});
+			}else{
+				await Swal.fire({
+					icon: 'error',
+					text: '수정을 실패하였습니다.',
+				});
+			}
 		}
 	};
 
@@ -216,15 +286,13 @@ function PostDetail() {
 		<Background>
 			<Header>
 				<TextTitle>글 수정</TextTitle>
-				<BackBtn
+				<CreateBtn
 					onClick={() =>
-						navigate(
-							`${routes.community}/${communityId}${routes.postDetail}/${post.id}`
-						)
+						setPostUpdating(false)
 					}
 				>
-					◀
-				</BackBtn>
+					돌아가기
+				</CreateBtn>
 			</Header>
 			<NForm onSubmit={handleSubmit(onValidSubmitPost)}>
 				<Label htmlFor='title'>
@@ -262,69 +330,80 @@ function PostDetail() {
 		<Background>
 			<Header>
 				<TextTitle>글 상세보기</TextTitle>
-				<BackBtn
+				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
+				{post?.member?.nickname === nickname ? (
+					<BtnBox>
+						<CreateBtn
+							onClick={() =>
+								navigate(`${routes.community}/${communityId}/${routes.posts}`)
+							}
+						>
+							목록으로
+						</CreateBtn>
+						<UpdateBtn type='button' onClick={() => setPostUpdating(true)}>
+							수정
+						</UpdateBtn>
+						<DeleteBtn type='button' onClick={() => handleDeletePost()}>
+							삭제
+						</DeleteBtn>
+					</BtnBox>
+				) : (
+				<CreateBtn
 					onClick={() =>
 						navigate(`${routes.community}/${communityId}/${routes.posts}`)
 					}
 				>
-					◀
-				</BackBtn>
+					목록으로
+				</CreateBtn>
+				)}
 			</Header>
 			<Detail>
-				<p>제목 : {post?.title}</p>
-				<p>작성자 : {post?.member?.nickname}</p>
-				<p>작성시간 : {dayjs(post?.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
-				<p>내용 : {post?.content}</p>
+				<DetailContent>제목 : {post?.title}</DetailContent>
+				<DetailContent>작성자 : {post?.member?.nickname}</DetailContent>
+				<DetailContent>작성시간 : {dayjs(post?.created_at).format('YYYY-MM-DD HH:mm:ss')}</DetailContent>
+				<DetailContent>내용 : {post?.content}</DetailContent>
 				{/* <p>첨부파일 {post?.upload}</p> */}
 
-				{/* 로그인 & 자기글만 수정 삭제가 되어야 한다 */}
-				{post?.member?.nickname === nickname ? (
-					<Btns>
-						<SmallBtn type='button' onClick={() => setPostUpdating(true)}>
-							수정
-						</SmallBtn>
-						<SmallBtn type='button' onClick={() => handleDeletePost()}>
-							삭제
-						</SmallBtn>
-					</Btns>
-				) : null}
-
-				<p>댓글({post?.board_comments?.length})</p>
+				<DetailContent>댓글({post?.board_comments?.length})</DetailContent>
 				<CommentInput />
 				{post?.board_comments?.map(comment => (
-					<CommentList>
-						<p key={comment.id}>
+					<CommentList key={comment.id}>
+						<CommentLine>
 							{/* 댓글 update true */}
 							{isCommentUpdating && comment === targetComment ? (
 								<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
 									<CLabel htmlFor='content'>
-										<input
-											{...cRegister('content', {
-												required: true,
-											})}
-											type='content'
-											placeholder='내용 없음'
-										/>
-										<SmallBtn type='submit'>수정</SmallBtn>
-										<SmallBtn
-											type='button'
-											onClick={() => {
-												setCommentUpdating(false);
-												setTargetComment({});
-											}}
-										>
-											취소
-										</SmallBtn>
+										<CommentLine>
+											<input
+												{...cRegister('content', {
+													required: true,
+												})}
+												type='content'
+												placeholder='내용 없음'
+											/>
+											<CSmallBtn type='submit'>수정</CSmallBtn>
+											<CSmallBtn
+												type='button'
+												onClick={() => {
+													setCommentUpdating(false);
+													setTargetComment({});
+												}}
+											>
+												취소
+											</CSmallBtn>
+										</CommentLine>
 									</CLabel>
 								</CForm>
 							) : (
 								// 댓글 update false
-								<>
-									{comment?.member?.nickname} - {comment?.content}
+								<CommentLine>
+									<div>
+									{comment?.member?.nickname}({dayjs(comment?.updated_at).format('YYYY-MM-DD')}) : {comment?.content}
+									</div>
 									{/* 로그인 유저 === 댓글 작성자 일때 버튼이 보여야 함 */}
 									{comment?.member?.nickname === nickname ? (
-										<>
-											<SmallBtn
+										<div>
+											<CSmallBtn
 												type='button'
 												onClick={() => {
 													setCommentUpdating(true);
@@ -333,18 +412,18 @@ function PostDetail() {
 												}}
 											>
 												수정
-											</SmallBtn>
-											<SmallBtn
+											</CSmallBtn>
+											<DSmallBtn
 												type='button'
 												onClick={() => handleDeleteComment(comment.id)}
 											>
 												삭제
-											</SmallBtn>
-										</>
+											</DSmallBtn>
+										</div>
 									) : null}
-								</>
+								</CommentLine>
 							)}
-						</p>
+						</CommentLine>
 					</CommentList>
 				))}
 			</Detail>

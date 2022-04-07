@@ -81,7 +81,7 @@ def uniquecheck_community_name(request, community_name):
 
     if Community.objects.filter(name=community_name):
         return Response({'error: 커뮤니티 명이 중복됩니다.'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'response: 사용 가능한 이름입니다.'}, status=status.HTTP_200_OK)
+    return Response({'response: 사용 가능한 이름입니다.'})
 
 
 # 2. 커뮤니티 가입 신청
@@ -111,7 +111,7 @@ def search_for_code(request, code):
 
     if community:
         serializer = CommunitySearchSerializer(community)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data)
     return Response({'error: 해당 코드의 커뮤니티가 존재하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -121,7 +121,7 @@ def search_for_name(request, keyword):
 
     if communities:
         serializers = CommunitySearchSerializer(communities, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        return Response(serializers.data)
     return Response('error: 해당 이름의 커뮤니티가 존재하지 않습니다.', status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -135,7 +135,7 @@ def uniquecheck_member_nickname(request, community_pk, nickname):
     for member in members:
         if member.nickname == nickname:
             return Response({'error: 중복되는 닉네임이 있습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'response: 사용 가능한 닉네임입니다.'}, status=status.HTTP_200_OK)
+    return Response({'response: 사용 가능한 닉네임입니다.'})
 
 
 @swagger_auto_schema(method='PUT', request_body=CommunitySerializer)
@@ -158,7 +158,7 @@ def community_detail_update_delete(request, community_pk):
         elif request.method == 'DELETE':
             community.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -166,7 +166,7 @@ def community_get_members(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     members = community.member_set.all()
     serializer = MemberSerializer(members, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.data)
 
 
 # 가입 승인
@@ -177,8 +177,8 @@ def members_get_waiting(request, community_pk):
     if community.member_set.filter(user_id=request.user.id, is_admin=True):
         waiting_members = community.member_set.filter(is_active=False)
         serializer = MemberSerializer(waiting_members, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.data)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['PUT'])
@@ -190,8 +190,8 @@ def approve_waiting_member(request, community_pk, member_pk):
         waiting_member.is_active = True
         ret = waiting_member.save()
         serializer = MemberSerializer(ret)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.data)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 # 구성원 초대
@@ -209,7 +209,7 @@ def find_user(request, keyword):
         return Response({'error: 해당 유저가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     serializer = UserSerializer(users, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.data)
 
 
 @api_view(['POST'])
@@ -254,14 +254,14 @@ def member_update(request, community_pk, member_pk):
         nicknames = [member.nickname for member in members]
 
         if me.nickname != request.data['nickname'] and request.data['nickname'] in nicknames:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error: 이미 존재하는 닉네임'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = MemberSerializer(me, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['DELETE'])
@@ -280,4 +280,4 @@ def member_delete(request, community_pk, member_pk):
     elif me.is_admin:
         member.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)

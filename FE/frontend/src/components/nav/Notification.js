@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FiX } from 'react-icons/fi';
+import { FiCheck, FiX } from 'react-icons/fi';
 import { VscBell } from 'react-icons/vsc';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -27,10 +27,11 @@ const NotificationBtn = styled(IconBtn)`
 `;
 
 const NotificationContainer = styled.div`
+	z-index: 9999;
 	position: absolute;
 	top: 70px;
 	right: 0px;
-	width: 300px;
+	width: 350px;
 	max-height: 500px;
 	overflow-y: hidden;
 	border: 1px solid black;
@@ -149,6 +150,17 @@ function Notification() {
 		}
 	};
 
+	const checkNotification = async target => {
+		try {
+			await apiGetNotificationDetail({ notificationId: target.id });
+
+			getUnreadNotificationsCount();
+			getNotifications();
+		} catch (e) {
+			// error
+		}
+	};
+
 	const deleteNotification = async target => {
 		try {
 			await apiDeleteNotification({ notificaitionId: target.id });
@@ -199,6 +211,9 @@ function Notification() {
 								notifications.map(e => (
 									<NotificationContent key={e.id} className={e.is_read ? 'checked' : ''}>
 										<Content onClick={() => readNotification(e)}>{e.content}</Content>
+										<ExitBtn onClick={() => checkNotification(e)}>
+											<FiCheck />
+										</ExitBtn>
 										<ExitBtn onClick={() => deleteNotification(e)}>
 											<FiX />
 										</ExitBtn>

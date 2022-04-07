@@ -8,6 +8,8 @@ import { apiCreateComment } from '../../api/board';
 import Label from '../../components/auth/Label';
 import SmallBtn from '../../components/community/board/list/SmallBtn';
 import NForm from '../../components/community/board/list/NForm';
+import BlueMdBtn from '../../components/common/BlueMdBtn';
+import BtnBox from '../../components/community/BtnBox';
 
 const CLabel = styled(Label)`
   input {
@@ -15,7 +17,15 @@ const CLabel = styled(Label)`
     font-size: 15px;
   }
 `
-
+const CSmallBtn = styled(SmallBtn)`
+padding: 3px;
+width: 70px;
+border: none;
+`
+const UpdateBtn = styled(BlueMdBtn)`
+	margin-right: 10px;
+  width: 7%;
+`;
 const CForm = styled(NForm)`
   padding: 0px;
 `
@@ -70,7 +80,7 @@ function CommentInput() {
 					type='content'
 					placeholder='댓글을 입력하세요'
 				/>
-			<SmallBtn type='submit' disabled={!isValid}>등록</SmallBtn>
+        <CSmallBtn type='submit' disabled={!isValid}>등록</CSmallBtn>
 			</CLabel>
 		</CForm>
 	);
