@@ -58,8 +58,11 @@ const CommunityImgContainer = styled.div`
 const CommunityName = styled.div`
 	font-size: 24px;
 	margin-bottom: 5px;
+	text-align: center;
 `;
-
+const CommunityDescription = styled.div`
+	text-align:center;
+`
 const Msg1 = '회의 시간, 3분';
 const Msg2 = '바쁜 직장인들을 위한 새로운 AI Solution';
 const Msg3 = 'Work Less, Better Work';
@@ -147,7 +150,7 @@ function Main() {
 									)}
 								</CommunityImgContainer>
 								<CommunityName>{e.name}</CommunityName>
-								<div>{e.intro}</div>
+								<CommunityDescription>{e.intro}</CommunityDescription>
 							</Contents>
 						</Link>
 					))}
