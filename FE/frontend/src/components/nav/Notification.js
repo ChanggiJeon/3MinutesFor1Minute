@@ -11,12 +11,22 @@ import {
 } from '../../api/notifications';
 import IconBtn from '../auth/IconBtn';
 
+const OutsideContainer = styled.div`
+	display: ${props => (props.isShown ? 'inherit' : 'none')};
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+`;
+
+const OutsideWrapper = styled.div``;
+
 const NotificationBtn = styled(IconBtn)`
 	position: relative;
 `;
 
 const NotificationContainer = styled.div`
-	display: ${props => (props.isShown ? 'inherit' : 'none')};
 	position: absolute;
 	top: 70px;
 	right: 0px;
@@ -158,6 +168,12 @@ function Notification() {
 		}
 	};
 
+	const handleShown = e => {
+		if (e.target === e.currentTarget) {
+			setShown(false);
+		}
+	};
+
 	const noticnt = () => {
 		if (unreadCount === 0) {
 			return null;
@@ -174,23 +190,27 @@ function Notification() {
 				<VscBell style={{ fontSize: '30px' }} />
 				{noticnt()}
 			</NotificationBtn>
-			<NotificationContainer isShown={isShown}>
-				<NotificationTitle>알림</NotificationTitle>
-				<NotificationWrapper>
-					{notifications.length > 0 ? (
-						notifications.map(e => (
-							<NotificationContent key={e.id} className={e.is_read ? 'checked' : ''}>
-								<Content onClick={() => readNotification(e)}>{e.content}</Content>
-								<ExitBtn onClick={() => deleteNotification(e)}>
-									<FiX />
-								</ExitBtn>
-							</NotificationContent>
-						))
-					) : (
-						<NotificationContent>알림이 없습니다.</NotificationContent>
-					)}
-				</NotificationWrapper>
-			</NotificationContainer>
+			<OutsideContainer isShown={isShown} onClick={handleShown}>
+				<OutsideWrapper>
+					<NotificationContainer>
+						<NotificationTitle>알림</NotificationTitle>
+						<NotificationWrapper>
+							{notifications.length > 0 ? (
+								notifications.map(e => (
+									<NotificationContent key={e.id} className={e.is_read ? 'checked' : ''}>
+										<Content onClick={() => readNotification(e)}>{e.content}</Content>
+										<ExitBtn onClick={() => deleteNotification(e)}>
+											<FiX />
+										</ExitBtn>
+									</NotificationContent>
+								))
+							) : (
+								<NotificationContent>알림이 없습니다.</NotificationContent>
+							)}
+						</NotificationWrapper>
+					</NotificationContainer>
+				</OutsideWrapper>
+			</OutsideContainer>
 		</>
 	);
 }

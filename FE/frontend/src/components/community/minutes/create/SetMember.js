@@ -67,10 +67,16 @@ const AddedMemberBtn = styled(EmptyBtn)`
 
 function SetMember({ setMode, members, setMembers }) {
 	const { member_set: memberSet } = useSelector(state => state.community);
+	const { id } = useSelector(state => state.member);
 	const [keyword, setKeyword] = useState('');
 
 	const addMember = target => {
-		if (!members.some(e => e.id === target.id)) {
+		if (id === target.id) {
+			Swal.fire({
+				icon: 'info',
+				text: '작성자 본인은 자동으로 추가됩니다.',
+			});
+		} else if (!members.some(e => e.id === target.id)) {
 			setMembers([...members, target]);
 		}
 	};
@@ -94,8 +100,7 @@ function SetMember({ setMode, members, setMembers }) {
 			<ResultWrapper>
 				<ResultList>
 					{memberSet
-						?.slice()
-						?.filter(e => e.nickname.indexOf(keyword) !== -1)
+						?.filter(e => e.nickname.indexOf(keyword) !== -1 && e.id !== id)
 						?.map(e => (
 							<ResultBtn type='button' key={e.id} onClick={() => addMember(e)}>
 								{e?.nickname}
@@ -115,7 +120,7 @@ function SetMember({ setMode, members, setMembers }) {
 				<AddedMemberContents>추가된 멤버(클릭하여 제거)</AddedMemberContents>
 				<AddedMemberContents>
 					{members.map(e => (
-						<AddedMemberBtn type='button' onClick={() => deleteMember(e)}>
+						<AddedMemberBtn key={e.id} type='button' onClick={() => deleteMember(e)}>
 							{e.nickname}
 						</AddedMemberBtn>
 					))}
