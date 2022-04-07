@@ -94,6 +94,7 @@ function MinutesCreate() {
 	const dispatch = useDispatch();
 	const [members, setMembers] = useState([]);
 	const [isAddMode, setAddMode] = useState(false);
+	const now = new Date();
 	const memberModal = isAddMode && (
 		<Modal setMode={setAddMode}>
 			<SetMember setMode={setAddMode} members={members} setMembers={setMembers} />
@@ -208,6 +209,7 @@ function MinutesCreate() {
 								required: '회의 종료일을 입력해주세요',
 							})}
 							type='datetime-local'
+							min={now}
 						/>
 						<ErrorMsg style={{ textAlign: 'center' }}>
 							{errors?.Dday?.message}
