@@ -21,8 +21,7 @@ const CreateBtn = styled(BlueMdBtn)`
 `;
 const Background = styled.div`
   width: 96%;
-  height: 100%;
-  padding: 10px;
+  padding-bottom: 15px;
   margin: 20px;
   background-color: inherit;
 
