@@ -34,6 +34,7 @@ function Signup() {
 		clearErrors,
 		watch,
 		getFieldState,
+		setFocus,
 	} = useForm({
 		mode: 'all',
 	});
@@ -130,7 +131,7 @@ function Signup() {
 		const { id, password, passwordConfirmation, name, email } = getValues();
 
 		try {
-			if (!idCheck && !emailCheck && !emailConfirm) throw Error();
+			if (!idCheck || !emailCheck || !emailConfirm) throw Error();
 
 			await apiSignup({
 				id,
@@ -146,10 +147,30 @@ function Signup() {
 
 			navigate(routes.login);
 		} catch (e) {
-			await Swal.fire({
-				icon: 'error',
-				text: '회원가입 오류, 다시 시도하세요.',
-			});
+			if (!idCheck) {
+				await Swal.fire({
+					icon: 'info',
+					text: '아이디 중복확인이 필요합니다.',
+				});
+				setFocus('id');
+			} else if (!emailCheck) {
+				await Swal.fire({
+					icon: 'info',
+					text: '이메일 인증이 필요합니다.',
+				});
+				setFocus('email');
+			} else if (!emailConfirm) {
+				await Swal.fire({
+					icon: 'info',
+					text: '이메일 인증이 필요합니다.',
+				});
+				setFocus('emailConfirmCode');
+			} else {
+				await Swal.fire({
+					icon: 'error',
+					text: '회원가입 오류, 다시 시도하세요.',
+				});
+			}
 		}
 	};
 
@@ -328,12 +349,7 @@ function Signup() {
 						</Label>
 					)}
 					{ErrorAndCheck(errors?.emailConfirmCode?.message, emailConfirm)}
-					<SubmitButton
-						type='submit'
-						disabled={!isValid || !idCheck || !emailCheck || !emailConfirm}
-					>
-						회 원 가 입
-					</SubmitButton>
+					<SubmitButton type='submit'>회 원 가 입</SubmitButton>
 				</Form>
 			</FormContainer>
 		</Divider>

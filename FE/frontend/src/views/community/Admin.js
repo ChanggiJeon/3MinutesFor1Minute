@@ -134,6 +134,11 @@ function Admin() {
 			setResult(response.data);
 		} catch (e) {
 			// error
+			setResult([]);
+			Swal.fire({
+				icon: 'info',
+				text: '검색 결과가 없습니다.',
+			});
 		}
 	};
 
