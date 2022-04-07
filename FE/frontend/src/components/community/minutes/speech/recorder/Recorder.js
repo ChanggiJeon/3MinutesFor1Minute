@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import routes from '../../../../../routes';
 import GrayLgButton from '../../../../common/GrayLgButton';
 import RecorderImg from '../RecorderImg';
@@ -74,15 +75,29 @@ function Recorder() {
 				setRecordStatus('idle');
 		}
 	}, [status]);
+	// 업로드하면 녹음파일 제출하고 스피치 객체 리덕스에 생성하고 로딩 상태 변경
 	const upload = async () => {
 		navigate(
 			`${routes.community}/${communityId}/minutes/${minutesId}/speechCreate`
 		);
 		const result = await uploadRecording(communityId, minutesId);
-		dispatch(fetchSpeechByAI(result));
-		setTimeout(() => {
-			dispatch(finishLoading());
-		}, 4 * 1000);
+		if (result === 400) {
+			Swal.fire({
+				title: '녹음 내용 없음',
+				text: '5단어 이하의 음성 파일은 등록하실 수 없습니다.',
+				icon: 'error',
+				confirmButtonText: '확인',
+				confirmButtonColor: '#537791',
+			});
+			navigate(
+				`${routes.community}/${communityId}/minutes/${minutesId}/recordCreate`
+			);
+		} else {
+			dispatch(fetchSpeechByAI(result));
+			setTimeout(() => {
+				dispatch(finishLoading());
+			}, 4 * 1000);
+		}
 	};
 	return (
 		<RecContainer>

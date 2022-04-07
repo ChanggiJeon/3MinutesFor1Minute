@@ -4,18 +4,26 @@ import { useForm } from 'react-hook-form';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
-import routes from '../../routes';
 import { apiCreateBoard } from '../../api/board';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
-import RightBtn from '../../components/community/board/list/BackBtn';
-import SLink from '../../components/community/board/list/SLink';
 import ComMain from '../../components/community/MainStart';
 import Background from '../../components/community/board/list/Background';
 import Header from '../../components/community/board/list/Header';
 import BoardTitle from '../../components/community/board/list/BoardTitle';
 import NForm from '../../components/community/board/list/NForm';
 import SubmitButton from '../../components/auth/SubmitButton';
+import BlueMdBtn from '../../components/common/BlueMdBtn';
+
+const SButton = styled(SubmitButton)`
+border: none;
+`
+const CreateBtn = styled(BlueMdBtn)`
+	margin-right: 20px;
+`;
+const TitileInput = styled.input`
+	width:100%
+`;
 
 function PostCreate() {
 	const {
@@ -47,12 +55,20 @@ function PostCreate() {
 				text: '게시글이 성공적으로 작성되었습니다.',
 			});
 			navigate(`/community/${communityId}/posts/${postId}`);
-		} catch (e) {
+		} catch (error) {
 			// error
-			await Swal.fire({
-				icon: 'error',
-				text: '게시글 작성에 실패하였습니다. 다시 시도하세요.',
-			});
+			if(error.response.status === 400){
+				await Swal.fire({
+					icon: 'error',
+					text: '공지는 최대 5개까지 작성할 수 있습니다.',
+				});
+			}else{
+				await Swal.fire({
+					icon: 'error',
+					text: '게시글 작성에 실패하였습니다. 다시 시도하세요.',
+				});
+			}
+			
 		}
 	};
 
@@ -61,13 +77,13 @@ function PostCreate() {
 			<Background>
 				<Header>
 					<BoardTitle>게시글 작성</BoardTitle>
-					<RightBtn onClick={() => navigate(`/community/${communityId}/posts`)}>
-						◀
-					</RightBtn>
+					<CreateBtn onClick={() => navigate(`/community/${communityId}/posts`)}>
+						돌아가기
+					</CreateBtn>
 				</Header>
 				<NForm onSubmit={handleSubmit(onValidSubmit)}>
 					<Label htmlFor='title'>
-						<input
+						<TitileInput
 							{...register('title', {
 								required: true,
 							})}
@@ -97,7 +113,7 @@ function PostCreate() {
 						파일첨부
 						<input {...register('upload')} type='file' multiple />
 					</Label> */}
-					<SubmitButton disabled={!isValid}>작성하기</SubmitButton>
+					<SButton disabled={!isValid}>작성하기</SButton>
 				</NForm>
 			</Background>
 		</ComMain>

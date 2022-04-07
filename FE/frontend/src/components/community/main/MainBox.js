@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 const MainBox = styled.div`
-	width: 96%;
-	height: 280px;
+	height: 300px;
 	background-color: #ffffff;
-	border-radius: 50px;
-	padding: 10px;
+	border-radius: 30px;
+	padding: 5px;
+	margin: 5px;
 `;
 
 export default MainBox;

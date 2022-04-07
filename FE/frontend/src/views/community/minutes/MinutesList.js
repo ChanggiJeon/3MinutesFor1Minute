@@ -4,10 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import routes from '../../../routes';
 import Container from '../../../components/community/Container';
-import Main from '../../../components/community/MainCenter';
 import TextSubTitle from '../../../components/common/TextSubTitle';
 import DivLine from '../../../components/community/main/DivLine';
-import MainBox from '../../../components/community/minutes/list/MainBox';
 import BlueMdBtn from '../../../components/common/BlueMdBtn';
 import { fetchMinutesByComId } from '../../../store/minutes';
 import HeaderBox from '../../../components/community/HeaderBox';
@@ -19,12 +17,26 @@ import DateBox from '../../../components/community/minutes/list/textBox/DateBox'
 import AuthorBox from '../../../components/community/minutes/list/textBox/AuthorBox';
 import DeadlineBox from '../../../components/community/minutes/list/textBox/DeadlineBox';
 
-const MinutesContainer = styled(Container)`
+const Main = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+	justify-content: center;
+	width: 100%;
+	margin-bottom: 20px;
+`;
+
+const MinutesContainer = styled.div`
 	align-content: flex-start;
 	align-items: center;
 	justify-content: center;
 	width: 85%;
-	height: 85%;
+	display: flex;
+	flex-wrap: wrap;
+	background-color: #ffffff;
+	border-radius: 50px;
+	padding: 10px;
+	margin-top: 20px;
 `;
 const CreateBtn = styled(BlueMdBtn)`
 	margin-right: 20px;
@@ -32,7 +44,6 @@ const CreateBtn = styled(BlueMdBtn)`
 
 const ListBox = styled.ul`
 	width: 100%;
-	height: 85%;
 	padding: 10px;
 	margin-top: 10px;
 `;
@@ -41,17 +52,19 @@ const Divider = styled(DivLine)`
 	margin: 15px 0;
 `;
 
+const MainBox = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 10px;
+`
+
 function MinutesList() {
 	const { communityId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	dispatch(fetchMinutesByComId(communityId));
-	// const allMinutes = useSelector(state => state.minutes.allMinutes);
-	// console.log('LIST');
-	// console.log(allMinutes);
-
 	const [posts, setPosts] = useState([]);
-	const [limit, setLimit] = useState(5);
+	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const offset = (currentPage - 1) * limit;
 	const location = useLocation();
