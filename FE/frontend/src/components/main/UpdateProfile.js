@@ -46,7 +46,6 @@ function UpdateProfile({ toggleMode }) {
 			});
 
 			const response = await apiGetMyProfile();
-			console.log(response);
 			dispatch(
 				getUserData({
 					...response.data,
