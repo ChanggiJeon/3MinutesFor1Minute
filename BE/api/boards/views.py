@@ -136,10 +136,10 @@ def board_comment_create(request, community_pk, board_pk):
 def board_comment_delete(request, community_pk, board_pk, comment_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
+    comment = get_object_or_404(BoardComment, pk=comment_pk, board=board)
     me = get_object_or_404(Member, user=request.user, community=community)
 
-    if me == board.member or me.is_admin:
-        comment = get_object_or_404(BoardComment, pk=comment_pk, board=board)
+    if me == comment.member or me.is_admin:
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -150,10 +150,10 @@ def board_comment_delete(request, community_pk, board_pk, comment_pk):
 def board_comment_update(request, community_pk, board_pk, comment_pk):
     community = get_object_or_404(Community, pk=community_pk)
     board = get_object_or_404(Board, pk=board_pk, community=community)
+    comment = get_object_or_404(BoardComment, pk=comment_pk, board=board)
     me = get_object_or_404(Member, user=request.user, community=community)
 
-    if me == board.member or me.is_admin:
-        comment = get_object_or_404(BoardComment, pk=comment_pk, board=board)
+    if me == comment.member or me.is_admin:
         serializer = BoardCommentSerializer(comment, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
