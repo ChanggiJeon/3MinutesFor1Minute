@@ -383,7 +383,7 @@ function SpeechDetail() {
 								<FileItem
 									key={file.id}
 									onClick={() =>
-										downloadFile({ fileId: file.id, fileName: file.reference_file })
+										downloadFile({ fileId: file.id, fileName: file.filename })
 									}
 								>
 									{file.filename}
@@ -397,7 +397,7 @@ function SpeechDetail() {
 					<CommentContainer>
 						<SpeechComment />
 						{speechComments.map(comment => (
-							<CommentList>
+							<CommentList key={comment.id}>
 								{/* 댓글 update true */}
 								{isCommentUpdating && comment === targetComment ? (
 									<CForm onSubmit={cHandleSubmit(onValidSubmitComment)}>
