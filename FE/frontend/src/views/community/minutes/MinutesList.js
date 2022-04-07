@@ -46,10 +46,6 @@ function MinutesList() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	dispatch(fetchMinutesByComId(communityId));
-	// const allMinutes = useSelector(state => state.minutes.allMinutes);
-	// console.log('LIST');
-	// console.log(allMinutes);
-
 	const [posts, setPosts] = useState([]);
 	const [limit, setLimit] = useState(5);
 	const [currentPage, setCurrentPage] = useState(1);
