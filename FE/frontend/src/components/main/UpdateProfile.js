@@ -35,8 +35,6 @@ function UpdateProfile({ toggleMode }) {
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('username', username);
 		formData.append('password', password);
-		formData.append('new_password', password);
-		formData.append('new_password_confirm', password);
 
 		try {
 			await apiUpdateProfileImage({
@@ -98,7 +96,7 @@ function UpdateProfile({ toggleMode }) {
 								message: '8자 이상 입력하세요.',
 							},
 							pattern: {
-								value: /^(?=.+[a-z])(?=.+[A-Z])((?=.+[0-9])(?=.+[!@#$%^&*])).{8,}$/,
+								value: /^(?=.*[a-z])(?=.*[A-Z])((?=.*[0-9])(?=.*[!@#$%^&*])).{8,}$/,
 								message: '영문 대문자, 소문자, 숫자, 특수문자를 사용하세요.',
 							},
 						})}
