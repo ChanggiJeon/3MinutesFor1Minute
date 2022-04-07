@@ -108,6 +108,9 @@ const Buttons = styled(BtnBox)`
 	justify-content: end;
 	width: 60%;
 `;
+const EditBtns = styled.div`
+	display: ${props => (props.isAuthor ? 'flex' : 'none')};
+`;
 const CreatePage = styled.div`
 	display: flex;
 	flex-wrap: wrap;
@@ -140,9 +143,7 @@ const SmallBtn = styled(SubmitButton)`
 	font-size: 15px;
 `;
 
-const CommentName = styled.div`
-
-`;
+const CommentName = styled.div``;
 
 const CForm = styled(NForm)`
 	padding: 0px;
@@ -159,12 +160,14 @@ const FileItem = styled(TextContent)`
 
 function SpeechDetail() {
 	// 초기 데이터 세팅
+	const [isAuthor, setIsAuthor] = useState(false);
 	const params = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(readSingleSpeechById(params));
 	}, []);
+	const loginUser = useSelector(state => state.member.nickname);
 	const { singleSpeech } = useSelector(state => state.speech);
 	const {
 		author,
@@ -178,8 +181,13 @@ function SpeechDetail() {
 		referenceFile,
 		updatedAt,
 	} = singleSpeech;
-	// const audioSrc = `http://localhost:8000${recordFile}`;
-	const audioSrc = 'http://localhost:8000/record/1648986351112.wav';
+	const audioSrc = `http://localhost:8000${recordFile}`;
+	// 데이터 받으면 작성자인지 확인
+	useEffect(() => {
+		if (loginUser === author) {
+			setIsAuthor(true);
+		}
+	}, [singleSpeech]);
 	// wordCloud
 	const maxWords = 50;
 	const options = {
@@ -330,10 +338,12 @@ function SpeechDetail() {
 						<DivLine />
 						<TextContentBox>{voiceText}</TextContentBox>
 						<AudioBox>
-							<audio controls>
-								<source src={audioSrc} type='audio/wav' />
-								<track kind='captions' />
-							</audio>
+							{recordFile ? (
+								<audio controls>
+									<source src={audioSrc} type='audio/wav' />
+									<track kind='captions' />
+								</audio>
+							) : null}
 						</AudioBox>
 					</SpeechRecognitionContainer>
 				</LeftContainer>
@@ -342,8 +352,10 @@ function SpeechDetail() {
 						<HeaderBox>
 							<TextSubTitle>스피치 정보</TextSubTitle>
 							<Buttons>
-								<UpdateBtn onClick={updateSpeech}>수정</UpdateBtn>
-								<DeleteBtn onClick={deleteSpeech}>삭제</DeleteBtn>
+								<EditBtns isAuthor={isAuthor}>
+									<UpdateBtn onClick={updateSpeech}>수정</UpdateBtn>
+									<DeleteBtn onClick={deleteSpeech}>삭제</DeleteBtn>
+								</EditBtns>
 								<BackSpaceBtn
 									onClick={() => {
 										navigate(

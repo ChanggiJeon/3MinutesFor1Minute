@@ -64,7 +64,7 @@ const SpeechBox = styled.div`
 	overflow-y: scroll;
 `;
 const SpeechCreateBtn = styled(BlueMdBtn)`
-	display: ${props => (props.iCanSpeak === 'no' ? 'block' : 'none')};
+	display: ${props => (props.iCanSpeak === 'yes' ? 'block' : 'none')};
 	margin-right: 10px;
 `;
 const SpeechDeleteBtn = styled(RedMdBtn)`
@@ -84,34 +84,41 @@ function MinutesDetail() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const location = useLocation();
-	// 초기값 설정
+	// 리덕스 스토어 생성
 	useEffect(() => {
 		dispatch(detailMinutesById(params));
+	}, [location]);
+	// 백그라운드 데이터 설정
+	const loginUser = useSelector(state => state.member.nickname);
+	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
+	const { speeches, referenceFile } = singleMinutes;
+	// 데이터 받아오면 초기값 설정
+	useEffect(() => {
 		if (loginUser === singleMinutes.author) {
 			setIsAuthor(true);
 		} else if (singleMinutes.participants.find(p => p === loginUser)) {
 			setIsParticipant(true);
+		} else {
+			setIsAuthor(false);
+			setIsParticipant(false);
 		}
-		console.log('loginUser');
-		console.log(loginUser);
-		console.log('singleMinutes');
-		console.log(singleMinutes);
-	}, []);
+	}, [loginUser, singleMinutes]);
 	// 스피치 등록/삭제 버튼 관련
 	useEffect(() => {
-		if (isAuthor || isParticipant) {
-			setICanSpeak('yes');
-		}
+		let check = 'I can make speech';
 		singleMinutes.speeches.forEach(speech => {
 			if (speech.participant.member.nickname === loginUser) {
-				setICanSpeak('done');
+				check = 'I can not make speech';
 			}
 		});
-	}, [isAuthor, isParticipant]);
-	// 백그라운드 데이터
-	const loginUser = useSelector(state => state.member.nickname);
-	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
-	const { speeches, referenceFile } = singleMinutes;
+		if (check === 'I can not make speech') {
+			setICanSpeak('done');
+		} else if (isAuthor || isParticipant) {
+			setICanSpeak('yes');
+		} else {
+			setICanSpeak('no');
+		}
+	}, [isAuthor, isParticipant, singleMinutes]);
 	// 회의록 삭제
 	const deleteMinutes = () => {
 		Swal.fire({
@@ -244,7 +251,7 @@ function MinutesDetail() {
 				<TextContent>회의 제목 : {singleMinutes.title}</TextContent>
 				<TextContent>
 					참여자 :
-					{singleMinutes.participants.map(p => (
+					{singleMinutes.participants?.map(p => (
 						<TextContent key={p}>{p}</TextContent>
 					))}
 				</TextContent>
@@ -257,7 +264,7 @@ function MinutesDetail() {
 						<FileItem
 							key={file.id}
 							onClick={() =>
-								downloadFile({ fileId: file.id, fileName: file.reference_file })
+								downloadFile({ fileId: file.id, fileName: file.filename })
 							}
 						>
 							{file.filename}
