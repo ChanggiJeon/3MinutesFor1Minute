@@ -15,6 +15,19 @@ import routes from '../../routes';
 import { apiGetBoards } from '../../api/board';
 import EmptyBtn from '../../components/auth/EmptyBtn';
 
+const MainContainer = styled(Main)`
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	padding: 10px;
+	box-sizing: border-box;
+`;
+
+const CommunityMainBox = styled(MainBox)`
+	position: relative;
+	grid-column: 1 / 3;
+	box-sizing: border-box;
+`;
+
 const CommunitySubBox = styled(SubBox)`
 	position: relative;
 `;
@@ -22,8 +35,8 @@ const CommunitySubBox = styled(SubBox)`
 const TitleContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
-	width: 100%;
 	padding: 10px;
+	grid-column: 1 / 3;
 
 	& > div {
 		display: flex;
@@ -76,11 +89,11 @@ const MemberContent = styled.div`
 	padding: 10px;
 	margin: 5px;
 `;
-
 const More = styled(EmptyBtn)`
 	position: absolute;
 	top: 25px;
 	right: 25px;
+	color: ${props => props.theme.sideBarColor};
 `;
 const ListBox = styled.ul`
 	display: flex;
@@ -110,8 +123,18 @@ function Community() {
 		try {
 			const { data } = await apiGetBoards({ communityId });
 
-			setRecentNotice(data.filter(e => e.is_notice).slice(0, 2));
-			setRecentPost(data.filter(e => !e.is_notice).slice(0, 2));
+			setRecentNotice(
+				data
+					.filter(e => e.is_notice)
+					.reverse()
+					.slice(0, 2)
+			);
+			setRecentPost(
+				data
+					.filter(e => !e.is_notice)
+					.reverse()
+					.slice(0, 2)
+			);
 		} catch (e) {
 			// error
 		}
@@ -120,14 +143,14 @@ function Community() {
 	useEffect(() => {
 		dispatch(fetchMainpageMinutesByComId(communityId));
 		getPosts();
-	}, [location]);
+	}, [location, communityId]);
 
 	const mainpageMinutesList = useSelector(
 		state => state.minutes.mainpageMinutes
 	);
 
 	return (
-		<Main>
+		<MainContainer>
 			<TitleContainer>
 				<div>
 					<ImageContainer>
@@ -141,7 +164,10 @@ function Community() {
 				</div>
 				<div>참여코드 : {privateCode}</div>
 			</TitleContainer>
-			<MainBox>
+			<CommunityMainBox>
+				<More type='button' onClick={() => navigate(routes.minutesList)}>
+					...더보기
+				</More>
 				<TextSubTitle>회의록</TextSubTitle>
 				<DivLine />
 				<ListBox>
@@ -159,7 +185,7 @@ function Community() {
 						<TextSubTitle>처리할 회의가 없습니다.</TextSubTitle>
 					)}
 				</ListBox>
-			</MainBox>
+			</CommunityMainBox>
 			<CommunitySubBox>
 				<More type='button' onClick={() => navigate(routes.posts)}>
 					...더보기
@@ -209,11 +235,7 @@ function Community() {
 					</MembersContainer>
 				)}
 			</CommunitySubBox>
-			<CommunitySubBox>
-				<TextSubTitle>일정 관리</TextSubTitle>
-				<DivLine />
-			</CommunitySubBox>
-		</Main>
+		</MainContainer>
 	);
 }
 
