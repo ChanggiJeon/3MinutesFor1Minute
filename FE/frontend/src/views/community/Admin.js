@@ -78,6 +78,7 @@ const TableContainer = styled.div`
 
 const ResultContainer = styled.div`
 	margin: 20px 0;
+	max-width: 350px;
 `;
 
 const ResultWrapper = styled.div`
