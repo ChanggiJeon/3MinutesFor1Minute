@@ -35,8 +35,6 @@ function UpdateProfile({ toggleMode }) {
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('username', username);
 		formData.append('password', password);
-		formData.append('new_password', password);
-		formData.append('new_password_confirm', password);
 
 		try {
 			await apiUpdateProfileImage({
@@ -48,6 +46,7 @@ function UpdateProfile({ toggleMode }) {
 			});
 
 			const response = await apiGetMyProfile();
+			console.log(response);
 			dispatch(
 				getUserData({
 					...response.data,

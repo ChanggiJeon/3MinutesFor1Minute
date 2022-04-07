@@ -114,7 +114,7 @@ function MinutesUpdate() {
 				navigate(`/community/${community}/minutes/${id}`);
 			});
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	}
 	// 업로드 된 파일 표시하기 위한 변수
@@ -154,7 +154,7 @@ function MinutesUpdate() {
 					<ErrorMsg>{errors?.title?.message}</ErrorMsg>
 					<Br />
 					{/* 참여자 */}
-					<TextContent>참여자 : Member랑 연계필요</TextContent>
+					<TextContent>참여자 : {singleMinutes.participants.join(', ')}</TextContent>
 					<Br />
 					{/* 종료일 */}
 					<TextContent>
