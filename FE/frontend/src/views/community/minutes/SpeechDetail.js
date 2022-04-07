@@ -105,9 +105,6 @@ const Br = styled.div`
 const TextBox = styled(TextContent)`
 	width: 100%;
 `;
-const TextUpload = styled(TextContent)`
-	font-size: 16px;
-`;
 const Buttons = styled(BtnBox)`
 	justify-content: end;
 	width: 60%;
