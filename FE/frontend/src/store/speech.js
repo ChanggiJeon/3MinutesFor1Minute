@@ -36,6 +36,7 @@ const initialState = {
 		author: '',
 		title: '',
 		summary: '',
+		speechComments: [],
 		referenceFile: [],
 		wordCloudList: [],
 		recordFile: '',
@@ -52,7 +53,9 @@ function polishData(data) {
 	polished.id = data.id;
 	polished.title = data.title;
 	polished.summary = data.summary;
+	polished.speechComments = data.speech_comments;
 	polished.recordFile = data.record_file;
+	polished.referenceFile = data.speechfile_set;
 	polished.voiceText = data.voice_text;
 	polished.updatedAt = data.updated_at;
 	polished.author = data.participant.member.nickname;

@@ -90,6 +90,7 @@ function MinutesUpdate() {
 	// form 제출 로직
 	function onValidSubmit(data) {
 		const formData = new FormData();
+		const polishedDeadline = data.deadline.slice(0 ,16);
 		if (data.upload[0]) {
 			formData.append(`reference_file`, data.upload[0]);
 		}
@@ -97,7 +98,7 @@ function MinutesUpdate() {
 		formData.append('title', data.title);
 		formData.append('content', data.content);
 		formData.append('member_ids', []);
-		formData.append('deadline', data.deadline);
+		formData.append('deadline', polishedDeadline);
 		// navigate를 위한 값
 		formData.append('comId', communityId);
 		formData.append('minId', minutesId);

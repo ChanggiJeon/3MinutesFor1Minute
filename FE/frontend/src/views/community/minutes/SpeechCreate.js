@@ -136,8 +136,8 @@ function SpeechCreate() {
 		recordFile,
 		voiceText,
 	} = singleSpeech;
-	// const audioSrc = `http://localhost:8000${recordFile}`;
-	const audioSrc = 'http://localhost:8000/record/1648986351112.wav';
+	const audioSrc = `http://localhost:8000${recordFile}`;
+	// const audioSrc = 'http://localhost:8000/recordfile/1/1648986351112.wav';
 	useEffect(() => {
 		if (!completed && loading) {
 			setStatus('loading');
@@ -188,7 +188,7 @@ function SpeechCreate() {
 	const dispatch = useDispatch();
 
 	// ************제출 로직**************
-	function onValidSubmit(data) {
+	async function onValidSubmit(data) {
 		const formData = new FormData();
 		if (data.upload[0]) {
 			for (let i = 0; i < fileCount; i += 1) {
@@ -205,16 +205,15 @@ function SpeechCreate() {
 		formData.append('minId', minutesId);
 		formData.append('spcId', id);
 		try {
-			dispatch(updateSpeechByData(formData)).then(res => {
-				Swal.fire({
-					position: 'top-end',
-					icon: 'success',
-					title: '스피치가 작성되었습니다.',
-					showConfirmButton: false,
-					timer: 1500,
-				});
-				navigate(`/community/${communityId}/minutes/${minutesId}`);
+			await dispatch(updateSpeechByData(formData));
+			Swal.fire({
+				position: 'top-end',
+				icon: 'success',
+				title: '스피치가 작성되었습니다.',
+				showConfirmButton: false,
+				timer: 1500,
 			});
+			navigate(`/community/${communityId}/minutes/${minutesId}`);
 		} catch (error) {
 			console.log(error);
 		}
