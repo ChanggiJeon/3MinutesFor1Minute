@@ -28,7 +28,7 @@ export async function createSpeech(comId, minId, data) {
 		});
 		return response.data;
 	} catch (err) {
-		return err.response.data;
+		return err.response.status;
 	}
 }
 export async function updateSpeech(comId, minId, spcId, data) {

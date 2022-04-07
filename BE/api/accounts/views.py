@@ -54,7 +54,7 @@ def unique_check_username(request, username):
     User = get_user_model()
 
     if User.objects.filter(username=username):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: ID 중복'}, status=status.HTTP_400_BAD_REQUEST)
 
     else:
         return Response(status=status.HTTP_200_OK)
@@ -66,7 +66,7 @@ def unique_check_email(request, email):
     User = get_user_model()
 
     if User.objects.filter(email=email):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 이메일 중복'}, status=status.HTTP_400_BAD_REQUEST)
 
     else:
         code = make_random_code()
@@ -75,7 +75,7 @@ def unique_check_email(request, email):
         mail_to = email
         email = EmailMessage(mail_title, message, to=[mail_to])
         email.send()
-        return Response({'code': code}, status=status.HTTP_200_OK)
+        return Response({'code': code})
 
 
 @swagger_auto_schema(method='DELETE', request_body=AuthenticateSerializer)
@@ -87,7 +87,7 @@ def delete(request):
     if request.user == user and user.check_password(request.data['password']):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 본인 인증 실패'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(method='PUT', request_body=UserUpdateSerializer)
@@ -116,7 +116,7 @@ def update(request):
             me.set_password(new_password)
             me.save()
         return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 본인 인증 실패'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
