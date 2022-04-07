@@ -87,10 +87,8 @@ function SetMember({ setMode, members, setMembers }) {
 
 	const formContents = (
 		<Label htmlFor='name'>
+			<FaSearch />
 			<input type='name' placeholder='닉네임으로 찾기' onInput={handleName} />
-			<IconBtn>
-				<FaSearch />
-			</IconBtn>
 		</Label>
 	);
 
