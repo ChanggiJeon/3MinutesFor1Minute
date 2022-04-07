@@ -108,10 +108,6 @@ function UpdatePassword() {
 								value: 8,
 								message: '8자 이상 입력하세요.',
 							},
-							pattern: {
-								value: /((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,})/,
-								message: '영문 대문자, 소문자, 숫자, 특수문자를 사용하세요.',
-							},
 						})}
 						type='password'
 						placeholder='기존 비밀번호'
