@@ -21,10 +21,7 @@ import ComMain from '../../components/community/MainStart';
 import Background from '../../components/community/board/list/Background';
 import Header from '../../components/community/board/list/Header';
 import TextTitle from '../../components/common/TextTitle';
-import BackBtn from '../../components/community/board/list/BackBtn';
 import SmallBtn from '../../components/community/board/list/SmallBtn';
-import SLink from '../../components/community/board/list/SLink';
-import Btns from '../../components/community/board/list/Btns';
 import NForm from '../../components/community/board/list/NForm';
 import BlueMdBtn from '../../components/common/BlueMdBtn';
 import RedMdBtn from '../../components/common/RedMdBtn';
@@ -243,12 +240,19 @@ function PostDetail() {
 				text: '수정을 완료하였습니다.',
 			});
 			setPostUpdating(false);
-		} catch (e) {
+		} catch (error) {
 			// error
-			await Swal.fire({
-				icon: 'error',
-				text: '수정을 실패하였습니다.',
-			});
+			if(error.response.status === 400){
+				await Swal.fire({
+					icon: 'error',
+					text: '공지는 최대 5개까지 작성할 수 있습니다.',
+				});
+			}else{
+				await Swal.fire({
+					icon: 'error',
+					text: '수정을 실패하였습니다.',
+				});
+			}
 		}
 	};
 

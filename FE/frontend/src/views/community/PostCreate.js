@@ -4,12 +4,9 @@ import { useForm } from 'react-hook-form';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
-import routes from '../../routes';
 import { apiCreateBoard } from '../../api/board';
 import Label from '../../components/auth/Label';
 import AreaLabel from '../../components/auth/AreaLabel';
-import RightBtn from '../../components/community/board/list/BackBtn';
-import SLink from '../../components/community/board/list/SLink';
 import ComMain from '../../components/community/MainStart';
 import Background from '../../components/community/board/list/Background';
 import Header from '../../components/community/board/list/Header';
@@ -58,12 +55,20 @@ function PostCreate() {
 				text: '게시글이 성공적으로 작성되었습니다.',
 			});
 			navigate(`/community/${communityId}/posts/${postId}`);
-		} catch (e) {
+		} catch (error) {
 			// error
-			await Swal.fire({
-				icon: 'error',
-				text: '게시글 작성에 실패하였습니다. 다시 시도하세요.',
-			});
+			if(error.response.status === 400){
+				await Swal.fire({
+					icon: 'error',
+					text: '공지는 최대 5개까지 작성할 수 있습니다.',
+				});
+			}else{
+				await Swal.fire({
+					icon: 'error',
+					text: '게시글 작성에 실패하였습니다. 다시 시도하세요.',
+				});
+			}
+			
 		}
 	};
 
