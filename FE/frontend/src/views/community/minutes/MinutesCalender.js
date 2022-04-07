@@ -25,11 +25,22 @@ export const StyleWrapper = styled.div`
 	display:none;
   }
   .fc-event-title{
-	text-align: center;
-	font-size: 15px
+	  text-align: center;
+	  background-color: #537791;
+	  color: var(--fc-event-text-color, #fff);
   }
+	.fc-event-title:hover{
+		text-align: center;
+		font-size: 15px;
+		cursor: pointer
+	}
+
   .fc-event-title-container{
 	text-align: center;
+  }
+  .fc-event-title-container:hover{
+	text-align: center;
+	cursor: pointer
   }
 
 `
