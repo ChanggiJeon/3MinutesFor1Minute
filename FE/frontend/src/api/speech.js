@@ -12,7 +12,6 @@ export async function getSingleSpeech(comId, minId, spcId) {
 		});
 		return response.data;
 	} catch (err) {
-		console.log(err);
 		return err.response.data;
 	}
 }
@@ -43,8 +42,6 @@ export async function updateSpeech(comId, minId, spcId, data) {
 				'Content-Type': 'multipart/form-data',
 			},
 		});
-		console.log('response.data');
-		console.log(response.data);
 		return response.data;
 	} catch (err) {
 		return err.response.data;
@@ -64,3 +61,69 @@ export async function deleteSpeech(comId, minId, spcId) {
 		return err.response.status;
 	}
 }
+export async function downloadFile(comId, minId, spcId, fileId) {
+	try {
+		const response = await axios({
+			method: 'get',
+			url: `${BASE_URL}/${comId}/minutes/${minId}/speech/${spcId}/download/${fileId}/`,
+			responseType: 'blob',
+			headers: {
+				...setToken(),
+			},
+		});
+		return response.data;
+	} catch (err) {
+		return err.response.data;
+	}
+}
+
+// comment API
+
+export const apiCreateComment = ({
+	communityId,
+	minutesId,
+	speechId,
+	content,
+}) =>
+	axios({
+		method: 'post',
+		url: `${BASE_URL}/${communityId}/minutes/${minutesId}/speech/${speechId}/comment/create/`,
+		data: {
+			content,
+		},
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiPutComment = ({
+	communityId,
+	minutesId,
+	speechId,
+	commentId,
+	content,
+}) =>
+	axios({
+		method: 'put',
+		url: `${BASE_URL}/${communityId}/minutes/${minutesId}/speech/${speechId}/comment/${commentId}/update/`,
+		data: {
+			content,
+		},
+		headers: {
+			...setToken(),
+		},
+	});
+
+export const apiDeleteComment = ({
+	communityId,
+	minutesId,
+	speechId,
+	commentId,
+}) =>
+	axios({
+		method: 'delete',
+		url: `${BASE_URL}/${communityId}/minutes/${minutesId}/speech/${speechId}/comment/${commentId}/delete/`,
+		headers: {
+			...setToken(),
+		},
+	});

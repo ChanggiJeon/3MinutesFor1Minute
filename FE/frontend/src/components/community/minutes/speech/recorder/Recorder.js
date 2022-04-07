@@ -94,7 +94,7 @@ function Recorder() {
 					<RecorderImg src={recorder} />
 				</SubBox>
 				<SubBox>
-					<Timer status={recordStatus} />
+					<Timer status={recordStatus} saveRecording={saveRecording} />
 				</SubBox>
 			</MainBox>
 			<BtnBox>
