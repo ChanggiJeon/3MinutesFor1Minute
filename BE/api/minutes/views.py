@@ -96,7 +96,7 @@ def minute_create(request, community_pk):
                     notification = Notification(
                         user=me.user,
                         minute=minute,
-                        content=f'{me.nickname}님께서 주최하신 {minute.title}이(가) 정상적으로 등록되었습니다.',
+                        content=f'{me.nickname}님께서 주최하신 {minute.title} 회의가 정상적으로 등록되었습니다.',
                         is_activate=True
                     )
 
@@ -105,7 +105,7 @@ def minute_create(request, community_pk):
                     notification_deadline = Notification(
                         user=me.user,
                         minute=minute,
-                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                        content=f'{minute.title} 회의의 스피치 등록 마감이 1시간 남았습니다.',
                         is_activate=False
                     )
 
@@ -118,7 +118,7 @@ def minute_create(request, community_pk):
                     notification = Notification(
                         user=member.user,
                         minute=minute,
-                        content=f'{me.nickname}님께서 {member.nickname}을(를) {minute.title}의 참여자로 등록하였습니다.',
+                        content=f'{me.nickname}님께서 {member.nickname}님을 {minute.title} 회의의 참여자로 등록하였습니다.',
                         is_activate=True
                     )
 
@@ -127,7 +127,7 @@ def minute_create(request, community_pk):
                     notification_deadline = Notification(
                         user=member.user,
                         minute=minute,
-                        content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                        content=f'{minute.title} 회의의 스피치 등록 마감이 1시간 남았습니다.',
                         is_activate=False
                     )
 
@@ -170,8 +170,10 @@ def minute_update(request, community_pk, minute_pk):
     minute = get_object_or_404(Minute, pk=minute_pk, community=community)
     me = get_object_or_404(Member, user=request.user, community=community)
     assignee = minute.participant_set.get(is_assignee=True)
+    old_deadline = minute.deadline
 
-    if minute.deadline != request.data['deadline'] and datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
+    if 'deadline' in request.data and old_deadline != request.data['deadline'] \
+        and datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     elif me == assignee.member or me.is_admin:
@@ -192,7 +194,7 @@ def minute_update(request, community_pk, minute_pk):
                     new_file = MinuteFile(minute=minute, filename=str(value), reference_file=value)
                     new_file.save()
 
-            if 'deadline' in request.data and request.data['deadline'] != minute.deadline:
+            if 'deadline' in request.data and old_deadline != request.data['deadline']:
                 notifications = get_list_or_404(Notification, minute=minute, is_activate=False)
 
                 if not notifications:
@@ -200,7 +202,7 @@ def minute_update(request, community_pk, minute_pk):
                         notification_deadline = Notification(
                             user=participant.member.user,
                             minute=minute,
-                            content=f'{minute.title}의 등록 마감이 1시간 남았습니다.',
+                            content=f'{minute.title} 회의의 스피치 등록 마감이 1시간 남았습니다.',
                             is_activate=False
                         )
 
@@ -210,8 +212,8 @@ def minute_update(request, community_pk, minute_pk):
                     notification_alarm = Notification(
                         user=participant.member.user,
                         minute=minute,
-                        content=f'{minute.title}의 등록 마감 시간이 변경되었습니다.',
-                        is_activate=False
+                        content=f'{minute.title} 회의의 스피치 등록 마감 시간이 변경되었습니다.',
+                        is_activate=True
                     )
 
                     notification_alarm.save()
@@ -240,7 +242,7 @@ def minute_close(request, community_pk, minute_pk):
                 notification = Notification(
                     user=participant.member.user,
                     minute=minute,
-                    content=f'{me.nickname}님께서 {minute.title}를 종료하였습니다.',
+                    content=f'{me.nickname}님께서 {minute.title} 회의를 종료하였습니다.',
                     is_activate=True
                 )
 

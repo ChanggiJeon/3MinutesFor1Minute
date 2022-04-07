@@ -14,7 +14,7 @@ const Alarm = styled(BsAlarmFill)`
 	margin: 0 20px;
 `;
 
-function Timer({ status }) {
+function Timer({ status, saveRecording }) {
 	const [minutes, setMinutes] = useState(parseInt(3, 10));
 	const [seconds, setSeconds] = useState(parseInt(0, 10));
 
@@ -26,6 +26,7 @@ function Timer({ status }) {
 				}
 				if (parseInt(seconds, 10) === 0) {
 					if (parseInt(minutes, 10) === 0) {
+						saveRecording();
 						clearInterval(countdown);
 					} else {
 						setMinutes(parseInt(minutes, 10) - 1);
