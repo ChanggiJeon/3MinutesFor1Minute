@@ -26,6 +26,11 @@ def board_list(request, community_pk):
 @api_view(['POST'])
 def board_create(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
+    notices = community.board_set.filter(is_notice=True)
+
+    if len(notices) == 5 and 'is_notice' in request.data and request.data['is_notice']:
+        return Response({'error: 공지 과다'}, status=status.HTTP_400_BAD_REQUEST)
+
     me = get_object_or_404(Member, user=request.user, community=community)
     serializer = BoardSerializer(data=request.data)
 
@@ -59,13 +64,18 @@ def board_delete(request, community_pk, board_pk):
     if me == board.member or me.is_admin:
         board.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(method='PUT', request_body=CustomBoardSerializer)
 @api_view(['PUT'])
 def board_update(request, community_pk, board_pk):
     community = get_object_or_404(Community, pk=community_pk)
+    notices = community.board_set.filter(is_notice=True)
+
+    if len(notices) == 5 and 'is_notice' in request.data and request.data['is_notice']:
+        return Response({'error: 공지 과다'}, status=status.HTTP_400_BAD_REQUEST)
+
     board = get_object_or_404(Board, pk=board_pk, community=community)
     me = get_object_or_404(Member, user=request.user, community=community)
 
@@ -89,7 +99,7 @@ def board_update(request, community_pk, board_pk):
 
             serializer = BoardSerializer(board)
             return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 from config.settings import MEDIA_ROOT
@@ -132,7 +142,7 @@ def board_comment_delete(request, community_pk, board_pk, comment_pk):
         comment = get_object_or_404(BoardComment, pk=comment_pk, board=board)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(method='PUT', request_body=CustomBoardCommentSerializer)
@@ -149,4 +159,4 @@ def board_comment_update(request, community_pk, board_pk, comment_pk):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
