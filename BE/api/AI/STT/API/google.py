@@ -1,11 +1,9 @@
 from google.cloud import storage
-import os, sys
+import sys, os, re
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from hanspell import spell_checker
-import re
-import os
 from config.settings import BASE_DIR
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR) + "\AI\STT\API\\festive-vim-345604-8faec2e2d112.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR) + "/AI/STT/API/festive-vim-345604-8faec2e2d112.json"
 
 
 def upload_file(file_path, file_name):
@@ -61,9 +59,3 @@ def transcribe_gcs(file_name):
     for i in result:
         fixed_text += i.checked
     return fixed_text
-
-# if __name__ == "__main__":
-
-# upload_file("C:/Users/multicampus/Desktop/S06P22D202/BE/api/", "media/test/article.wav")
-# text = transcribe_gcs("1648968825136.wav")
-# print(text)
