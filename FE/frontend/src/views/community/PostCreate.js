@@ -16,7 +16,14 @@ import Header from '../../components/community/board/list/Header';
 import BoardTitle from '../../components/community/board/list/BoardTitle';
 import NForm from '../../components/community/board/list/NForm';
 import SubmitButton from '../../components/auth/SubmitButton';
+import BlueMdBtn from '../../components/common/BlueMdBtn';
 
+const SButton = styled(SubmitButton)`
+border: none;
+`
+const CreateBtn = styled(BlueMdBtn)`
+	margin-right: 20px;
+`;
 function PostCreate() {
 	const {
 		register,
@@ -61,9 +68,9 @@ function PostCreate() {
 			<Background>
 				<Header>
 					<BoardTitle>게시글 작성</BoardTitle>
-					<RightBtn onClick={() => navigate(`/community/${communityId}/posts`)}>
-						◀
-					</RightBtn>
+					<CreateBtn onClick={() => navigate(`/community/${communityId}/posts`)}>
+						돌아가기
+					</CreateBtn>
 				</Header>
 				<NForm onSubmit={handleSubmit(onValidSubmit)}>
 					<Label htmlFor='title'>
@@ -97,7 +104,7 @@ function PostCreate() {
 						파일첨부
 						<input {...register('upload')} type='file' multiple />
 					</Label> */}
-					<SubmitButton disabled={!isValid}>작성하기</SubmitButton>
+					<SButton disabled={!isValid}>작성하기</SButton>
 				</NForm>
 			</Background>
 		</ComMain>
