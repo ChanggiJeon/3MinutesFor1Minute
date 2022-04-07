@@ -90,32 +90,47 @@ function MinutesUpdate() {
 	// form 제출 로직
 	function onValidSubmit(data) {
 		const formData = new FormData();
-		const polishedDeadline = data.deadline.slice(0 ,16);
+		const polishedDeadline = data.deadline.slice(0, 16);
 		if (data.upload[0]) {
 			formData.append(`reference_file`, data.upload[0]);
 		}
 		formData.append('enctype', 'multipart/form-data');
 		formData.append('title', data.title);
 		formData.append('content', data.content);
-		formData.append('member_ids', []);
 		formData.append('deadline', polishedDeadline);
 		// navigate를 위한 값
 		formData.append('comId', communityId);
 		formData.append('minId', minutesId);
 		try {
 			dispatch(updateMinutesByData(formData)).then(res => {
-				Swal.fire({
-					position: 'top-end',
-					icon: 'success',
-					title: '수정 완료',
-					showConfirmButton: false,
-					timer: 1500,
-				});
-				const { community, id } = res.payload;
-				navigate(`/community/${community}/minutes/${id}`);
+				if (res.payload === 400) {
+					Swal.fire({
+						position: 'top-end',
+						icon: 'error',
+						title: '수정 실패! 날짜를 확인해주세요!',
+						showConfirmButton: false,
+						timer: 1500,
+					});
+				} else {
+					Swal.fire({
+						position: 'top-end',
+						icon: 'success',
+						title: '회의록이 수정되었습니다..',
+						showConfirmButton: false,
+						timer: 1500,
+					});
+					const { community, id } = res.payload;
+					navigate(`/community/${community}/minutes/${id}`);
+				}
 			});
 		} catch (error) {
-			// console.log(error);
+			Swal.fire({
+				position: 'top-end',
+				icon: 'error',
+				title: '에러 발생, 관리자에게 문의바랍니다.',
+				showConfirmButton: false,
+				timer: 1500,
+			});
 		}
 	}
 	// 업로드 된 파일 표시하기 위한 변수

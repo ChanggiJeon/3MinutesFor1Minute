@@ -76,7 +76,6 @@ const MemberContent = styled.div`
 	padding: 10px;
 	margin: 5px;
 `;
-
 const More = styled(EmptyBtn)`
 	position: absolute;
 	top: 25px;
@@ -142,6 +141,9 @@ function Community() {
 				<div>참여코드 : {privateCode}</div>
 			</TitleContainer>
 			<MainBox>
+				<More type='button' onClick={() => navigate(routes.minutesList)}>
+					...더보기
+				</More>
 				<TextSubTitle>회의록</TextSubTitle>
 				<DivLine />
 				<ListBox>
