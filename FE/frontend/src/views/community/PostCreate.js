@@ -24,6 +24,10 @@ border: none;
 const CreateBtn = styled(BlueMdBtn)`
 	margin-right: 20px;
 `;
+const TitileInput = styled.input`
+	width:100%
+`;
+
 function PostCreate() {
 	const {
 		register,
@@ -74,7 +78,7 @@ function PostCreate() {
 				</Header>
 				<NForm onSubmit={handleSubmit(onValidSubmit)}>
 					<Label htmlFor='title'>
-						<input
+						<TitileInput
 							{...register('title', {
 								required: true,
 							})}
