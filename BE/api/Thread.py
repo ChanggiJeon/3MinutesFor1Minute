@@ -39,7 +39,7 @@ def activate_notification():
     except:
         print("there is no notification such conditions")
 
-    time.sleep(60)
+    time.sleep(45)
 
 
 if __name__ == "__main__":

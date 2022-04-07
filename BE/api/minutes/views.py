@@ -54,7 +54,7 @@ def minute_list(request, community_pk):
 def minute_main(request, community_pk):
     community = get_object_or_404(Community, pk=community_pk)
     me = get_object_or_404(Member, user=request.user, community=community)
-    participants = me.participant_set.filter()
+    participants = me.participant_set.all()
     minutes = []
 
     for participant in participants:
@@ -78,7 +78,7 @@ def minute_create(request, community_pk):
 
     elif request.method == 'POST':
         if datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error: 잘못된 등록 마감 시간'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = MinuteSerializer(data=request.data)
 
@@ -160,7 +160,7 @@ def minute_delete(request, community_pk, minute_pk):
     if me == assignee.member or me.is_admin:
         minute.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(method='PUT', request_body=MinuteSerializer)
@@ -174,7 +174,7 @@ def minute_update(request, community_pk, minute_pk):
 
     if 'deadline' in request.data and old_deadline != request.data['deadline'] \
         and datetime.datetime.strptime(request.data['deadline'], '%Y-%m-%dT%H:%M') <= datetime.datetime.now():
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 잘못된 등록 마감 시간'}, status=status.HTTP_400_BAD_REQUEST)
 
     elif me == assignee.member or me.is_admin:
         serializer = MinuteSerializer(minute, data=request.data)
@@ -219,7 +219,7 @@ def minute_update(request, community_pk, minute_pk):
                     notification_alarm.save()
             serializer = MinuteSerializer(minute)
             return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(method='PUT', request_body=MinuteCloseSerializer)
@@ -249,7 +249,7 @@ def minute_close(request, community_pk, minute_pk):
                 notification.save()
             serializer = MinuteSerializer(minute)
             return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 from config.settings import MEDIA_ROOT
@@ -273,14 +273,19 @@ def minute_file_download(request, community_pk, minute_pk, reference_file_pk):
 def speech_create(request, community_pk, minute_pk):
     community = get_object_or_404(Community, pk=community_pk)
     minute = get_object_or_404(Minute, pk=minute_pk, community=community)
-    me = get_object_or_404(Member, user=request.user, community=community)
-    participant = get_object_or_404(Participant, member=me, minute=minute)
-    serializer = SpeechSerializer(data=request.data)
 
     if minute.is_closed or minute.deadline < datetime.datetime.now():
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 종료된 회의'}, status=status.HTTP_400_BAD_REQUEST)
 
-    elif serializer.is_valid(raise_exception=True):
+    me = get_object_or_404(Member, user=request.user, community=community)
+    participant = get_object_or_404(Participant, member=me, minute=minute)
+
+    if Speech.objects.filter(participant=participant).exists():
+        return Response({'error: 이미 스피치 존재'}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = SpeechSerializer(data=request.data)
+
+    if serializer.is_valid(raise_exception=True):
         serializer.save(minute=minute, participant=participant)
         speech = get_object_or_404(Speech, pk=serializer.data['id'])
 
@@ -297,7 +302,7 @@ def speech_create(request, community_pk, minute_pk):
 
         except:
             speech.delete()
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error: 잘못된 녹음'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = SpeechSerializer(speech, data=request.data)
 
@@ -342,7 +347,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
     participant = me.participant_set.get(minute=minute)
 
     if minute.is_closed or minute.deadline < datetime.datetime.now() or not request.data['title']:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error: 종료된 회의'}, status=status.HTTP_400_BAD_REQUEST)
 
     elif participant == speech.participant:
         serializer = SpeechSerializer(speech, data=request.data)
@@ -364,7 +369,7 @@ def speech_update(request, community_pk, minute_pk, speech_pk):
 
             serializer = SpeechSerializer(speech)
             return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -404,7 +409,7 @@ def speech_comment_delete(request, community_pk, minute_pk, speech_pk, comment_p
     if me == comment.member:
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(method='PUT', request_body=SpeechCommentSerializer)
@@ -422,4 +427,4 @@ def speech_comment_update(request, community_pk, minute_pk, speech_pk, comment_p
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+    return Response({'error: 권한 없음'}, status=status.HTTP_401_UNAUTHORIZED)
