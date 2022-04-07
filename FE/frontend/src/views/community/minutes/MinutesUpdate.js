@@ -170,7 +170,7 @@ function MinutesUpdate() {
 					<ErrorMsg>{errors?.title?.message}</ErrorMsg>
 					<Br />
 					{/* 참여자 */}
-					<TextContent>참여자 : Member랑 연계필요</TextContent>
+					<TextContent>참여자 : {singleMinutes.participants.join(', ')}</TextContent>
 					<Br />
 					{/* 종료일 */}
 					<TextContent>
