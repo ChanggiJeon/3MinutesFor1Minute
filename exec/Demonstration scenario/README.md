@@ -1,3 +1,5 @@
+### 3Minutes for 1Minute 사용설명
+
 ![슬라이드1](pic/슬라이드1.JPG)
 
 ![슬라이드2](pic/슬라이드2.JPG)
