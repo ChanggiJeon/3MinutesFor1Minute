@@ -119,7 +119,7 @@ function Community() {
 	useEffect(() => {
 		dispatch(fetchMainpageMinutesByComId(communityId));
 		getPosts();
-	}, [location]);
+	}, [location, communityId]);
 
 	const mainpageMinutesList = useSelector(
 		state => state.minutes.mainpageMinutes
