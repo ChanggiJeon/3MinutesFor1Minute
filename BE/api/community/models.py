@@ -20,7 +20,7 @@ class Community(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     image = ProcessedImageField(
         upload_to=image_path,
-        # processors=[ResizeToFill(125, 125)],
+        processors=[ResizeToFill(125, 125)],
         format='JPEG',
         options={'quality': 100},
         null=True,
