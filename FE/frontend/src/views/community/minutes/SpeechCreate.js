@@ -136,7 +136,7 @@ function SpeechCreate() {
 		recordFile,
 		voiceText,
 	} = singleSpeech;
-	const audioSrc = `http://localhost:8000${recordFile}`;
+	const audioSrc = process.env.REACT_APP_MEDIA_URL`/${recordFile}`;
 	// const audioSrc = 'http://localhost:8000/recordfile/1/1648986351112.wav';
 	useEffect(() => {
 		if (!completed && loading) {
