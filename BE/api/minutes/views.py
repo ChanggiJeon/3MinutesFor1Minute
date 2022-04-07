@@ -86,7 +86,7 @@ def minute_create(request, community_pk):
             serializer.save(community=community)
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
             me = get_object_or_404(Member, user=request.user, community=community)
-            member_ids = set(request.data['member_ids'])
+            member_ids = set(request.data['member_ids'].split(','))
             member_ids.add(me.id)
 
             for member_id in member_ids:
