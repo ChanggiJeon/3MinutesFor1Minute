@@ -181,7 +181,7 @@ function SpeechDetail() {
 		referenceFile,
 		updatedAt,
 	} = singleSpeech;
-	const audioSrc = `http://localhost:8000${recordFile}`;
+	const audioSrc = `${process.env.REACT_APP_MEDIA_URL}/${recordFile}`;
 	// 데이터 받으면 작성자인지 확인
 	useEffect(() => {
 		if (loginUser === author) {
