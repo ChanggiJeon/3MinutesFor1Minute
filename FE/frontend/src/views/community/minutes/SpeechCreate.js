@@ -325,10 +325,12 @@ function SpeechCreate() {
 						<ErrorMsg>{errors?.content?.message}</ErrorMsg>
 						<Br />
 						<TextBox>다시 듣기 :</TextBox>
-						<audio controls>
-							<source src={audioSrc} type='audio/wav' />
-							<track kind='captions' />
-						</audio>
+						{recordFile ? (
+							<audio controls>
+								<source src={audioSrc} type='audio/wav' />
+								<track kind='captions' />
+							</audio>
+						) : null}
 						<Br />
 						<Br />
 						<TextUpload>파일 첨부 : </TextUpload>

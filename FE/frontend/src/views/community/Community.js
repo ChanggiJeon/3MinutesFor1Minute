@@ -89,7 +89,6 @@ const MemberContent = styled.div`
 	padding: 10px;
 	margin: 5px;
 `;
-
 const More = styled(EmptyBtn)`
 	position: absolute;
 	top: 25px;

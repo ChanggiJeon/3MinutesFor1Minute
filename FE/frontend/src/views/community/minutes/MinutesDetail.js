@@ -8,6 +8,7 @@ import {
 	deleteMinutesById,
 	endMinutesById,
 } from '../../../store/minutes';
+import { deleteSpeechById } from '../../../store/speech';
 import { downloadFile as download } from '../../../api/minutes';
 import routes from '../../../routes';
 import Container from '../../../components/community/Container';
@@ -43,18 +44,17 @@ const EndMinutesBox = styled.div`
 	width: 100%;
 `;
 const TopBtnBox = styled(BtnBox)`
+	display: ${props => (props.isAuthor ? 'flex' : 'none')};
 	width: 60%;
 `;
 const UpdateBtn = styled(BlueMdBtn)`
-	margin-right: 10px;
-`;
-const FileBtn = styled(BlueMdBtn)`
 	margin-right: 10px;
 `;
 const DeleteBtn = styled(RedMdBtn)`
 	margin-right: 10px;
 `;
 const EndBtn = styled(RedMdBtn)`
+	display: ${props => (props.isAuthor ? 'block' : 'none')};
 	margin-right: 10px;
 `;
 const SpeechBox = styled.div`
@@ -64,6 +64,11 @@ const SpeechBox = styled.div`
 	overflow-y: scroll;
 `;
 const SpeechCreateBtn = styled(BlueMdBtn)`
+	display: ${props => (props.iCanSpeak === 'no' ? 'block' : 'none')};
+	margin-right: 10px;
+`;
+const SpeechDeleteBtn = styled(RedMdBtn)`
+	display: ${props => (props.iCanSpeak === 'done' ? 'block' : 'none')};
 	margin-right: 10px;
 `;
 const FileItem = styled(TextContent)`
@@ -71,16 +76,40 @@ const FileItem = styled(TextContent)`
 `;
 
 function MinutesDetail() {
+	const [isAuthor, setIsAuthor] = useState(false);
+	const [isParticipant, setIsParticipant] = useState(false);
+	const [iCanSpeak, setICanSpeak] = useState('no');
 	const [isDeleted, setIsDeleted] = useState(undefined);
-	const [iCanSpeak, setICanSpeak] = useState(false);
 	const params = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const location = useLocation();
-	// 리덕스에서 데이터 받아오기
+	// 초기값 설정
 	useEffect(() => {
 		dispatch(detailMinutesById(params));
+		if (loginUser === singleMinutes.author) {
+			setIsAuthor(true);
+		} else if (singleMinutes.participants.find(p => p === loginUser)) {
+			setIsParticipant(true);
+		}
+		console.log('loginUser');
+		console.log(loginUser);
+		console.log('singleMinutes');
+		console.log(singleMinutes);
 	}, []);
+	// 스피치 등록/삭제 버튼 관련
+	useEffect(() => {
+		if (isAuthor || isParticipant) {
+			setICanSpeak('yes');
+		}
+		singleMinutes.speeches.forEach(speech => {
+			if (speech.participant.member.nickname === loginUser) {
+				setICanSpeak('done');
+			}
+		});
+	}, [isAuthor, isParticipant]);
+	// 백그라운드 데이터
+	const loginUser = useSelector(state => state.member.nickname);
 	const singleMinutes = useSelector(state => state.minutes.singleMinutes);
 	const { speeches, referenceFile } = singleMinutes;
 	// 회의록 삭제
@@ -147,6 +176,37 @@ function MinutesDetail() {
 			});
 		}
 	};
+	// 스피치 삭제
+	const deleteMySpeech = async () => {
+		await Swal.fire({
+			title: '삭제하시겠습니까?',
+			text: '해당 스피치와 관련된 모든 데이터가 사라집니다.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#537791',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes',
+		}).then(result => {
+			if (result.isConfirmed) {
+				try {
+					const request = {
+						communityId: params.communityId,
+						minutesId: params.minutesId,
+					};
+					singleMinutes.speeches.forEach(speech => {
+						if (speech.participant.member.nickname === loginUser) {
+							request.speechId = speech.id;
+							dispatch(deleteSpeechById(request));
+							Swal.fire('완료', '스피치가 삭제되었습니다.', 'success');
+							window.location.reload();
+						}
+					});
+				} catch {
+					Swal.fire('실패', '에러 발생, 관리자에게 문의바랍니다.', 'error');
+				}
+			}
+		});
+	};
 	// 첨부파일 다운로드
 	const downloadFile = ({ fileId, fileName }) => {
 		const res = download(params.communityId, params.minutesId, fileId);
@@ -165,7 +225,7 @@ function MinutesDetail() {
 			<ContentsContainer>
 				<HeaderBox>
 					<TextSubTitle>회의 내용</TextSubTitle>
-					<TopBtnBox>
+					<TopBtnBox isAuthor={isAuthor}>
 						<UpdateBtn
 							onClick={() =>
 								navigate(
@@ -236,9 +296,13 @@ function MinutesDetail() {
 								`${routes.community}/${params.communityId}/minutes/${params.minutesId}/recordCreate`
 							)
 						}
+						iCanSpeak={iCanSpeak}
 					>
 						스피치 등록
 					</SpeechCreateBtn>
+					<SpeechDeleteBtn onClick={deleteMySpeech} iCanSpeak={iCanSpeak}>
+						내 스피치 삭제
+					</SpeechDeleteBtn>
 				</BtnBox>
 				<br />
 				<HeaderBox>
@@ -252,7 +316,9 @@ function MinutesDetail() {
 					<EndMinutesBox>
 						<TextSubTitle>회의가 진행중입니다.</TextSubTitle>
 						<br />
-						<EndBtn onClick={endMinutes}>회의 종료</EndBtn>
+						<EndBtn isAuthor={isAuthor} onClick={endMinutes}>
+							회의 종료
+						</EndBtn>
 					</EndMinutesBox>
 				)}
 			</SpeechContainer>

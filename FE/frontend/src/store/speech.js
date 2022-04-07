@@ -50,6 +50,10 @@ const initialState = {
 function polishData(data) {
 	// 기본 데이터 입력받기
 	const polished = {};
+	if (data === 400) {
+		return initialState;
+	}
+	// 기본 데이터 입력받기
 	polished.id = data.id;
 	polished.title = data.title;
 	polished.summary = data.summary;
@@ -58,10 +62,10 @@ function polishData(data) {
 	polished.referenceFile = data.speechfile_set;
 	polished.voiceText = data.voice_text;
 	polished.updatedAt = data.updated_at;
-	polished.author = data.participant.member.nickname;
+	polished.author = data?.participant?.member?.nickname;
 	polished.content = data.content;
 	// 워드 클라우드 데이터 가공 WORD[{text: string, value: number,}]
-	const text = data.cloud_keyword.slice(1, -1);
+	const text = data?.cloud_keyword.slice(1, -1);
 	const arr = text.split(', ');
 	const result = arr.map(word => word.slice(1, -1));
 	const countWords = {};

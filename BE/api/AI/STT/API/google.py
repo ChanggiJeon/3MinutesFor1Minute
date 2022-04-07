@@ -44,6 +44,8 @@ def transcribe_gcs(file_name):
     text = ' '.join(text.split())
     p = re.compile('\S\b*다\s')
     text = re.sub(p,'다. ',text)
+    p = re.compile('\S\b*요\s')
+    text = re.sub(p,'요. ',text)
     input_convert = text.replace('.','.#').split('#')
     input_list =  [""]
 
