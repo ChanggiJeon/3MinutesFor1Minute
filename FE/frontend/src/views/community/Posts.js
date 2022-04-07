@@ -15,11 +15,14 @@ import SLink from '../../components/community/board/list/SLink';
 import Header from '../../components/community/board/list/Header';
 import BoardTitle from '../../components/community/board/list/BoardTitle';
 import PostPagination from './PostPagination';
+import BlueMdBtn from '../../components/common/BlueMdBtn';
 
 const TableContainer = styled.div`
 	height: 80%;
 `;
-
+const CreateBtn = styled(BlueMdBtn)`
+	margin-right: 20px;
+`;
 function Posts() {
 	// const posts = useSelector((state) => state.posts)
 	const { communityId } = useParams();
@@ -51,13 +54,13 @@ function Posts() {
 			<Background>
 				<Header>
 					<BoardTitle>글 목록</BoardTitle>
-					<WriteBtn
+					<CreateBtn
 						onClick={() =>
 							navigate(`${routes.community}/${communityId}/${routes.postCreate}`)
 						}
 					>
 						작성하기
-					</WriteBtn>
+					</CreateBtn>
 				</Header>
 				<TableContainer>
 					<Table>
