@@ -31,6 +31,7 @@ import {
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale.css';
 
+
 const SpeechMain = styled(Main)`
 	align-content: center;
 	padding-top: 15px;
@@ -136,7 +137,7 @@ function SpeechCreate() {
 		recordFile,
 		voiceText,
 	} = singleSpeech;
-	const audioSrc = `http://localhost:8000${recordFile}`;
+	const audioSrc = `${process.env.REACT_APP_MEDIA_URL}/${recordFile}`;
 	// const audioSrc = 'http://localhost:8000/recordfile/1/1648986351112.wav';
 	useEffect(() => {
 		if (!completed && loading) {

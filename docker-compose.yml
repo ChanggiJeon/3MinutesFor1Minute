@@ -37,4 +37,4 @@ services:
     command: chmod +x backend/wsgi-entrypoint.sh
     entrypoint:
       - /backend/wsgi-entrypoint.sh
-      - nohup python /backend/Thread.py&
+      # - nohup python /backend/Thread.py&

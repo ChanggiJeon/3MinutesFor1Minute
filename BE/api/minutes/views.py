@@ -86,8 +86,10 @@ def minute_create(request, community_pk):
             serializer.save(community=community)
             minute = get_object_or_404(Minute, pk=serializer.data['id'])
             me = get_object_or_404(Member, user=request.user, community=community)
-            member_ids = set(request.data['member_ids'].split(','))
-            member_ids.add(me.id)
+            member_ids = set([me.id])
+
+            if 'member_ids' in request.data and request.data['member_ids']:
+                member_ids.update(request.data['member_ids'].split(','))
 
             for member_id in member_ids:
                 if member_id == me.id:
@@ -296,7 +298,7 @@ def speech_create(request, community_pk, minute_pk):
 
         try: 
             file = speech.record_file
-            file_path = str(MEDIA_ROOT) + f'\\recordfile\\{minute.pk}\\'
+            file_path = str(MEDIA_ROOT) + f'/recordfile/{minute.pk}/'
             file_name = str(file).split('/')[-1]
             voice_text, summary, cloud_keyword = AI(file_path, file_name)
 
