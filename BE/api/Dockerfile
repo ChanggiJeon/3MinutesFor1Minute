@@ -1,4 +1,5 @@
-FROM continuumio/miniconda3
+# FROM continuumio/miniconda3
+FROM python:3
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update
@@ -30,7 +31,11 @@ ENV DATABASE_PORT $DATABASE_PORT
 RUN mkdir /backend
 WORKDIR /backend
 COPY ./ ./
-RUN conda env create -f tmp.yml
-RUN echo "conda activate ai" >> ~/.bashrc
+# RUN conda env create -f tmp.yml
+# RUN echo "conda activate ai" >> ~/.bashrc
 # ENV PATH /opt/conda/envs/nenv/bin:$PATH
-RUN /bin/bash -c "source activate ai && pip install --upgrade pip && pip install --upgrade setuptools && pip install gunicorn && pip install -r requirements.txt"
+# RUN echo "source activate ai" >> ~/.bashrc
+# RUN pip install --upgrade pip
+# RUN pip install --upgrade setuptools
+RUN pip install gunicorn
+RUN pip install -r requirements.txt
