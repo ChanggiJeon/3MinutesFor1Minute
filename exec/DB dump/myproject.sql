@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `boards_board` (
   CONSTRAINT `boards_board_member_id_cc86ba0f_fk_community_member_id` FOREIGN KEY (`member_id`) REFERENCES `community_member` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.boards_board:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.boards_board:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `boards_board` DISABLE KEYS */;
 INSERT INTO `boards_board` (`id`, `title`, `content`, `is_notice`, `created_at`, `updated_at`, `community_id`, `member_id`) VALUES
 	(1, 'board1', 'board1', 1, '2022-04-08 00:08:00.000000', '2022-04-08 00:08:00.000000', 1, 1),
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `boards_boardcomment` (
   CONSTRAINT `boards_boardcomment_member_id_1f3bfc12_fk_community_member_id` FOREIGN KEY (`member_id`) REFERENCES `community_member` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.boards_boardcomment:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.boards_boardcomment:~1 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `boards_boardcomment` DISABLE KEYS */;
 INSERT INTO `boards_boardcomment` (`id`, `content`, `created_at`, `updated_at`, `board_id`, `member_id`) VALUES
 	(1, 'board comment1', '2022-04-08 00:10:00.000000', '2022-04-08 00:10:00.000000', 1, 1);
@@ -413,7 +413,7 @@ CREATE TABLE IF NOT EXISTS `minutes_minute` (
   CONSTRAINT `minutes_minute_community_id_d27aecc6_fk_community_community_id` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.minutes_minute:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.minutes_minute:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `minutes_minute` DISABLE KEYS */;
 INSERT INTO `minutes_minute` (`id`, `title`, `content`, `conclusion`, `is_closed`, `deadline`, `created_at`, `updated_at`, `community_id`) VALUES
 	(1, 'minute1', 'minute1', 'closed', 1, '2022-04-08 11:00:00.000000', '2022-04-08 00:14:00.000000', '2022-04-08 11:00:00.000000', 1),
@@ -448,7 +448,7 @@ CREATE TABLE IF NOT EXISTS `minutes_participant` (
   CONSTRAINT `minutes_participant_minute_id_f070c492_fk_minutes_minute_id` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.minutes_participant:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.minutes_participant:~4 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `minutes_participant` DISABLE KEYS */;
 INSERT INTO `minutes_participant` (`id`, `is_assignee`, `member_id`, `minute_id`) VALUES
 	(1, 1, 1, 1),
@@ -528,12 +528,27 @@ CREATE TABLE IF NOT EXISTS `notifications_notification` (
   KEY `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` (`user_id`),
   CONSTRAINT `notifications_notifi_minute_id_de6a78c2_fk_minutes_m` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`),
   CONSTRAINT `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
+<<<<<<< HEAD
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+=======
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+>>>>>>> 1caaecdb6f71ebb40a4d09980f4b4372a80beae2
 
--- 테이블 데이터 myproject.notifications_notification:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.notifications_notification:~8 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `notifications_notification` DISABLE KEYS */;
 INSERT INTO `notifications_notification` (`id`, `content`, `is_activate`, `is_read`, `minute_id`, `user_id`) VALUES
 	(1, 'admin님께서 주최하신 minute1 회의가 정상적으로 등록되었습니다.', 1, 0, 1, 1),
+<<<<<<< HEAD
+	(2, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 1, 0, 1, 1),
+	(3, 'admin님께서 주최하신 minute1 회의가 정상적으로 등록되었습니다.', 1, 0, 1, 2),
+	(4, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 1, 0, 1, 2),
+	(5, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 1),
+	(6, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 2),
+	(7, 'admin님께서 주최하신 minute2 회의가 정상적으로 등록되었습니다.', 1, 0, 2, 1),
+	(8, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 1),
+	(9, 'admin님께서 ssafy님을 minute2 회의의 참여자로 등록하였습니다.', 1, 0, 2, 2),
+	(10, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 2);
+=======
 	(2, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 1, 1),
 	(3, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 1),
 	(4, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 2),
@@ -541,6 +556,7 @@ INSERT INTO `notifications_notification` (`id`, `content`, `is_activate`, `is_re
 	(6, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 1),
 	(7, 'admin님께서 ssafy님을 minute2 회의의 참여자로 등록하였습니다.', 1, 0, 2, 2),
 	(8, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 2);
+>>>>>>> 1caaecdb6f71ebb40a4d09980f4b4372a80beae2
 /*!40000 ALTER TABLE `notifications_notification` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
