@@ -32,7 +32,7 @@
 
 
 
-## :two:ENV
+## :two:  ENV
 
 - FE
 
@@ -69,7 +69,7 @@ REDIRECT_PAGE=http://j6d202.p.ssafy.io/login
 
 
 
-## :three:배포 환경
+## :three:  배포 환경
 
 ![image-20220408091547524](/uploads/6d839bdb4caa73dc5d9bee32b4a08494/image-20220408091547524.png)
 
@@ -169,7 +169,7 @@ python Thread.py
 
 
 
-## :five:DB 접속 정보
+## :five:  DB 접속 정보
 
 ```
 database: glassix
