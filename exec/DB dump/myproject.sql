@@ -34,12 +34,13 @@ CREATE TABLE IF NOT EXISTS `accounts_user` (
   `profile_image` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.accounts_user:~1 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.accounts_user:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `accounts_user` DISABLE KEYS */;
 INSERT INTO `accounts_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `name`, `profile_image`) VALUES
-	(1, 'pbkdf2_sha256$320000$B3uhBFzqQzz1MMIz8rYy0y$vKqOaO+qAOJ1ONv5VXsdML7FM0UVirKbyUBpb2eNbTs=', NULL, 0, 'ssafy', '', '', 'wotjd4725@naver.com', 0, 1, '2022-04-04 21:58:30.659723', 'dd', '');
+	(1, 'pbkdf2_sha256$320000$r00VagBgdP9bLZlRyXdXO5$sPrpKK94ycUPMTTW7EIzQbFSriWp+YxKIU+AvI9lFWc=', NULL, 1, 'admin', '', '', 'admin@admin.com', 1, 1, '2022-04-08 00:00:00.000000', 'admin', ''),
+	(2, 'pbkdf2_sha256$320000$RV8tZQniUBCTtVdZTBLOX0$n0JewWE5jBor4FVX7xZcIiIiPUIQduk9psLmlueQ8MM=', NULL, 1, 'ssafy', '', '', 'ssafy@ssafy.com', 1, 1, '2022-04-08 00:02:00.000000', 'ssafy', '');
 /*!40000 ALTER TABLE `accounts_user` ENABLE KEYS */;
 
 -- 테이블 myproject.accounts_user_groups 구조 내보내기
@@ -205,10 +206,13 @@ CREATE TABLE IF NOT EXISTS `boards_board` (
   KEY `boards_board_member_id_cc86ba0f_fk_community_member_id` (`member_id`),
   CONSTRAINT `boards_board_community_id_f6c1f026_fk_community_community_id` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
   CONSTRAINT `boards_board_member_id_cc86ba0f_fk_community_member_id` FOREIGN KEY (`member_id`) REFERENCES `community_member` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.boards_board:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.boards_board:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `boards_board` DISABLE KEYS */;
+INSERT INTO `boards_board` (`id`, `title`, `content`, `is_notice`, `created_at`, `updated_at`, `community_id`, `member_id`) VALUES
+	(1, 'board1', 'board1', 1, '2022-04-08 00:08:00.000000', '2022-04-08 00:08:00.000000', 1, 1),
+	(2, 'board2', 'board2', 0, '2022-04-08 00:12:00.000000', '2022-04-08 00:12:00.000000', 1, 1);
 /*!40000 ALTER TABLE `boards_board` ENABLE KEYS */;
 
 -- 테이블 myproject.boards_boardcomment 구조 내보내기
@@ -224,15 +228,18 @@ CREATE TABLE IF NOT EXISTS `boards_boardcomment` (
   KEY `boards_boardcomment_member_id_1f3bfc12_fk_community_member_id` (`member_id`),
   CONSTRAINT `boards_boardcomment_board_id_596458a0_fk_boards_board_id` FOREIGN KEY (`board_id`) REFERENCES `boards_board` (`id`),
   CONSTRAINT `boards_boardcomment_member_id_1f3bfc12_fk_community_member_id` FOREIGN KEY (`member_id`) REFERENCES `community_member` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.boards_boardcomment:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.boards_boardcomment:~1 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `boards_boardcomment` DISABLE KEYS */;
+INSERT INTO `boards_boardcomment` (`id`, `content`, `created_at`, `updated_at`, `board_id`, `member_id`) VALUES
+	(1, 'board comment1', '2022-04-08 00:10:00.000000', '2022-04-08 00:10:00.000000', 1, 1);
 /*!40000 ALTER TABLE `boards_boardcomment` ENABLE KEYS */;
 
 -- 테이블 myproject.boards_boardfile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `boards_boardfile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(100) NOT NULL,
   `reference_file` varchar(100) DEFAULT NULL,
   `board_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -254,10 +261,12 @@ CREATE TABLE IF NOT EXISTS `community_community` (
   `created_at` datetime(6) NOT NULL,
   `image` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.community_community:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.community_community:~1 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `community_community` DISABLE KEYS */;
+INSERT INTO `community_community` (`id`, `name`, `intro`, `private_code`, `is_private`, `created_at`, `image`) VALUES
+	(1, 'community1', 'community1', '3XV1AKI768', 0, '2022-04-08 00:04:00.000000', '');
 /*!40000 ALTER TABLE `community_community` ENABLE KEYS */;
 
 -- 테이블 myproject.community_member 구조 내보내기
@@ -276,10 +285,13 @@ CREATE TABLE IF NOT EXISTS `community_member` (
   KEY `community_member_user_id_17ca1363_fk_accounts_user_id` (`user_id`),
   CONSTRAINT `community_member_community_id_19371442_fk_community_community_id` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`),
   CONSTRAINT `community_member_user_id_17ca1363_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.community_member:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.community_member:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `community_member` DISABLE KEYS */;
+INSERT INTO `community_member` (`id`, `nickname`, `bio`, `is_admin`, `is_active`, `created_at`, `profile_image`, `community_id`, `user_id`) VALUES
+	(1, 'admin', '', 1, 1, '2022-04-08 00:04:00.000000', '', 1, 1),
+	(2, 'ssafy', '', 0, 1, '2022-04-08 00:06:00.000000', '', 1, 2);
 /*!40000 ALTER TABLE `community_member` ENABLE KEYS */;
 
 -- 테이블 myproject.django_admin_log 구조 내보내기
@@ -347,29 +359,29 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
 -- 테이블 데이터 myproject.django_migrations:~23 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
-	(1, 'contenttypes', '0001_initial', '2022-04-04 21:58:04.465749'),
-	(2, 'contenttypes', '0002_remove_content_type_name', '2022-04-04 21:58:04.532751'),
-	(3, 'auth', '0001_initial', '2022-04-04 21:58:04.759748'),
-	(4, 'auth', '0002_alter_permission_name_max_length', '2022-04-04 21:58:04.805750'),
-	(5, 'auth', '0003_alter_user_email_max_length', '2022-04-04 21:58:04.812747'),
-	(6, 'auth', '0004_alter_user_username_opts', '2022-04-04 21:58:04.819750'),
-	(7, 'auth', '0005_alter_user_last_login_null', '2022-04-04 21:58:04.826746'),
-	(8, 'auth', '0006_require_contenttypes_0002', '2022-04-04 21:58:04.830750'),
-	(9, 'auth', '0007_alter_validators_add_error_messages', '2022-04-04 21:58:04.837748'),
-	(10, 'auth', '0008_alter_user_username_max_length', '2022-04-04 21:58:04.845748'),
-	(11, 'auth', '0009_alter_user_last_name_max_length', '2022-04-04 21:58:04.854747'),
-	(12, 'auth', '0010_alter_group_name_max_length', '2022-04-04 21:58:04.931751'),
-	(13, 'auth', '0011_update_proxy_permissions', '2022-04-04 21:58:04.940747'),
-	(14, 'auth', '0012_alter_user_first_name_max_length', '2022-04-04 21:58:04.948747'),
-	(15, 'accounts', '0001_initial', '2022-04-04 21:58:05.222751'),
-	(16, 'admin', '0001_initial', '2022-04-04 21:58:05.330781'),
-	(17, 'admin', '0002_logentry_remove_auto_add', '2022-04-04 21:58:05.340749'),
-	(18, 'admin', '0003_logentry_add_action_flag_choices', '2022-04-04 21:58:05.348751'),
-	(19, 'community', '0001_initial', '2022-04-04 21:58:05.502785'),
-	(20, 'boards', '0001_initial', '2022-04-04 21:58:05.785747'),
-	(21, 'minutes', '0001_initial', '2022-04-04 21:58:06.331795'),
-	(22, 'notifications', '0001_initial', '2022-04-04 21:58:06.455795'),
-	(23, 'sessions', '0001_initial', '2022-04-04 21:58:06.503796');
+	(1, 'contenttypes', '0001_initial', '2022-04-08 00:22:23.524204'),
+	(2, 'contenttypes', '0002_remove_content_type_name', '2022-04-08 00:22:23.574187'),
+	(3, 'auth', '0001_initial', '2022-04-08 00:22:23.757973'),
+	(4, 'auth', '0002_alter_permission_name_max_length', '2022-04-08 00:22:23.796082'),
+	(5, 'auth', '0003_alter_user_email_max_length', '2022-04-08 00:22:23.803063'),
+	(6, 'auth', '0004_alter_user_username_opts', '2022-04-08 00:22:23.811129'),
+	(7, 'auth', '0005_alter_user_last_login_null', '2022-04-08 00:22:23.818081'),
+	(8, 'auth', '0006_require_contenttypes_0002', '2022-04-08 00:22:23.822068'),
+	(9, 'auth', '0007_alter_validators_add_error_messages', '2022-04-08 00:22:23.829052'),
+	(10, 'auth', '0008_alter_user_username_max_length', '2022-04-08 00:22:23.838031'),
+	(11, 'auth', '0009_alter_user_last_name_max_length', '2022-04-08 00:22:23.845980'),
+	(12, 'auth', '0010_alter_group_name_max_length', '2022-04-08 00:22:23.868920'),
+	(13, 'auth', '0011_update_proxy_permissions', '2022-04-08 00:22:23.874903'),
+	(14, 'auth', '0012_alter_user_first_name_max_length', '2022-04-08 00:22:23.880887'),
+	(15, 'accounts', '0001_initial', '2022-04-08 00:22:24.111285'),
+	(16, 'admin', '0001_initial', '2022-04-08 00:22:24.202730'),
+	(17, 'admin', '0002_logentry_remove_auto_add', '2022-04-08 00:22:24.210693'),
+	(18, 'admin', '0003_logentry_add_action_flag_choices', '2022-04-08 00:22:24.218653'),
+	(19, 'community', '0001_initial', '2022-04-08 00:22:24.320183'),
+	(20, 'boards', '0001_initial', '2022-04-08 00:22:24.542006'),
+	(21, 'minutes', '0001_initial', '2022-04-08 00:22:24.985493'),
+	(22, 'notifications', '0001_initial', '2022-04-08 00:22:25.083504'),
+	(23, 'sessions', '0001_initial', '2022-04-08 00:22:25.120429');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- 테이블 myproject.django_session 구조 내보내기
@@ -399,15 +411,19 @@ CREATE TABLE IF NOT EXISTS `minutes_minute` (
   PRIMARY KEY (`id`),
   KEY `minutes_minute_community_id_d27aecc6_fk_community_community_id` (`community_id`),
   CONSTRAINT `minutes_minute_community_id_d27aecc6_fk_community_community_id` FOREIGN KEY (`community_id`) REFERENCES `community_community` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.minutes_minute:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.minutes_minute:~2 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `minutes_minute` DISABLE KEYS */;
+INSERT INTO `minutes_minute` (`id`, `title`, `content`, `conclusion`, `is_closed`, `deadline`, `created_at`, `updated_at`, `community_id`) VALUES
+	(1, 'minute1', 'minute1', 'closed', 1, '2022-04-08 11:00:00.000000', '2022-04-08 00:14:00.000000', '2022-04-08 11:00:00.000000', 1),
+	(2, 'minute2', 'minute2', '', 0, '2022-04-30 23:00:00.000000', '2022-04-08 00:16:00.000000', '2022-04-08 00:16:00.000000', 1);
 /*!40000 ALTER TABLE `minutes_minute` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_minutefile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_minutefile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(100) NOT NULL,
   `reference_file` varchar(100) DEFAULT NULL,
   `minute_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -430,17 +446,23 @@ CREATE TABLE IF NOT EXISTS `minutes_participant` (
   KEY `minutes_participant_minute_id_f070c492_fk_minutes_minute_id` (`minute_id`),
   CONSTRAINT `minutes_participant_member_id_e70faed9_fk_community_member_id` FOREIGN KEY (`member_id`) REFERENCES `community_member` (`id`),
   CONSTRAINT `minutes_participant_minute_id_f070c492_fk_minutes_minute_id` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.minutes_participant:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.minutes_participant:~4 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `minutes_participant` DISABLE KEYS */;
+INSERT INTO `minutes_participant` (`id`, `is_assignee`, `member_id`, `minute_id`) VALUES
+	(1, 1, 1, 1),
+	(2, 0, 2, 1),
+	(3, 1, 1, 2),
+	(4, 0, 2, 2);
 /*!40000 ALTER TABLE `minutes_participant` ENABLE KEYS */;
 
 -- 테이블 myproject.minutes_speech 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_speech` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
   `content` longtext NOT NULL,
-  `title` longtext NOT NULL,
+  `voice_text` longtext NOT NULL,
   `summary` longtext NOT NULL,
   `cloud_keyword` longtext NOT NULL,
   `created_at` datetime(6) NOT NULL,
@@ -481,6 +503,7 @@ CREATE TABLE IF NOT EXISTS `minutes_speechcomment` (
 -- 테이블 myproject.minutes_speechfile 구조 내보내기
 CREATE TABLE IF NOT EXISTS `minutes_speechfile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(100) NOT NULL,
   `reference_file` varchar(100) DEFAULT NULL,
   `speech_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -505,10 +528,21 @@ CREATE TABLE IF NOT EXISTS `notifications_notification` (
   KEY `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` (`user_id`),
   CONSTRAINT `notifications_notifi_minute_id_de6a78c2_fk_minutes_m` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`),
   CONSTRAINT `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
--- 테이블 데이터 myproject.notifications_notification:~0 rows (대략적) 내보내기
+-- 테이블 데이터 myproject.notifications_notification:~8 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `notifications_notification` DISABLE KEYS */;
+INSERT INTO `notifications_notification` (`id`, `content`, `is_activate`, `is_read`, `minute_id`, `user_id`) VALUES
+	(1, 'admin님께서 주최하신 minute1 회의가 정상적으로 등록되었습니다.', 1, 0, 1, 1),
+	(2, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 1, 0, 1, 1),
+	(3, 'admin님께서 주최하신 minute1 회의가 정상적으로 등록되었습니다.', 1, 0, 1, 2),
+	(4, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 1, 0, 1, 2),
+	(5, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 1),
+	(6, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 2),
+	(7, 'admin님께서 주최하신 minute2 회의가 정상적으로 등록되었습니다.', 1, 0, 2, 1),
+	(8, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 1),
+	(9, 'admin님께서 ssafy님을 minute2 회의의 참여자로 등록하였습니다.', 1, 0, 2, 2),
+	(10, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 2);
 /*!40000 ALTER TABLE `notifications_notification` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
