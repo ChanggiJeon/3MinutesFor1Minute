@@ -215,7 +215,14 @@ function SpeechCreate() {
 			});
 			navigate(`/community/${communityId}/minutes/${minutesId}`);
 		} catch (error) {
-			console.log(error);
+			Swal.fire({
+				position: 'top-end',
+				icon: 'error',
+				title: '에러 발생',
+				text: '관리자에게 문의바랍니다.',
+				showConfirmButton: false,
+				timer: 1500,
+			});
 		}
 	}
 
