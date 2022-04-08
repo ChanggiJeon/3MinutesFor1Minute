@@ -52,16 +52,18 @@ const Divider = styled(DivLine)`
 `;
 
 const MainBox = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 10px;
-`
+	display: flex;
+	width: 100%;
+	padding: 10px;
+`;
 
 function MinutesList() {
 	const { communityId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	dispatch(fetchMinutesByComId(communityId));
+	useEffect(() => {
+		dispatch(fetchMinutesByComId(communityId));
+	}, []);
 	const [posts, setPosts] = useState([]);
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
