@@ -71,7 +71,7 @@ REDIRECT_PAGE=http://j6d202.p.ssafy.io/login
 
 ## :three:배포 환경
 
-![image-20220408091547524](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20220408091547524.png)
+![image-20220408091547524](/uploads/6d839bdb4caa73dc5d9bee32b4a08494/image-20220408091547524.png)
 
 
 
