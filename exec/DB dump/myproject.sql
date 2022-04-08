@@ -528,12 +528,17 @@ CREATE TABLE IF NOT EXISTS `notifications_notification` (
   KEY `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` (`user_id`),
   CONSTRAINT `notifications_notifi_minute_id_de6a78c2_fk_minutes_m` FOREIGN KEY (`minute_id`) REFERENCES `minutes_minute` (`id`),
   CONSTRAINT `notifications_notification_user_id_b5e8c0ff_fk_accounts_user_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_user` (`id`)
+<<<<<<< HEAD
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+=======
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+>>>>>>> 1caaecdb6f71ebb40a4d09980f4b4372a80beae2
 
 -- 테이블 데이터 myproject.notifications_notification:~8 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `notifications_notification` DISABLE KEYS */;
 INSERT INTO `notifications_notification` (`id`, `content`, `is_activate`, `is_read`, `minute_id`, `user_id`) VALUES
 	(1, 'admin님께서 주최하신 minute1 회의가 정상적으로 등록되었습니다.', 1, 0, 1, 1),
+<<<<<<< HEAD
 	(2, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 1, 0, 1, 1),
 	(3, 'admin님께서 주최하신 minute1 회의가 정상적으로 등록되었습니다.', 1, 0, 1, 2),
 	(4, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 1, 0, 1, 2),
@@ -543,6 +548,15 @@ INSERT INTO `notifications_notification` (`id`, `content`, `is_activate`, `is_re
 	(8, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 1),
 	(9, 'admin님께서 ssafy님을 minute2 회의의 참여자로 등록하였습니다.', 1, 0, 2, 2),
 	(10, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 2);
+=======
+	(2, 'minute1 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 1, 1),
+	(3, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 1),
+	(4, 'admin님께서 minute1 회의를 종료하였습니다.', 1, 0, 1, 2),
+	(5, 'admin님께서 주최하신 minute2 회의가 정상적으로 등록되었습니다.', 1, 0, 2, 1),
+	(6, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 1),
+	(7, 'admin님께서 ssafy님을 minute2 회의의 참여자로 등록하였습니다.', 1, 0, 2, 2),
+	(8, 'minute2 회의의 스피치 등록 마감이 1시간 남았습니다.', 0, 0, 2, 2);
+>>>>>>> 1caaecdb6f71ebb40a4d09980f4b4372a80beae2
 /*!40000 ALTER TABLE `notifications_notification` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
