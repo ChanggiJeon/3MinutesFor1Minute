@@ -5,10 +5,7 @@
 > <img src="static/Intro.png" alt="function" style="zoom: 80%;" />
 
 
-
-
-
-### :balloon: 프로젝트 개요
+## :balloon: 프로젝트 개요
 
 **:star: Backend**: <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=Python&logoColor=white"><img src="https://img.shields.io/badge/Django-2F8D46?style=for-the-badge&logo=Django&logoColor=white"><img src="https://img.shields.io/badge/anaconda-44A833?style=for-the-badge&logo=Anaconda&logoColor=white"><img src="https://img.shields.io/badge/pytorch-EE4C2C?style=for-the-badge&logo=Pytorch&logoColor=white"><img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white"><img src="https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=MariaDB&logoColor=white">
 
@@ -33,24 +30,23 @@
     - 언제 어디서든 회의 시작부터 회의 종료 시간까지의 시간만 맞춘다면 본인의 의견을 간단하게 3분 내로 표현할 수 있다.
   - 피드백의 활성화
     - 각각의 참여자의 스피치에서 댓글을 달 수 있고 관련 파일을 업로드하여 의견의 설득력을 보탤 수 있다.
+<br/>
 
 
-
-### :robot: AI
+## :robot: AI
 
 1. STT(Speech To Text) 및 문법 검사
 
 <img src="static/AI1.png" alt="function" style="zoom: 80%;" />
 
 
-
 2. 문장 요약 및 워드클라우드화
 
 <img src="static/AI2.png" alt="function" style="zoom: 80%;" />
+<br/>
 
 
-
-### :bowling: 주요 기능
+## :bowling: 주요 기능
 
 | 순번 | 기능                | 내용                                                         |
 | :--: | :------------------ | :----------------------------------------------------------- |
@@ -59,9 +55,10 @@
 |  3   | 프로필 조회 및 변경 | 커뮤니티 멤버로서 본인의 프로필과 본인 계정 프로필을 조회 및 수정 가능하다. |
 |  4   | 회의록 작성         | 작성 일자, 작성자, 제목, 참여자, 첨부 파일 등 필요한 정보를 기입하여 회의록 작성이 가능하다.<br />회의록이 작성되면 참여자들은 스피치 등록 버튼을 통해 스피치를 생성할 수 있다.<br /><br />회의 종료일 전에 회의 종료 버튼을 통해 회의를 조기 종료할 수 있다. |
 
-- **Sample UI**
+- **Sample UI(1~4)**
 
 <img src="static/주요기능1.gif" alt="function" style="zoom: 80%;" />
+<br/>
 
 | 순번 | 기능                | 내용                                                         |
 | :--: | :------------------ | :----------------------------------------------------------- |
@@ -70,18 +67,14 @@
 |  7   | 달력형 회의록       | 회의록의 전체 일정을 달력형으로 볼 수 있다.<br />기간별로 회의를 바 형태로 보여준다. |
 |  8   | 회원관리            | 관리자는 회원관리 페이지에서 멤버 초대, 가입 수락 및 추방이 가능하다.<br />커뮤니티의 정보를 수정할 수 있다. |
 
-- **Sample UI**
+- **Sample UI(5~8)**
+<img src="static/주요기능2.gif" alt="function" style="zoom: 30%;" />
+<br/>
 
-<img src="static/주요기능2.gif" alt="function" style="zoom: 80%;" />
 
+## :tada:아키텍쳐
 
-
-### :tada:아키텍쳐
-
-<br>
-
-<img src="static/아키텍쳐.png" alt="function" style="zoom: 80%;" />
-
+<img src="static/아키텍쳐.png" alt="function" style="zoom: 30%;" />
 
 
 ## :family_man_man_boy_boy: 팀원 소개
@@ -98,39 +91,30 @@
 - 역할: Backend / Infra
 - Github: [@Jaeseed](https://github.com/Jaeseed)
 
-
-
 ##### :cactus: Su-won Jang
 
 - 역할: Backend
 - Github: [@kielj](https://github.com/kielj)
-
-
 
 ##### :santa: Jong-hyeon Kim
 
 - 역할: Frontend
 - Github: [@Jhon-Kim93](https://github.com/Jhon-Kim93)
 
-
-
 #####  :candy: Hyun-bae Ji
 
 - 역할: Frontend
 - Github: [@ruokic](https://github.com/ruokic)
 
-
-
 ##### :clown_face: Jong-mok Yoon
 
 - 역할: Frontend
 - Github: [@yoonjongmok](https://github.com/yoonjongmok)
+<br/>
 
 
 
-
-
-### ⚙ 개발 환경 및 IDE
+## ⚙ 개발 환경 및 IDE
 
 - **DevOps**
 
@@ -164,10 +148,10 @@
 
 - **IDE**
   - Visual Studio Code
+<br/>
 
 
-
-#### 설치
+## 설치
 
 - Docker
 
@@ -189,8 +173,6 @@ sudo apt update
 sudo apt install docker-ce docker-ce-cli containerd.io
 ```
 
-
-
 - Docker-compose
 
 ```bash
@@ -204,8 +186,6 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 docker-compose -version
 ```
-
-
 
 - docker-compose 실행
 
@@ -227,10 +207,9 @@ docker exec -it <BE container 명> bash
 # python daemon 실행
 python Thread.py
 ```
+<br/>
 
-
-
-### :package:포트
+## :package:포트
 
 | 80   | nginx(http / redirect to 443) |
 | ---- | ----------------------------- |
@@ -238,10 +217,10 @@ python Thread.py
 | 3000 | Gunicorn -> Django            |
 | 3307 | DB (mariaDB)                  |
 | 8080 | Jenkins                       |
+<br/>
 
 
-
-### 🎞 최종산출물
+## 🎞 최종산출물
 
 <a href="static/최종발표.pdf" style="text-decoration:none">최종 발표 pdf</a>
 
